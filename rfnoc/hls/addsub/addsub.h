@@ -1,5 +1,5 @@
-#ifndef FIR_H_
-#define FIR_H_
+#ifndef ADDSUB_H_
+#define ADDSUB_H_
 
 #include "ap_int.h"
 
@@ -14,8 +14,8 @@ struct axis_cplx {
     ap_uint<1> last;
 };
 
-void test_hls(axis_cplx &a, axis_cplx &b,
-		      axis_cplx &add, axis_cplx &sub);
+void addsub(axis_cplx &a, axis_cplx &b,
+		    axis_cplx &add, axis_cplx &sub);
 
 
 

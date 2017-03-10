@@ -1,9 +1,9 @@
 #include <complex>
-#include "test_hls.h"
+#include "addsub.h"
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
-void test_hls (axis_cplx &a, axis_cplx &b, axis_cplx &add, axis_cplx &sub) {
+void addsub(axis_cplx &a, axis_cplx &b, axis_cplx &add, axis_cplx &sub) {
 
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
     #pragma HLS INTERFACE ap_ctrl_none port=return

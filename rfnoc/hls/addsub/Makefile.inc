@@ -3,7 +3,7 @@
 #
 
 # Set IP name
-HLS_IP_NAME = test_hls
+HLS_IP_NAME = addsub
 
 # Add C/C++/tcl files relative to usrp3/lib/hls/<ip> directory
 HLS_IP_$(HLS_IP_NAME)_SRCS = \

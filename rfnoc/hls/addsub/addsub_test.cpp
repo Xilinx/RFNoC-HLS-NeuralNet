@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <complex>
-#include "test_hls.h"
+#include "addsub.h"
 
 int main () {
   const int    SAMPLES=100;
@@ -27,7 +27,7 @@ int main () {
   	in_b.last = (i==SAMPLES);
 
 	// Execute the function with latest input
-    test_hls(in_a, in_b, add, sub);
+    addsub(in_a, in_b, add, sub);
     
     if ((ramp_up == 1) && (signal >= 100))
     	ramp_up = 0;
