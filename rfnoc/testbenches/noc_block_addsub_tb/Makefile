@@ -29,13 +29,13 @@ $(HLS_IP_OUTPUT_SRCS) \
 )
 
 # Define only one toplevel module
-SIM_TOP = noc_block_testhls_tb
+SIM_TOP = noc_block_addsub_tb
 
 # Add test bench, user design under test, and
 # additional user created files
 SIM_SRCS = \
-$(abspath noc_block_testhls_tb.sv) \
-$(abspath ../../fpga-src/noc_block_testhls.v)
+$(abspath noc_block_addsub_tb.sv) \
+$(abspath ../../fpga-src/noc_block_addsub.v)
 
 #-------------------------------------------------
 # Bottom-of-Makefile

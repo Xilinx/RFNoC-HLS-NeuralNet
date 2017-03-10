@@ -2,7 +2,7 @@
 // Copyright 2015 Ettus Research LLC
 //
 
-module noc_block_testhls #(
+module noc_block_addsub #(
   parameter NOC_ID = 64'hADD0_0000_0000_0000,
   parameter STR_SINK_FIFOSIZE = 11) // Use VHDL version of AddSub module
 (
@@ -72,7 +72,7 @@ module noc_block_testhls #(
       .o_tdata(in_tdata[i]), .o_tuser(in_tuser[i]), .o_tlast(in_tlast[i]), .o_tvalid(in_tvalid[i]), .o_tready(in_tready[i]));
   endgenerate
 
-  test_hls inst_test_hls (
+  addsub inst_addsub_hls (
     .ap_clk(ce_clk), .ap_rst_n(~ce_rst),
     .a_TDATA(in_tdata[0]), .a_TVALID(in_tvalid[0]), .a_TREADY(in_tready[0]), .a_TLAST(in_tlast[0]),
     .b_TDATA(in_tdata[1]), .b_TVALID(in_tvalid[1]), .b_TREADY(in_tready[1]), .b_TLAST(in_tlast[1]),

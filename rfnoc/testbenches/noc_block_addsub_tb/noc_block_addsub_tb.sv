@@ -10,14 +10,14 @@
 `include "sim_clks_rsts.vh"
 `include "sim_rfnoc_lib.svh"
 
-module noc_block_testhls_tb();
+module noc_block_addsub_tb();
   `TEST_BENCH_INIT("noc_block_testfhls",`NUM_TEST_CASES,`NS_PER_TICK);
   localparam BUS_CLK_PERIOD = $ceil(1e9/166.67e6);
   localparam CE_CLK_PERIOD  = $ceil(1e9/200e6);
   localparam NUM_CE         = 1;  // Number of Computation Engines / User RFNoC blocks to simulate
   localparam NUM_STREAMS    = 2;  // Number of test bench streams
   `RFNOC_SIM_INIT(NUM_CE, NUM_STREAMS, BUS_CLK_PERIOD, CE_CLK_PERIOD);
-  `RFNOC_ADD_BLOCK(noc_block_testhls, 0);
+  `RFNOC_ADD_BLOCK(noc_block_addsub, 0);
 
   localparam SPP = 256; // Samples per packet
 
@@ -42,19 +42,19 @@ module noc_block_testhls_tb();
     ********************************************************/
     `TEST_CASE_START("Check NoC ID");
     // Read NOC IDs
-    tb_streamer.read_reg(sid_noc_block_testhls, RB_NOC_ID, readback);
+    tb_streamer.read_reg(sid_noc_block_addsub, RB_NOC_ID, readback);
     $display("Read NOC ID: %16x", readback);
-    `ASSERT_ERROR(readback == noc_block_testhls.NOC_ID, "Incorrect NOC ID");
+    `ASSERT_ERROR(readback == noc_block_addsub.NOC_ID, "Incorrect NOC ID");
     `TEST_CASE_DONE(1);
 
     /********************************************************
     ** Test 3 -- Connect RFNoC blocks
     ********************************************************/
     `TEST_CASE_START("Connect RFNoC blocks");
-    `RFNOC_CONNECT_BLOCK_PORT(noc_block_tb,0,noc_block_testhls,0,SC16,SPP);
-    `RFNOC_CONNECT_BLOCK_PORT(noc_block_tb,1,noc_block_testhls,1,SC16,SPP);
-    `RFNOC_CONNECT_BLOCK_PORT(noc_block_testhls,0,noc_block_tb,0,SC16,SPP);
-    `RFNOC_CONNECT_BLOCK_PORT(noc_block_testhls,1,noc_block_tb,1,SC16,SPP);
+    `RFNOC_CONNECT_BLOCK_PORT(noc_block_tb,0,noc_block_addsub,0,SC16,SPP);
+    `RFNOC_CONNECT_BLOCK_PORT(noc_block_tb,1,noc_block_addsub,1,SC16,SPP);
+    `RFNOC_CONNECT_BLOCK_PORT(noc_block_addsub,0,noc_block_tb,0,SC16,SPP);
+    `RFNOC_CONNECT_BLOCK_PORT(noc_block_addsub,1,noc_block_tb,1,SC16,SPP);
     `TEST_CASE_DONE(1);
 
     /********************************************************
