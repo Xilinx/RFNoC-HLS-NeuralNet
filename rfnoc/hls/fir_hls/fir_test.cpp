@@ -22,14 +22,32 @@ int main () {
 //  fp=fopen("out.dat","w");
   // Stimulate with impulses
   for (i=0;i<=SAMPLES;i++) {
-	if (i%20 == 0)
-		signal = 1;
-	else
-		signal = 0;
+	if (i == 0) {
+	  	in_data.data.real() = +1;
+	  	in_data.data.imag() = 0;
+	}
+	else if (i == N+1){
+	  	in_data.data.real() = +1;
+	  	in_data.data.imag() = -1;
+	}
+	else if (i == 2*(N+1)){
+	  	in_data.data.real() = +1;
+	  	in_data.data.imag() = +1;
+	}
+	else if (i == 3*(N+1)){
+	  	in_data.data.real() = -1;
+	  	in_data.data.imag() = -1;
+	}
+	else if (i == 4*(N+1)){
+	  	in_data.data.real() = 0;
+	  	in_data.data.imag() = +1;
+	}
+	else {
+	  	in_data.data.real() = 0;
+	  	in_data.data.imag() = 0;
+	}
 
   	// Populate input data
-  	in_data.data.real() = signal;
-  	in_data.data.imag() = 0;
   	in_data.last = (i == SAMPLES);
 
 	// Execute the function with latest input

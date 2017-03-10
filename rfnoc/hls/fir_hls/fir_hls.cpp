@@ -5,6 +5,9 @@
 void fir_hls (axis_cplx &in, axis_cplx &out, cplx_data_t coeff[N]) {
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
     #pragma HLS INTERFACE ap_ctrl_none port=return
+	// Start this sucker fully pipelined- Seems to want 44 multipliers for N=11
+	// ... which makes sense, because there's 4 x-ers per complex multiply
+	#pragma HLS PIPELINE
     // Set ports as AXI-Stream
     #pragma HLS INTERFACE axis port=in
     #pragma HLS INTERFACE axis port=out
@@ -15,11 +18,12 @@ void fir_hls (axis_cplx &in, axis_cplx &out, cplx_data_t coeff[N]) {
     #pragma HLS DATA_PACK variable=in.data
     #pragma HLS DATA_PACK variable=out.data
 
-    // Filters!
-	out.data = in.data;
+	// Dummy loopback
+	// out.data = in.data;
 
+    // Filters!
 	static cplx_data_t shift_reg[N];
-	std::complex<int> acc;
+	std::complex<short int> acc;
 	cplx_data_t data;
 	int ii;
 
@@ -33,7 +37,7 @@ void fir_hls (axis_cplx &in, axis_cplx &out, cplx_data_t coeff[N]) {
 			shift_reg[ii]=shift_reg[ii-1];
 			data = shift_reg[ii];
 		}
-		acc+=data*coeff[ii];
+		acc += data*coeff[ii];
 	}
 	out.data = (cplx_data_t) acc;
 
