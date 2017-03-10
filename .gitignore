@@ -1,0 +1,12 @@
+build
+build-fpga
+*.log
+*.jou
+build-ip
+xsim_proj
+.ipynb_checkpoints
+*.swp
+*.save
+*.wcfg
+*.txt
+*.str
