@@ -2,18 +2,19 @@
 
 Still working through learning HLS: 
 
-[ ] Play with optimization tradeoffs for complex FIR (area, multipliers, throughput, etc)
-
+- [ ] Play with optimization tradeoffs for complex FIR (area, multipliers, throughput, etc)
+- [ ] Larger complex FIR filter. Parameterize Ntaps effectively?
+- [ ] Explore coefficient load process interface
 
 Start HLS IP for neural nets:
 
-[ ] New HLS IP with complex inputs, but real FIR filter only. (... basic building block of neural nets)
-[ ] Add activation layer
-[ ] Test demonstration neural net using 16 bit representation- compare results vs reference
-[ ] Run demo in HLS
-[ ] Simulate in noc_block + resource estimate
+- [ ] New HLS IP using real FIR filter only. (FIR filter is essentially the building block of neural nets)
+- [ ] Add activation layer
+- [ ] Test demonstration neural net using 16 bit representation. Compare results vs (floating pt) reference
+- [ ] Run demo in HLS
+- [ ] Simulate in noc_block + resource estimate
 
-Also note: Not sure if autoencoders are the appropriate first step. Either way, need to get the basics running,  which includes...
+Also note: Not sure what's the appropriate first step. Autoencoder looks like a good way to test just a couple of layers in a somewhat useful demo. Either way, need to get the basics running, which includes...
 
 * FIR + activation function
 * Multiple layers (including convolutional??)
@@ -23,4 +24,4 @@ Also note: Not sure if autoencoders are the appropriate first step. Either way, 
 
 More advanced stuff:
 
-[ ] Where to go next??
+- [ ] Where to go next??
