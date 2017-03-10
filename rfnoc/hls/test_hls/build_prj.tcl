@@ -6,6 +6,8 @@
 open_project -reset test_hls_prj
 set_top test_hls
 add_files test_hls.cpp
+add_files -tb test.cpp
+add_files -tb out.gold.dat
 open_solution -reset "solution1"
 set_part {xc7z020clg484-3}
 create_clock -period 10 -name default

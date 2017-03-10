@@ -1,10 +1,5 @@
 #include <complex>
-#include "ap_int.h"
-
-struct axis_cplx {
-    std::complex<short int> data;
-    ap_uint<1> last;
-};
+#include "test_hls.h"
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
