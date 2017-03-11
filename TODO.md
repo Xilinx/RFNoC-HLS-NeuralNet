@@ -2,10 +2,11 @@
 
 Still working through learning HLS: 
 
-- [ ] Examine waveform trace output from HLS project
-- [ ] Play with optimization tradeoffs for complex FIR (area, multipliers, throughput, etc)
+- [x] Examine waveform trace output from HLS project
+- [x] Play with optimization tradeoffs for complex FIR (area, multipliers, throughput, etc)
 - [ ] Larger complex FIR filter. Parameterize Ntaps effectively?
 - [ ] Explore coefficient load process interface
+    * I needed to move the coefficient load out of the main function call because HLS yelled at me.
 
 Start HLS IP for neural nets:
 
