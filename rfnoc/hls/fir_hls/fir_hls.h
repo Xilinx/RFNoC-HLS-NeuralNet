@@ -15,9 +15,13 @@ struct axis_cplx {
     ap_uint<1> last;
 };
 
+//void fir_hls(axis_cplx &in,
+//		     axis_cplx &out,
+//			 cplx_data_t coeff[N]
+//		    );
+
 void fir_hls(axis_cplx &in,
-		     axis_cplx &out,
-			 cplx_data_t coeff[N]
+		     axis_cplx &out
 		    );
 
 

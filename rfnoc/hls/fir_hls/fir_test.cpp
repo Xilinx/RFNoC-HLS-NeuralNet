@@ -19,7 +19,7 @@ int main () {
   ramp_up = 1;
   axis_cplx in_data, out_data;
   
-//  fp=fopen("out.dat","w");
+  fp=fopen("out.dat","w");
   // Stimulate with impulses
   for (i=0;i<=SAMPLES;i++) {
 	if (i == 0) {
@@ -51,7 +51,7 @@ int main () {
   	in_data.last = (i == SAMPLES);
 
 	// Execute the function with latest input
-  	fir_hls(in_data, out_data, taps);
+  	fir_hls(in_data, out_data);
     
 //    if ((ramp_up == 1) && (signal >= 75))
 //    	ramp_up = 0;
@@ -60,21 +60,21 @@ int main () {
     	
 		// Save the results.
      printf("In: %i+%ij  \t Out: %i+%ij\n", in_data.data.real(), in_data.data.imag(), out_data.data.real(), out_data.data.imag());
-//    fprintf(fp,"%i %d %d\n",i,signal,output);
+    fprintf(fp,"%i %i %i\n",  out_data.data.real(), out_data.data.imag(), (int)out_data.last);
   }
-//  fclose(fp);
+  fclose(fp);
   
-//  printf ("Comparing against output data \n");
-//  if (system("diff -w out.dat out.gold.dat")) {
-//
-//	fprintf(stdout, "*******************************************\n");
-//	fprintf(stdout, "FAIL: Output DOES NOT match the golden output\n");
-//	fprintf(stdout, "*******************************************\n");
-//     return 1;
-//  } else {
-//	fprintf(stdout, "*******************************************\n");
-//	fprintf(stdout, "PASS: The output matches the golden output!\n");
-//	fprintf(stdout, "*******************************************\n");
-//     return 0;
-//  }
+  printf ("Comparing against output data \n");
+  if (system("diff -w out.dat out.gold.dat")) {
+
+	fprintf(stdout, "*******************************************\n");
+	fprintf(stdout, "FAIL: Output DOES NOT match the golden output\n");
+	fprintf(stdout, "*******************************************\n");
+     return 1;
+  } else {
+	fprintf(stdout, "*******************************************\n");
+	fprintf(stdout, "PASS: The output matches the golden output!\n");
+	fprintf(stdout, "*******************************************\n");
+     return 0;
+  }
 }
