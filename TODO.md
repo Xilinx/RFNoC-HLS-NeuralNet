@@ -2,6 +2,7 @@
 
 Still working through learning HLS: 
 
+- [ ] Examine waveform trace output from HLS project
 - [ ] Play with optimization tradeoffs for complex FIR (area, multipliers, throughput, etc)
 - [ ] Larger complex FIR filter. Parameterize Ntaps effectively?
 - [ ] Explore coefficient load process interface
