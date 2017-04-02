@@ -1,6 +1,6 @@
 #include "nnet_basic.h"
 
-coeff_t coeff[N] = {0,-10,-9,23,56,63,56,23,-9,-10,0,};
+//coeff_t coeff[N] = {0,-10,-9,23,56,63,56,23,-9,-10,0,};
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
@@ -46,9 +46,10 @@ void nnet_layer(
     Col: for(int i_col = 0; i_col < N_LAYER_OUT; i_col++) {
 	#pragma HLS PIPELINE
 		// Do the inner product of a row of A and col of B
-		// Cache all cols (so they are only read once per function)
-		Product: for(int ii = 0, tmp = 0; ii < N_LAYER_IN; ii++) {
-			tmp += data[ii] * weights[ii][i_col];
+    	tmp = 0;
+		Product: for(int ii = 0; ii < N_LAYER_IN; ii++) {
+			coeff_t weight = weights[i_col][ii];
+			tmp += data[ii] * weight;
 		}
 		res[i_col] = tmp + biases[i_col];
     }
