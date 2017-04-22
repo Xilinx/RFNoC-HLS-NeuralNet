@@ -7,54 +7,22 @@ int main(int argc, char **argv)
 {
   // Dummy data for now
   input_t data[N_LAYER_IN] = {0, 1, 1};
-  coeff_t coeffs[N_LAYER_IN][N_LAYER_OUT] = {{1, 0, 0}, {0, 2, 0}, {0, 10, 20}};
+  coeff_t coeffs[N_LAYER_IN][N_LAYER_OUT] = {{1,  0,  0},
+                                             {0,  2,  0}, 
+                                             {0, 10, 20}};
   bias_t  biases[N_LAYER_OUT] = {1, 2, 3};
-
-
-//   mat_a_t in_mat_a[3][3] = {
-//      {0, 0, 1},
-//      {0, 1, 0},
-//      {1, 0, 0}
-//   };
-//   mat_b_t in_mat_b[3][3] = {
-//      {1, 1, 1},
-//      {0, 1, 1},
-//      {0, 0, 1}
-//   };
-//   result_t hw_result[3][3], sw_result[3][3];
-//
-//   // Generate the expected result
-//   // Iterate over the rows of the A matrix
-//   for(int i = 0; i < MAT_A_ROWS; i++) {
-//      for(int j = 0; j < MAT_B_COLS; j++) {
-//         // Iterate over the columns of the B matrix
-//         sw_result[i][j] = 0;
-//         // Do the inner product of a row of A and col of B
-//         for(int k = 0; k < MAT_B_ROWS; k++) {
-//            sw_result[i][j] += in_mat_a[i][k] * in_mat_b[k][j];
-//         }
-//      }
-//   }
+  short int answer[N_LAYER_OUT] = {1, 14, 23};
 
   // Run the basic neural net block
   result_t res[N_LAYER_OUT];
   nnet_basic(data, coeffs, biases, res);
 
-  // Print result matrix
-  //cout << setw(6);
+  // Print result vector
   int err_cnt = 0;
   for (int ii = 0; ii < N_LAYER_OUT; ii++) {
-    std::cout << res[ii] << std::endl;
-    // Check HW result against SW
-    // if (hw_result[i][j] != sw_result[i][j]) {
-    //    err_cnt++;
-    // }
+    std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << std::endl;
+    if (res[ii] != answer[ii]) err_cnt++;
   }
-
-  // if (err_cnt)
-  //    std::cout << "ERROR: " << err_cnt << " mismatches detected!" << std::endl;
-  // else
-  //    std::cout << "Test passes." << std::endl;
   return err_cnt;
 }
 

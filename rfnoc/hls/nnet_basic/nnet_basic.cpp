@@ -6,10 +6,10 @@
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
 //void nnet_basic (axis &in, axis &out) {
 void nnet_basic(
-	  input_t data[N_LAYER_IN],
-	  coeff_t weights[N_LAYER_IN][N_LAYER_OUT],
-	  bias_t  biases[N_LAYER_OUT],
-	  result_t res[N_LAYER_OUT])
+	  input_t   data[N_LAYER_IN],
+	  coeff_t   weights[N_LAYER_IN][N_LAYER_OUT],
+	  bias_t    biases[N_LAYER_OUT],
+	  result_t  res[N_LAYER_OUT])
 {
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
     //#pragma HLS INTERFACE ap_ctrl_none port=return
@@ -30,26 +30,34 @@ void nnet_basic(
 }
 
 void nnet_layer(
-	  input_t data[N_LAYER_IN],
-	  coeff_t weights[N_LAYER_IN][N_LAYER_OUT],
-	  bias_t  biases[N_LAYER_OUT],
-	  result_t res[N_LAYER_OUT])
+	  input_t   data[N_LAYER_IN],
+	  coeff_t   weights[N_LAYER_IN][N_LAYER_OUT],
+	  bias_t    biases[N_LAYER_OUT],
+	  result_t  res[N_LAYER_OUT])
 {
 //#pragma HLS ARRAY_RESHAPE variable=data complete dim=1
-	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
-	#pragma HLS INTERFACE ap_fifo port=data
+//	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
+//	#pragma HLS INTERFACE ap_fifo port=data
 	#pragma HLS INTERFACE ap_fifo port=weights
 	#pragma HLS INTERFACE ap_fifo port=biases
 	#pragma HLS INTERFACE ap_fifo port=res
+  	input_t data_cache[N_LAYER_IN];
 	int tmp = 0;
+	
     // Iterate over the columns of the weights matrix
     Col: for(int i_col = 0; i_col < N_LAYER_OUT; i_col++) {
 	#pragma HLS PIPELINE
 		// Do the inner product of a row of A and col of B
     	tmp = 0;
+
+        if (i_col == 0) {
+          Cache_Data: for(int i_data = 0; i_data < N_LAYER_IN; i_data++)
+            data_cache[i_data] = data[i_data];
+        }
+
 		Product: for(int ii = 0; ii < N_LAYER_IN; ii++) {
 			coeff_t weight = weights[i_col][ii];
-			tmp += data[ii] * weight;
+			tmp += data_cache[ii] * weight;
 		}
 		res[i_col] = tmp + biases[i_col];
     }
