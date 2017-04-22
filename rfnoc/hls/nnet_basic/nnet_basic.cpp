@@ -35,7 +35,7 @@ void nnet_layer(
 	  bias_t    biases[N_LAYER_OUT],
 	  result_t  res[N_LAYER_OUT])
 {
-//	#pragma HLS ARRAY_RESHAPE variable=data complete dim=2
+	#pragma HLS ARRAY_RESHAPE variable=data complete dim=1
 	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=1
 	#pragma HLS INTERFACE ap_fifo port=data
 	#pragma HLS INTERFACE ap_fifo port=weights
