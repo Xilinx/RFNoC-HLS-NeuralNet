@@ -45,20 +45,20 @@ void nnet_layer(
 	int tmp = 0;
 	
     // Iterate over the columns of the weights matrix
-    Col: for(int i_col = 0; i_col < N_LAYER_OUT; i_col++) {
+    Col: for(int jj = 0; jj < N_LAYER_OUT; jj++) {
 	#pragma HLS PIPELINE
 		// Do the inner product of a row of A and col of B
     	tmp = 0;
 
-        if (i_col == 0) {
+        if (jj == 0) {
           Cache_Data: for(int i_data = 0; i_data < N_LAYER_IN; i_data++)
             data_cache[i_data] = data[i_data];
         }
 
 		Product: for(int ii = 0; ii < N_LAYER_IN; ii++) {
-			coeff_t weight = weights[i_col][ii];
+			coeff_t weight = weights[ii][jj];
 			tmp += data_cache[ii] * weight;
 		}
-		res[i_col] = tmp + biases[i_col];
+		res[jj] = tmp + biases[jj];
     }
 }
