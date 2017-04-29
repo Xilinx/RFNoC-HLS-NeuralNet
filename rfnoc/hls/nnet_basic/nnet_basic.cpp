@@ -1,3 +1,6 @@
+#define N_LAYER_IN 784
+#define N_LAYER_OUT 10
+
 #include "nnet_basic.h"
 
 //coeff_t coeff[N] = {0,-10,-9,23,56,63,56,23,-9,-10,0,};
@@ -42,7 +45,7 @@ void nnet_layer(
 	#pragma HLS INTERFACE ap_fifo port=biases
 	#pragma HLS INTERFACE ap_fifo port=res
   	input_t data_cache[N_LAYER_IN];
-	int tmp = 0;
+	data_t tmp = 0;
 	
     // Iterate over the columns of the weights matrix
     Col: for(int jj = 0; jj < N_LAYER_OUT; jj++) {
@@ -51,14 +54,18 @@ void nnet_layer(
     	tmp = 0;
 
         if (jj == 0) {
-          Cache_Data: for(int i_data = 0; i_data < N_LAYER_IN; i_data++)
+          Cache_Data: for(int i_data = 0; i_data < N_LAYER_IN; i_data++){
             data_cache[i_data] = data[i_data];
+			//std::cout <<  "Loading Data: " << data_cache[i_data] << std::endl;
+          }
         }
 
 		Product: for(int ii = 0; ii < N_LAYER_IN; ii++) {
 			coeff_t weight = weights[ii][jj];
 			tmp += data_cache[ii] * weight;
+			//std::cout << "Multiplying: " << weight << " x " << data_cache[ii] << std::endl;
 		}
+		//std::cout <<  "Sum: " << tmp << std::endl;
 		res[jj] = tmp + biases[jj];
     }
 }

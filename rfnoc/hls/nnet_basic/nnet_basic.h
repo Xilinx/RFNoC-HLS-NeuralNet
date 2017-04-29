@@ -5,7 +5,8 @@
 #include "ap_int.h"
 
 // TODO: convert data types to fixed point (bleh)
-typedef short int data_t;
+//typedef short int data_t;
+typedef float data_t;
 
 typedef data_t input_t;
 typedef data_t coeff_t;
