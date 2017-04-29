@@ -97,9 +97,9 @@ int main(int argc, char **argv)
 
   // Load data from file
   int rval = 0;
-  rval = read_file_1D("mnist_validation_data_784x1.dat", data, N_LAYER_IN);
-  rval = read_file_2D("mnist_layer1_weights_784x10.dat", coeffs[0], N_LAYER_IN, N_LAYER_OUT);
-  rval = read_file_1D("mnist_layer1_biases_10x1.dat", biases, N_LAYER_OUT);
+  rval = read_file_1D("data/mnist_validation_data_784x1.dat", data, N_LAYER_IN);
+  rval = read_file_2D("data/mnist_layer1_weights_784x10.dat", coeffs[0], N_LAYER_IN, N_LAYER_OUT);
+  rval = read_file_1D("data/mnist_layer1_biases_10x1.dat", biases, N_LAYER_OUT);
 
 //  int ii, jj;
 //  for (ii=0; ii < N_LAYER_OUT; ii++){
