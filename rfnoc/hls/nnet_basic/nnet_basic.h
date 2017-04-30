@@ -3,10 +3,16 @@
 
 #include <complex>
 #include "ap_int.h"
+#include "ap_fixed.h"
 
 // TODO: convert data types to fixed point (bleh)
+
 //typedef short int data_t;
-typedef float data_t;
+//typedef float data_t;
+typedef ap_fixed<16,6> data_t;
+
+typedef ap_fixed<32,12> accum_t;
+
 
 typedef data_t input_t;
 typedef data_t coeff_t;
@@ -19,13 +25,12 @@ struct axis {
     ap_uint<1> last;
 };
 
-#ifndef N_LAYER_IN
-	#define N_LAYER_IN  3
-#endif
 
-#ifndef N_LAYER_OUT
-	#define N_LAYER_OUT 3
-#endif
+#define N_LAYER_IN 784
+#define N_LAYER_OUT 10
+
+//#define N_LAYER_IN  3
+//#define N_LAYER_OUT 3
 
 // Prototype of top level function for C-synthesis
 void nnet_basic(
