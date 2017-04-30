@@ -36,24 +36,26 @@ void nnet_layer(
 	  result_t  res[N_LAYER_OUT])
 {
 //	#pragma HLS ARRAY_RESHAPE variable=data complete dim=1
-//	#pragma HLS INTERFACE ap_fifo port=data
-//	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=1
+	#pragma HLS INTERFACE ap_fifo port=data
+	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
 //	#pragma HLS INTERFACE ap_fifo port=weights
 //	#pragma HLS INTERFACE ap_fifo port=biases
-//	#pragma HLS INTERFACE ap_fifo port=res
-  	input_t data_cache[N_LAYER_IN];
+	#pragma HLS INTERFACE ap_fifo port=res
+  	input_t data_cache;
   	accum_t acc[N_LAYER_OUT];
+    #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
 
 	Reset: for(int iacc = 0; iacc < N_LAYER_OUT; iacc++)
 		acc[iacc] = 0;
 
   	NewInput: for(int ii = 0; ii < N_LAYER_IN; ii++) {
-//	#pragma HLS PIPELINE
+	#pragma HLS PIPELINE
 
 		Product: for(int jj = 0; jj < N_LAYER_OUT; jj++) {
-//		#pragma HLS PIPELINE
+		#pragma HLS UNROLL
+			if (jj == 0) data_cache = data[ii];
 			coeff_t weight = weights[ii][jj];
-			acc[jj] += data[ii] * weight;
+			acc[jj] += data_cache * weight;
 			//std::cout << "Multiplying: " << weight << " x " << data_cache[ii] << std::endl;
 		}
     }
