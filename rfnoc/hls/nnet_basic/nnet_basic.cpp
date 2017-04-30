@@ -12,7 +12,7 @@ void nnet_basic(
 	  result_t  res[N_LAYER_OUT])
 {
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
-    //#pragma HLS INTERFACE ap_ctrl_none port=return
+    #pragma HLS INTERFACE ap_ctrl_none port=return
     // Set ports as AXI-Stream
     //#pragma HLS INTERFACE axis port=in
     //#pragma HLS INTERFACE axis port=out
@@ -37,10 +37,8 @@ void nnet_layer(
 {
 	#pragma HLS INTERFACE ap_fifo port=data
 	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
-//    #pragma HLS ARRAY_RESHAPE variable=biases complete dim=1
-//	#pragma HLS INTERFACE ap_fifo port=weights
-//	#pragma HLS INTERFACE ap_fifo port=biases
 	#pragma HLS INTERFACE ap_fifo port=res
+
   	input_t data_cache;
   	accum_t acc[N_LAYER_OUT];
     #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
