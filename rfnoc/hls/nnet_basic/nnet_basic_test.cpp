@@ -4,7 +4,8 @@
 
 #include "nnet_basic.h"
 
-int read_file_1D(const char * filename, data_t *data, unsigned int nsamps)
+template <class dataType>
+int read_file_1D(const char * filename, dataType *data, unsigned int nsamps)
 {
   FILE *fp;
 //  data_t datain[nsamps];
@@ -29,32 +30,8 @@ int read_file_1D(const char * filename, data_t *data, unsigned int nsamps)
   return 0;
 }
 
-int read_file_1D_float(const char * filename, float *data, unsigned int nsamps)
-{
-  FILE *fp;
-//  data_t datain[nsamps];
-
-  fp = fopen(filename, "r");
-  std::cout<< "Reading 1D file: " << fp << std::endl;
-  if (fp == 0) {
-    std::cout << "Failed to open file" << std::endl;
-    return 1;
-  }
-  // Read data from file
-  float newval;
-  for (int ii = 0; ii < nsamps; ii++){
-    if (fscanf(fp, "%f\n", &newval) != 0){
-      data[ii] = newval;
-    } else {
-      std::cout << "File failed to extract data" << std::endl;
-      return 2;
-    }
-  }
-  fclose(fp);
-  return 0;
-}
-
-int read_file_2D(const char * filename, data_t data[], unsigned int nrows, unsigned int ncols)
+template <class dataType>
+int read_file_2D(const char * filename, dataType data[], unsigned int nrows, unsigned int ncols)
 {
   FILE *fp;
 //  data_t datain[ncols][nrows];
@@ -111,17 +88,17 @@ int main(int argc, char **argv)
   // DATA FROM UDACITY TENSORFLOW CLASS
   // 1-Layer test
 
-  data_t  data[N_LAYER_IN];
+  input_t  data[N_LAYER_IN];
   coeff_t coeffs[N_LAYER_IN][N_LAYER_OUT];
   bias_t  biases[N_LAYER_OUT];
   float answer[N_LAYER_OUT];
 
   // Load data from file
   int rval = 0;
-  rval = read_file_1D("data/mnist_validation_data_784x1.dat", data, N_LAYER_IN);
-  rval = read_file_2D("data/mnist_layer1_weights_784x10.dat", coeffs[0], N_LAYER_IN, N_LAYER_OUT);
-  rval = read_file_1D("data/mnist_layer1_biases_10x1.dat", biases, N_LAYER_OUT);
-  rval = read_file_1D_float("data/mnist_validation_output_10x1.dat", answer, N_LAYER_OUT);
+  rval = read_file_1D<input_t>("data/mnist_validation_data_784x1.dat", data, N_LAYER_IN);
+  rval = read_file_2D<coeff_t>("data/mnist_layer1_weights_784x10.dat", coeffs[0], N_LAYER_IN, N_LAYER_OUT);
+  rval = read_file_1D<bias_t>("data/mnist_layer1_biases_10x1.dat", biases, N_LAYER_OUT);
+  rval = read_file_1D<float>("data/mnist_validation_output_10x1.dat", answer, N_LAYER_OUT);
 
   // Run the basic neural net block
   result_t res[N_LAYER_OUT];
@@ -129,10 +106,13 @@ int main(int argc, char **argv)
 
   // Print result vector
   int err_cnt = 0;
+  float err;
   for (int ii = 0; ii < N_LAYER_OUT; ii++) {
-    std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << std::endl;
-    if (abs(float(res[ii])-answer[ii]) > 0.5) err_cnt++;
+	err = float(res[ii])-answer[ii];
+    std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << "  ErrVal: " << err << std::endl;
+    if (abs(err) > 0.5) err_cnt++;
   }
+  std::cout<< err_cnt << std::endl;
   return err_cnt;
 }
 

@@ -11,13 +11,11 @@
 //typedef float data_t;
 typedef ap_fixed<16,6> data_t;
 
-typedef ap_fixed<32,12> accum_t;
-
-
-typedef data_t input_t;
-typedef data_t coeff_t;
-typedef data_t bias_t;
-typedef data_t result_t;
+typedef ap_fixed<32,10> accum_t;
+typedef ap_fixed<16,6> input_t;
+typedef ap_fixed<12,3> coeff_t;
+typedef ap_fixed<12,3> bias_t;
+typedef ap_fixed<16,8> result_t;
 
 // TODO: Figure out if we're using axi-stream interfaces?
 struct axis {
