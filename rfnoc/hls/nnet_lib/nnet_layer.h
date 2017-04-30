@@ -40,7 +40,7 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
 		Product: for(int jj = 0; jj < N_OUT; jj++) {
 		#pragma HLS UNROLL
 			if (jj == 0) data_cache = data[ii];
-			coeff_t weight = weights[ii][jj];
+			weight_T weight = weights[ii][jj];
 			acc[jj] += data_cache * weight;
 			//std::cout << "Multiplying: " << weight << " x " << data_cache[ii] << std::endl;
 		}
