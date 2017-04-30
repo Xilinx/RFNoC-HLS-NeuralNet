@@ -37,10 +37,10 @@ void nnet_basic(
 	  bias_t  biases[N_LAYER_OUT],
 	  result_t res[N_LAYER_OUT]);
 
-void nnet_layer(
-	  input_t data[N_LAYER_IN],
-      coeff_t weights[N_LAYER_IN][N_LAYER_OUT],
-	  bias_t  biases[N_LAYER_OUT],
-      result_t res[N_LAYER_OUT]);
+//void nnet_layer(
+//	  input_t data[N_LAYER_IN],
+//      coeff_t weights[N_LAYER_IN][N_LAYER_OUT],
+//	  bias_t  biases[N_LAYER_OUT],
+//      result_t res[N_LAYER_OUT]);
 
 #endif
