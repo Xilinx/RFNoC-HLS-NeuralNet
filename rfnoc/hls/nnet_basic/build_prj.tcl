@@ -5,7 +5,7 @@
 ############################################################
 open_project -reset nnet_basic_prj
 set_top nnet_basic
-add_files nnet_basic.cpp
+add_files nnet_basic.cpp -cflags "-I../../../nnet_lib"
 add_files -tb nnet_basic_test.cpp
 add_files -tb data
 open_solution -reset "solution1"

@@ -22,8 +22,7 @@ void nnet_basic(
     //#pragma HLS DATA_PACK variable=in.data
     //#pragma HLS DATA_PACK variable=out.data
 
-	// Dummy loopback
-	// out.data = in.data;
+	static nnet_layer<input_t, result_t, coeff_t, bias_t, accum_t> layer1;
 
-	nnet_layer<input_t, result_t, coeff_t, bias_t, accum_t>(data, res, weights, biases);
+	layer1.compute<N_LAYER_IN, N_LAYER_OUT>(data, res, weights, biases);
 }
