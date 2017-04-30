@@ -35,9 +35,9 @@ void nnet_layer(
 	  bias_t    biases[N_LAYER_OUT],
 	  result_t  res[N_LAYER_OUT])
 {
-//	#pragma HLS ARRAY_RESHAPE variable=data complete dim=1
 	#pragma HLS INTERFACE ap_fifo port=data
 	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
+//    #pragma HLS ARRAY_RESHAPE variable=biases complete dim=1
 //	#pragma HLS INTERFACE ap_fifo port=weights
 //	#pragma HLS INTERFACE ap_fifo port=biases
 	#pragma HLS INTERFACE ap_fifo port=res
@@ -46,6 +46,7 @@ void nnet_layer(
     #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
 
 	Reset: for(int iacc = 0; iacc < N_LAYER_OUT; iacc++)
+	#pragma HLS UNROLL
 		acc[iacc] = 0;
 
   	NewInput: for(int ii = 0; ii < N_LAYER_IN; ii++) {
