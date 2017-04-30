@@ -35,34 +35,30 @@ void nnet_layer(
 	  bias_t    biases[N_LAYER_OUT],
 	  result_t  res[N_LAYER_OUT])
 {
-	#pragma HLS ARRAY_RESHAPE variable=data complete dim=1
-	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=1
-	#pragma HLS INTERFACE ap_fifo port=data
-	#pragma HLS INTERFACE ap_fifo port=weights
-	#pragma HLS INTERFACE ap_fifo port=biases
-	#pragma HLS INTERFACE ap_fifo port=res
+//	#pragma HLS ARRAY_RESHAPE variable=data complete dim=1
+//	#pragma HLS INTERFACE ap_fifo port=data
+//	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=1
+//	#pragma HLS INTERFACE ap_fifo port=weights
+//	#pragma HLS INTERFACE ap_fifo port=biases
+//	#pragma HLS INTERFACE ap_fifo port=res
   	input_t data_cache[N_LAYER_IN];
-  	accum_t tmp = 0;
-	
-    // Iterate over the columns of the weights matrix
-    Col: for(int jj = 0; jj < N_LAYER_OUT; jj++) {
-	#pragma HLS PIPELINE
-		// Do the inner product of a row of A and col of B
-    	tmp = 0;
+  	accum_t acc[N_LAYER_OUT];
 
-        if (jj == 0) {
-          Cache_Data: for(int i_data = 0; i_data < N_LAYER_IN; i_data++){
-            data_cache[i_data] = data[i_data];
-			//std::cout <<  "Loading Data: " << data_cache[i_data] << std::endl;
-          }
-        }
+	Reset: for(int iacc = 0; iacc < N_LAYER_OUT; iacc++)
+		acc[iacc] = 0;
 
-		Product: for(int ii = 0; ii < N_LAYER_IN; ii++) {
+  	NewInput: for(int ii = 0; ii < N_LAYER_IN; ii++) {
+//	#pragma HLS PIPELINE
+
+		Product: for(int jj = 0; jj < N_LAYER_OUT; jj++) {
+//		#pragma HLS PIPELINE
 			coeff_t weight = weights[ii][jj];
-			tmp += data_cache[ii] * weight;
+			acc[jj] += data[ii] * weight;
 			//std::cout << "Multiplying: " << weight << " x " << data_cache[ii] << std::endl;
 		}
-		//std::cout <<  "Sum: " << tmp << std::endl;
-		res[jj] = tmp + biases[jj];
     }
+
+	Result: for(int ires = 0; ires < N_LAYER_OUT; ires++)
+		res[ires] = acc[ires] + biases[ires];
 }
+
