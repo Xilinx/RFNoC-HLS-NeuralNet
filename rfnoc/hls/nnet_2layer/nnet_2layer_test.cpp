@@ -35,29 +35,29 @@ int main(int argc, char **argv)
   // 1-Layer test
 
   input_t  data[N_LAYER_IN];
-  coeff_t coeffs[N_LAYER_IN][N_LAYER_OUT];
-  bias_t  biases[N_LAYER_OUT];
-  float answer[N_LAYER_OUT];
+  coeff_t coeffs[N_LAYER_IN][N_LAYER1_OUT];
+  bias_t  biases[N_LAYER1_OUT];
+  float answer[N_LAYER1_OUT];
 
   // Load data from file
   int rval = 0;
-  rval += read_file_1D<input_t>("data/mnist_validation_data_784x1.dat", data, N_LAYER_IN);
-  rval += read_file_2D<coeff_t>("data/mnist_layer1_weights_784x10.dat", coeffs[0], N_LAYER_IN, N_LAYER_OUT);
-  rval += read_file_1D<bias_t>("data/mnist_layer1_biases_10x1.dat", biases, N_LAYER_OUT);
-  rval += read_file_1D<float>("data/mnist_validation_output_10x1.dat", answer, N_LAYER_OUT);
+  rval += read_file_1D<input_t>("data/validation_data_784x1.dat", data, N_LAYER_IN);
+  rval += read_file_2D<coeff_t>("data/mnist_layer1_weights_784x1024.dat", coeffs[0], N_LAYER_IN, N_LAYER1_OUT);
+  rval += read_file_1D<bias_t>("data/mnist_layer1_biases_1024x1.dat", biases, N_LAYER1_OUT);
+  rval += read_file_1D<float>("data/validation_layer1_1024x1.dat", answer, N_LAYER1_OUT);
   if (rval != 0) {
 	  std::cout << "Failed to open files" << std::endl;
 	  return -1;
   }
 
   // Run the basic neural net block
-  result_t res[N_LAYER_OUT];
+  result_t res[N_LAYER1_OUT];
   nnet_2layer(data, coeffs, biases, res);
 
   // Print result vector
   int err_cnt = 0;
   float err;
-  for (int ii = 0; ii < N_LAYER_OUT; ii++) {
+  for (int ii = 0; ii < N_LAYER1_OUT; ii++) {
 	err = float(res[ii])-answer[ii];
     std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << "  ErrVal: " << err << std::endl;
     if (abs(err) > 0.5) err_cnt++;
