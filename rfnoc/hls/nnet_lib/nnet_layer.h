@@ -6,6 +6,11 @@
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
 class nnet_layer {
     protected:
+		template<int N_IN, int N_OUT>
+		void compute_small_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
+
+//		template<int N_IN, int N_OUT>
+//		void compute_large_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
     private:
     public:
         nnet_layer() { /*Do Nothing (for now)*/};
@@ -16,18 +21,20 @@ class nnet_layer {
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
 template<int N_IN, int N_OUT>
-void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
+void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
 	data_T    data[N_IN],
 	res_T     res[N_OUT],
 	weight_T  weights[N_IN][N_OUT],
 	bias_T    biases[N_OUT])
 {
-	#pragma HLS INTERFACE ap_fifo port=data
-	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
-	#pragma HLS INTERFACE ap_fifo port=res
+	#pragma HLS INLINE
 
 	data_T data_cache;
   	acc_T acc[N_OUT];
+
+	#pragma HLS INTERFACE ap_fifo port=data
+	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
+	#pragma HLS INTERFACE ap_fifo port=res
     #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
 
 	Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
@@ -48,6 +55,19 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
 
 	Result: for(int ires = 0; ires < N_OUT; ires++)
 		res[ires] = acc[ires] + biases[ires];
+}
+
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
+template<int N_IN, int N_OUT>
+void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
+	data_T    data[N_IN],
+	res_T     res[N_OUT],
+	weight_T  weights[N_IN][N_OUT],
+	bias_T    biases[N_OUT])
+{
+	if (N_OUT < 2048) {
+		compute_small_outputs<N_IN, N_OUT>(data, res, weights, biases);
+	}
 }
 
 #endif
