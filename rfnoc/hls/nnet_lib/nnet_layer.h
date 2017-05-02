@@ -73,6 +73,7 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
     }
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
+	#pragma HLS PIPELINE
         res[ires] = acc[ires] + biases[ires];
 }
 
@@ -84,7 +85,7 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
     weight_T  weights[N_IN][N_OUT],
     bias_T    biases[N_OUT])
 {
-    #pragma HLS INLINE
+//    #pragma HLS INLINE
 //	#define NNET_LAYER_FACTOR 16
 
     data_T data_cache;
@@ -95,15 +96,16 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
     #pragma HLS ARRAY_RESHAPE variable=weights block factor=16 dim=2
     #pragma HLS ARRAY_PARTITION variable=acc block factor=16 dim=1
 
-    Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
-    #pragma HLS UNROLL
-        acc[iacc] = 0;
+//    Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
+//    #pragma HLS UNROLL
+//        acc[iacc] = 0;
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
 //    #pragma HLS PIPELINE
 
         Product: for(int jj = 0; jj < N_OUT; jj++) {
         #pragma HLS UNROLL factor=16
+        	if (ii == 0) acc[jj] = 0;
             if (jj == 0) data_cache = data[ii];
             weight_T weight = weights[ii][jj];
             acc[jj] += data_cache * weight;
