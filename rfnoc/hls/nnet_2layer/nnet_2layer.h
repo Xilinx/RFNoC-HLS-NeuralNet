@@ -26,7 +26,7 @@ typedef ap_fixed<16,8> result_t;
 #define N_LAYER_IN 784
 #define N_LAYER_OUT 10
 
-#define N_LAYER1_OUT 1024
+#define N_LAYER1_OUT 64
 
 // Prototype of top level function for C-synthesis
 void nnet_2layer(
