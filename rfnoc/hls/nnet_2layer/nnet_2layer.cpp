@@ -2,7 +2,6 @@
 #include "nnet_layer.h"
 #include "nnet_activation.h"
 
-
 #include "nnet_2layer.h"
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
@@ -25,11 +24,11 @@ void nnet_2layer(
 	result_t hidden1[N_LAYER1_OUT];
 
 	// LAYER 1
-	nnet_layer<input_t, layer1_t, coeff_t, bias_t, accum_t> layer1;
+	nnet::layer<input_t, layer1_t, coeff_t, bias_t, accum_t> layer1;
 	layer1.compute<N_LAYER_IN, N_LAYER1_OUT>(data, logits1, weights1, biases1);
-	relu<layer1_t, layer1_t, N_LAYER1_OUT>(logits1, hidden1);
+	nnet::relu<layer1_t, layer1_t, N_LAYER1_OUT>(logits1, hidden1);
 
 	// LAYER 2
-	nnet_layer<layer1_t, result_t, coeff_t, bias_t, accum_t> layer2;
+	nnet::layer<layer1_t, result_t, coeff_t, bias_t, accum_t> layer2;
 	layer2.compute<N_LAYER1_OUT, N_LAYER_OUT>(hidden1, res, weights2, biases2);
 }

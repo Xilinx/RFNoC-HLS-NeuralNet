@@ -1,6 +1,8 @@
 #ifndef NNET_ACTIVATION_H_
 #define NNET_ACTIVATION_H_
 
+namespace nnet {
+
 template<class data_T, class res_T, int N_IN>
 void  relu(data_T data[N_IN], res_T res[N_IN])
 {
@@ -12,6 +14,8 @@ void  relu(data_T data[N_IN], res_T res[N_IN])
         if (datareg > 0) res[ii] = datareg;
         else res[ii] = 0;
     }
+}
+
 }
 
 #endif

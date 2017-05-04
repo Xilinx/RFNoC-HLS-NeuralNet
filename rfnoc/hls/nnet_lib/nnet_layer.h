@@ -3,8 +3,10 @@
 
 #include "nnet_default.h"
 
+namespace nnet {
+
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
-class nnet_layer {
+class layer {
     protected:
         template<int N_IN, int N_OUT>
         void compute_small_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
@@ -16,7 +18,7 @@ class nnet_layer {
         void compute_large_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
     private:
     public:
-        nnet_layer() { /*Do Nothing (for now)*/};
+        layer() { /*Do Nothing (for now)*/};
 
         template<int N_IN, int N_OUT>
         void compute(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
@@ -24,7 +26,7 @@ class nnet_layer {
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
 template<int N_IN, int N_OUT>
-void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
+void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
     data_T    data[N_IN],
     res_T     res[N_OUT],
     weight_T  weights[N_IN][N_OUT],
@@ -47,7 +49,7 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
 template<int N_IN, int N_OUT>
-void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
+void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
     data_T    data[N_IN],
     res_T     res[N_OUT],
     weight_T  weights[N_IN][N_OUT],
@@ -84,7 +86,7 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
 template<int N_IN, int N_OUT>
-void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
+void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
     data_T    data[N_IN],
     res_T     res[N_OUT],
     weight_T  weights[N_IN][N_OUT],
@@ -122,7 +124,7 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
 template<int N_IN, int N_OUT>
-void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
+void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
     data_T    data[N_IN],
     res_T     res[N_OUT],
     weight_T  weights[N_IN][N_OUT],
@@ -158,5 +160,6 @@ void nnet_layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
         res[ires] = acc[ires] + biases[ires];
 }
 
+}
 
 #endif
