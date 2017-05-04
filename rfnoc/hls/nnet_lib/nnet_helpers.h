@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-template <class dataType>
-int read_file_1D(const char * filename, dataType *data, unsigned int nsamps)
+template <class dataType, unsigned int nrows>
+int read_file_1D(const char * filename, dataType data[nrows])
 {
   FILE *fp;
   fp = fopen(filename, "r");
@@ -15,7 +15,7 @@ int read_file_1D(const char * filename, dataType *data, unsigned int nsamps)
   }
   // Read data from file
   float newval;
-  for (int ii = 0; ii < nsamps; ii++){
+  for (int ii = 0; ii < nrows; ii++){
     if (fscanf(fp, "%f\n", &newval) != 0){
       data[ii] = newval;
     } else {
@@ -26,8 +26,8 @@ int read_file_1D(const char * filename, dataType *data, unsigned int nsamps)
   return 0;
 }
 
-template <class dataType>
-int read_file_2D(const char * filename, dataType data[], unsigned int nrows, unsigned int ncols)
+template <class dataType, unsigned int nrows, unsigned int ncols>
+int read_file_2D(const char * filename, dataType data[nrows][ncols])
 {
   FILE *fp;
   fp = fopen(filename, "r");
@@ -39,7 +39,7 @@ int read_file_2D(const char * filename, dataType data[], unsigned int nrows, uns
   for (int ii = 0; ii < nrows; ii++) {
     for (int jj = 0; jj < ncols; jj++){
       if (fscanf(fp, "%f\n", &newval) != 0){
-        data[ii*ncols+jj] = newval;
+        data[ii][jj] = newval;
       } else {
         return -2;
       }

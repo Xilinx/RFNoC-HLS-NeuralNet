@@ -10,20 +10,26 @@
 //void nnet_basic (axis &in, axis &out) {
 void nnet_2layer(
 	  input_t   data[N_LAYER_IN],
-	  coeff_t   weights[N_LAYER_IN][N_LAYER1_OUT],
-	  bias_t    biases[N_LAYER1_OUT],
-	  result_t  res[N_LAYER1_OUT])
+	  coeff_t   weights1[N_LAYER_IN][N_LAYER1_OUT],
+	  bias_t    biases1[N_LAYER1_OUT],
+	  coeff_t   weights2[N_LAYER1_OUT][N_LAYER_OUT],
+	  bias_t    biases2[N_LAYER_OUT],
+	  result_t  res[N_LAYER_OUT])
 {
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
     #pragma HLS INTERFACE ap_ctrl_none port=return
 
 	#pragma HLS DATAFLOW
 
+	result_t logits1[N_LAYER1_OUT];
 	result_t hidden1[N_LAYER1_OUT];
-//	result_t hidden1[N_LAYER1_OUT];
 
-	static nnet_layer<input_t, result_t, coeff_t, bias_t, accum_t> layer1;
-	layer1.compute<N_LAYER_IN, N_LAYER1_OUT>(data, hidden1, weights, biases);
+	// LAYER 1
+	nnet_layer<input_t, layer1_t, coeff_t, bias_t, accum_t> layer1;
+	layer1.compute<N_LAYER_IN, N_LAYER1_OUT>(data, logits1, weights1, biases1);
+	relu<layer1_t, layer1_t, N_LAYER1_OUT>(logits1, hidden1);
 
-	relu<result_t, result_t, N_LAYER1_OUT>(hidden1, res);
+	// LAYER 2
+	nnet_layer<layer1_t, result_t, coeff_t, bias_t, accum_t> layer2;
+	layer2.compute<N_LAYER1_OUT, N_LAYER_OUT>(hidden1, res, weights2, biases2);
 }
