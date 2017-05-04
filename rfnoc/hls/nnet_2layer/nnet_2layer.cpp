@@ -1,5 +1,8 @@
 
 #include "nnet_layer.h"
+#include "nnet_activation.h"
+
+
 #include "nnet_2layer.h"
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
@@ -14,7 +17,13 @@ void nnet_2layer(
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
     #pragma HLS INTERFACE ap_ctrl_none port=return
 
-	static nnet_layer<input_t, result_t, coeff_t, bias_t, accum_t> layer1;
+	#pragma HLS DATAFLOW
 
-	layer1.compute<N_LAYER_IN, N_LAYER1_OUT>(data, res, weights, biases);
+	result_t hidden1[N_LAYER1_OUT];
+//	result_t hidden1[N_LAYER1_OUT];
+
+	static nnet_layer<input_t, result_t, coeff_t, bias_t, accum_t> layer1;
+	layer1.compute<N_LAYER_IN, N_LAYER1_OUT>(data, hidden1, weights, biases);
+
+	relu<result_t, result_t, N_LAYER1_OUT>(hidden1, res);
 }
