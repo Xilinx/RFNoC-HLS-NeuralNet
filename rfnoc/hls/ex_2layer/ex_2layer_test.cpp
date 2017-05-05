@@ -3,50 +3,26 @@
 #include <math.h>
 
 #include "nnet_helpers.h"
-#include "nnet_2layer.h"
-
-// int main(int argc, char **argv)
-// {
-//
-//   // Dummy data for now
-//   input_t data[N_LAYER_IN] = {0, 1, 1};
-//   coeff_t coeffs[N_LAYER_IN][N_LAYER_OUT] = {{1,  0,  0},
-//                                              {0,  2,  0},
-//                                              {0, 10, 20}};
-//   bias_t  biases[N_LAYER_OUT] = {1, 2, 3};
-//   short int answer[N_LAYER_OUT] = {1, 14, 23};
-//
-//   // Run the basic neural net block
-//   result_t res[N_LAYER_OUT];
-//   nnet_basic(data, coeffs, biases, res);
-//
-//   // Print result vector
-//   int err_cnt = 0;
-//   for (int ii = 0; ii < N_LAYER_OUT; ii++) {
-//     std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << std::endl;
-//     if (res[ii] != answer[ii]) err_cnt++;
-//   }
-//   return err_cnt;
-// }
+#include "ex_2layer.h"
 
 int main(int argc, char **argv)
 {
   // DATA FROM UDACITY TENSORFLOW CLASS
-  // 1-Layer test
+  // 2-Layer test
 
   input_t  data[N_LAYER_IN];
-  coeff_t coeffs1[N_LAYER_IN][N_LAYER1_OUT];
-  coeff_t coeffs2[N_LAYER1_OUT][N_LAYER_OUT];
-  bias_t  biases1[N_LAYER1_OUT];
+  coeff_t coeffs1[N_LAYER_IN][N_LAYER1];
+  coeff_t coeffs2[N_LAYER1][N_LAYER_OUT];
+  bias_t  biases1[N_LAYER1];
   bias_t  biases2[N_LAYER_OUT];
   float answer[N_LAYER_OUT];
 
   // Load data from file
   int rval = 1;
   rval += read_file_1D<input_t, N_LAYER_IN>("data/validation_data_784x1.dat", data);
-  rval += read_file_2D<coeff_t, N_LAYER_IN,  N_LAYER1_OUT>("data/mnist_layer1_weights_small_784x256.dat", coeffs1);
-  rval += read_file_1D<bias_t, N_LAYER1_OUT>("data/mnist_layer1_biases_small_256x1.dat", biases1);
-  rval += read_file_2D<coeff_t, N_LAYER1_OUT, N_LAYER_OUT>("data/mnist_layer2_weights_small_256x10.dat", coeffs2);
+  rval += read_file_2D<coeff_t, N_LAYER_IN,  N_LAYER1>("data/mnist_layer1_weights_small_784x256.dat", coeffs1);
+  rval += read_file_1D<bias_t, N_LAYER1>("data/mnist_layer1_biases_small_256x1.dat", biases1);
+  rval += read_file_2D<coeff_t, N_LAYER1, N_LAYER_OUT>("data/mnist_layer2_weights_small_256x10.dat", coeffs2);
   rval += read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer2_biases_small_10x1.dat", biases2);
   rval += read_file_1D<float, N_LAYER_OUT>("data/validation_layer2_small_10x1.dat", answer);
   if (rval == 0) {
@@ -56,7 +32,7 @@ int main(int argc, char **argv)
 
   // Run the basic neural net block
   result_t res[N_LAYER_OUT];
-  nnet_2layer(data, coeffs1, biases1, coeffs2, biases2, res);
+  ex_2layer(data, coeffs1, biases1, coeffs2, biases2, res);
 
   // Print result vector
   int err_cnt = 0;

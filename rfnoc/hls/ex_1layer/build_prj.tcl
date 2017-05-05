@@ -3,10 +3,10 @@
 ## Please DO NOT edit it.
 ## Copyright (C) 2015 Xilinx Inc. All rights reserved.
 ############################################################
-open_project -reset nnet_basic_prj
-set_top nnet_basic
-add_files nnet_basic.cpp -cflags "-I[file normalize ../nnet_lib]"
-add_files -tb nnet_basic_test.cpp
+open_project -reset ex_1layer_prj
+set_top ex_1layer
+add_files ex_1layer.cpp -cflags "-I[file normalize ../nnet_lib]"
+add_files -tb ex_1layer_test.cpp
 add_files -tb data
 open_solution -reset "solution1"
 set_part {xc7z020clg484-3}
