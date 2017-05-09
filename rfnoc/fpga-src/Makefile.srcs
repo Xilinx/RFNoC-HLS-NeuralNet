@@ -1,2 +1,2 @@
-$(addprefix /home/ejk/prefix/rfnoc/src/rfnoc-machlearn/rfnoc/fpga-src/, \
+$(addprefix /home/ejk/prefix/rfnoc/src/rfnoc-fpgannet/rfnoc/fpga-src/, \
 ) \

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,18 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-filter
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifndef INCLUDED_FPGANNET_API_H
+#define INCLUDED_FPGANNET_API_H
 
-#include "qa_machlearn.h"
+#include <gnuradio/attributes.h>
 
-CppUnit::TestSuite *
-qa_machlearn::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("machlearn");
+#ifdef gnuradio_fpgannet_EXPORTS
+#  define FPGANNET_API __GR_ATTR_EXPORT
+#else
+#  define FPGANNET_API __GR_ATTR_IMPORT
+#endif
 
-  return s;
-}
+#endif /* INCLUDED_FPGANNET_API_H */

@@ -25,22 +25,22 @@ include(GrPlatform) #define LIB_SUFFIX
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
-list(APPEND machlearn_sources
+list(APPEND fpgannet_sources
 )
 
 
-set(machlearn_sources "${machlearn_sources}" PARENT_SCOPE)
-if(NOT machlearn_sources)
+set(fpgannet_sources "${fpgannet_sources}" PARENT_SCOPE)
+if(NOT fpgannet_sources)
 	MESSAGE(STATUS "No C++ sources... skipping lib/")
 	return()
-endif(NOT machlearn_sources)
+endif(NOT fpgannet_sources)
 
-add_library(gnuradio-machlearn SHARED ${machlearn_sources})
-target_link_libraries(gnuradio-machlearn ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${ETTUS_LIBRARIES})
-set_target_properties(gnuradio-machlearn PROPERTIES DEFINE_SYMBOL "gnuradio_machlearn_EXPORTS")
+add_library(gnuradio-fpgannet SHARED ${fpgannet_sources})
+target_link_libraries(gnuradio-fpgannet ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${ETTUS_LIBRARIES})
+set_target_properties(gnuradio-fpgannet PROPERTIES DEFINE_SYMBOL "gnuradio_fpgannet_EXPORTS")
 
 if(APPLE)
-    set_target_properties(gnuradio-machlearn PROPERTIES
+    set_target_properties(gnuradio-fpgannet PROPERTIES
         INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
     )
 endif(APPLE)
@@ -48,7 +48,7 @@ endif(APPLE)
 ########################################################################
 # Install built library files
 ########################################################################
-install(TARGETS gnuradio-machlearn
+install(TARGETS gnuradio-fpgannet
     LIBRARY DESTINATION lib${LIB_SUFFIX} # .so/.dylib file
     ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     RUNTIME DESTINATION bin              # .dll file
@@ -61,23 +61,23 @@ include(GrTest)
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 
-list(APPEND test_machlearn_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_machlearn.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_machlearn.cc
+list(APPEND test_fpgannet_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_fpgannet.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fpgannet.cc
 )
 
-add_executable(test-machlearn ${test_machlearn_sources})
+add_executable(test-fpgannet ${test_fpgannet_sources})
 
 target_link_libraries(
-  test-machlearn
+  test-fpgannet
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   ${CPPUNIT_LIBRARIES}
   ${ETTUS_LIBRARIES}
   ${PC_ETTUS_LIBDIR}
-  gnuradio-machlearn
+  gnuradio-fpgannet
 )
 
 
 
-GR_ADD_TEST(test_machlearn test-machlearn)
+GR_ADD_TEST(test_fpgannet test-fpgannet)

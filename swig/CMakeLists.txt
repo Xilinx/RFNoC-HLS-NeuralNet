@@ -20,10 +20,10 @@
 ########################################################################
 # Check if there is C++ code at all
 ########################################################################
-if(NOT machlearn_sources)
+if(NOT fpgannet_sources)
 	MESSAGE(STATUS "No C++ sources... skipping swig/")
 	return()
-endif(NOT machlearn_sources)
+endif(NOT fpgannet_sources)
 
 ########################################################################
 # Include swig generation macros
@@ -43,23 +43,23 @@ foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
     list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
 endforeach(incdir)
 
-set(GR_SWIG_LIBRARIES gnuradio-machlearn)
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/machlearn_swig_doc.i)
+set(GR_SWIG_LIBRARIES gnuradio-fpgannet)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/fpgannet_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-GR_SWIG_MAKE(machlearn_swig machlearn_swig.i)
+GR_SWIG_MAKE(fpgannet_swig fpgannet_swig.i)
 
 ########################################################################
 # Install the build swig module
 ########################################################################
-GR_SWIG_INSTALL(TARGETS machlearn_swig DESTINATION ${GR_PYTHON_DIR}/machlearn)
+GR_SWIG_INSTALL(TARGETS fpgannet_swig DESTINATION ${GR_PYTHON_DIR}/fpgannet)
 
 ########################################################################
 # Install swig .i files for development
 ########################################################################
 install(
     FILES
-    machlearn_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/machlearn_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/machlearn/swig
+    fpgannet_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/fpgannet_swig_doc.i
+    DESTINATION ${GR_INCLUDE_DIR}/fpgannet/swig
 )

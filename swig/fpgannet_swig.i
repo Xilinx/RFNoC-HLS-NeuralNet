@@ -1,12 +1,12 @@
 /* -*- c++ -*- */
 
-#define MACHLEARN_API
+#define FPGANNET_API
 #define ETTUS_API
 
 %include "gnuradio.i"/*			*/// the common stuff
 
 //load generated python docstrings
-%include "machlearn_swig_doc.i"
+%include "fpgannet_swig_doc.i"
 //Header from gr-ettus
 %include "ettus/device3.h"
 %include "ettus/rfnoc_block.h"

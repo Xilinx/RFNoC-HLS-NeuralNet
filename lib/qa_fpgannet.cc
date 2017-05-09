@@ -1,4 +1,3 @@
-/* -*- c++ -*- */
 /*
  * Copyright 2012 Free Software Foundation, Inc.
  *
@@ -20,19 +19,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _QA_MACHLEARN_H_
-#define _QA_MACHLEARN_H_
+/*
+ * This class gathers together all the test cases for the gr-filter
+ * directory into a single test suite.  As you create new test cases,
+ * add them here.
+ */
 
-#include <gnuradio/attributes.h>
-#include <cppunit/TestSuite.h>
+#include "qa_fpgannet.h"
 
-//! collect all the tests for the gr-filter directory
-
-class __GR_ATTR_EXPORT qa_machlearn
+CppUnit::TestSuite *
+qa_fpgannet::suite()
 {
- public:
-  //! return suite of tests for all of gr-filter directory
-  static CppUnit::TestSuite *suite();
-};
+  CppUnit::TestSuite *s = new CppUnit::TestSuite("fpgannet");
 
-#endif /* _QA_MACHLEARN_H_ */
+  return s;
+}
