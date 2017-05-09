@@ -10,6 +10,7 @@ BASE_DIR = $(abspath ../../../../uhd-fpga/usrp3/top)
 # BASE_DIR = /home/ejk/target_rfnoc/src/uhd-fpga/usrp3/top # EJK: Note this was included by rfnocmodtool. Not sure what the deal is here...
 # Include viv_sim_preample after defining BASE_DIR
 include $(BASE_DIR)/../tools/make/viv_sim_preamble.mak
+include $(BASE_DIR)/../tools/make/viv_hls_ip_builder.mak
 
 ARCH = zynq
 PART_ID = xc7z020/clg484/-1
@@ -20,10 +21,11 @@ PART_ID = xc7z020/clg484/-1
 # If simulation contains IP, define the IP_DIR and point
 # it to the base level IP directory
 OOT_DIR = $(abspath ../../)
-HLS_IP_DIR = $(OOT_DIR)/hls
+
+# Add HLS IP to build
+include $(OOT_DIR)/hls/addsub/Makefile.inc
 
 # Include makefile for HLS files 
-include $(HLS_IP_DIR)/Makefile.inc
 RFNOC_SRCS += $(abspath \
 $(HLS_IP_OUTPUT_SRCS) \
 )
@@ -43,4 +45,7 @@ $(abspath ../../fpga-src/noc_block_addsub.v)
 # Include all simulator specific makefiles here
 # Each should define a unique target to simulate
 # e.g. xsim, vsim, etc and a common "clean" target
+
+hls_ip: $(HLS_IP_BUILD_TARGETS)
+
 include $(BASE_DIR)/../tools/make/viv_simulator.mak
