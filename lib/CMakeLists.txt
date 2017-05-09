@@ -26,6 +26,8 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND fpgannet_sources
+    ex1layer_impl.cc
+    ex1layer_block_ctrl_impl.cpp
 )
 
 

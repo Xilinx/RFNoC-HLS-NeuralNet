@@ -22,5 +22,6 @@
 ########################################################################
 install(FILES
     api.h
-    DESTINATION include/fpgannet
+    ex1layer.h
+    ex1layer_block_ctrl.hpp DESTINATION include/fpgannet
 )

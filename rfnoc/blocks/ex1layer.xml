@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--Default XML file-->
+<nocblock>
+  <name>ex1layer</name>
+  <blockname>ex1layer</blockname>
+  <ids>
+    <id revision="0">ABCD000101A7E200</id>
+  </ids>
+  <!--One input, one output. If this is used, better have all the info the C++ file.-->
+  <ports>
+    <sink>
+      <name>in</name>
+    </sink>
+    <source>
+      <name>out</name>
+    </source>
+  </ports>
+</nocblock>
