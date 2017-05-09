@@ -21,9 +21,10 @@ PART_ID = xc7z020/clg484/-1
 # If simulation contains IP, define the IP_DIR and point
 # it to the base level IP directory
 OOT_DIR = $(abspath ../../)
+FPGANNET_HLS_DIR = $(OOT_DIR)/hls
 
 # Add HLS IP to build
-include $(OOT_DIR)/hls/addsub/Makefile.inc
+include $(FPGANNET_HLS_DIR)/addsub/Makefile.inc
 
 # Include makefile for HLS files 
 RFNOC_SRCS += $(abspath \

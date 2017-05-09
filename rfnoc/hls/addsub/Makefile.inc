@@ -11,4 +11,4 @@ $(HLS_IP_NAME).cpp \
 $(HLS_IP_NAME).tcl
 
 # Setup build targets, don't remove this
-$(eval $(call HLS_IP_GEN_TARGETS,$(HLS_IP_NAME),$(PART_ID),$(HLS_IP_$(HLS_IP_NAME)_SRCS),$(HLS_IP_DIR),$(IP_BUILD_DIR)))
+$(eval $(call HLS_IP_GEN_TARGETS,$(HLS_IP_NAME),$(PART_ID),$(HLS_IP_$(HLS_IP_NAME)_SRCS),$(FPGANNET_HLS_DIR),$(IP_BUILD_DIR)))
