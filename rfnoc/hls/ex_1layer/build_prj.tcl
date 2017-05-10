@@ -6,7 +6,7 @@
 open_project -reset ex_1layer_prj
 set_top ex_1layer
 add_files ex_1layer.cpp -cflags "-I[file normalize ../nnet_lib]"
-add_files -tb ex_1layer_test.cpp
+add_files -tb ex_1layer_test.cpp -cflags "-I[file normalize ../nnet_lib]"
 add_files -tb data
 open_solution -reset "solution1"
 set_part {xc7z020clg484-3}

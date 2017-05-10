@@ -24,7 +24,7 @@ OOT_DIR = $(abspath ../../)
 FPGANNET_HLS_DIR = $(OOT_DIR)/hls
 
 # Add HLS IP to build
-include $(FPGANNET_HLS_DIR)/ex_1layer/Makefile.inc
+include $(FPGANNET_HLS_DIR)/ex_2layer/Makefile.inc
 
 # Include makefile for HLS files
 RFNOC_SRCS += $(abspath \
