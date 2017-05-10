@@ -16,7 +16,7 @@ void ex_2layer(
 	  result_t  res[N_LAYER_OUT])
 {
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
-    #pragma HLS INTERFACE ap_ctrl_none port=return
+//    #pragma HLS INTERFACE ap_ctrl_none port=return
 
 	#pragma HLS DATAFLOW
 
