@@ -70,12 +70,12 @@ module noc_block_ex1layer #(
   // Convert RFNoC Shell interface into AXI stream interface
   //
   ////////////////////////////////////////////////////////////
-  wire [31:0] m_axis_data_tdata;
+  wire [15:0] m_axis_data_tdata;
   wire        m_axis_data_tlast;
   wire        m_axis_data_tvalid;
   wire        m_axis_data_tready;
 
-  wire [31:0] s_axis_data_tdata;
+  wire [15:0] s_axis_data_tdata;
   wire        s_axis_data_tlast;
   wire        s_axis_data_tvalid;
   wire        s_axis_data_tready;
@@ -174,9 +174,17 @@ module noc_block_ex1layer #(
   end
 
   /* Simple Loopback */
-  assign m_axis_data_tready = s_axis_data_tready;
-  assign s_axis_data_tvalid = m_axis_data_tvalid;
-  assign s_axis_data_tlast  = m_axis_data_tlast;
-  assign s_axis_data_tdata  = m_axis_data_tdata;
+  // assign m_axis_data_tready = s_axis_data_tready;
+  // assign s_axis_data_tvalid = m_axis_data_tvalid;
+  // assign s_axis_data_tlast  = m_axis_data_tlast;
+  // assign s_axis_data_tdata  = m_axis_data_tdata;
+
+  ex_1layer inst_example_layer1 (
+    .ap_clk(ce_clk), .ap_rst(ce_rst),
+    .data_V_dout(m_axis_data_tdata), .data_V_empty_n(m_axis_data_tvalid), .data_V_read(m_axis_data_tready), 
+    .res_V_din(s_axis_data_tdata), .res_V_full_n(s_axis_data_tready), .res_V_write(s_axis_data_tvalid));
+
+  // Temporarily say tlast = 0
+  assign s_axis_data_tlast = 1'b0;
 
 endmodule
