@@ -24,7 +24,7 @@ OOT_DIR = $(abspath ../../)
 FPGANNET_HLS_DIR = $(OOT_DIR)/hls
 
 # Add HLS IP to build
-include $(FPGANNET_HLS_DIR)/ex_2layer/Makefile.inc
+include $(FPGANNET_HLS_DIR)/ex_1layer/Makefile.inc
 
 # Include makefile for HLS files
 RFNOC_SRCS += $(abspath \
@@ -39,6 +39,9 @@ SIM_TOP = noc_block_ex1layer_tb
 SIM_SRCS = \
 $(abspath noc_block_ex1layer_tb.sv) \
 $(abspath ../../fpga-src/noc_block_ex1layer.v)
+
+
+INC_SRCS += $(abspath mnist_validation_data_784x1.dat)
 
 #-------------------------------------------------
 # Bottom-of-Makefile

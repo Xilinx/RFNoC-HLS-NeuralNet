@@ -24,6 +24,8 @@ module noc_block_ex1layer_tb();
     string s;
     logic [31:0] random_word;
     logic [63:0] readback;
+    integer data_file; // file handler
+    integer scan_file; // file handler
 
     /********************************************************
     ** Test 1 -- Reset
@@ -47,8 +49,8 @@ module noc_block_ex1layer_tb();
     ** Test 3 -- Connect RFNoC blocks
     ********************************************************/
     `TEST_CASE_START("Connect RFNoC blocks");
-    `RFNOC_CONNECT(noc_block_tb,noc_block_ex1layer,SC16,SPP);
-    `RFNOC_CONNECT(noc_block_ex1layer,noc_block_tb,SC16,SPP);
+    `RFNOC_CONNECT(noc_block_tb,noc_block_ex1layer,S16,SPP);
+    `RFNOC_CONNECT(noc_block_ex1layer,noc_block_tb,S16,SPP);
     `TEST_CASE_DONE(1);
 
     /********************************************************
@@ -72,28 +74,83 @@ module noc_block_ex1layer_tb();
     ********************************************************/
     // ex1layer's user code is a loopback, so we should receive
     // back exactly what we send
-    `TEST_CASE_START("Test sequence");
+    // `TEST_CASE_START("Test sequence");
+    // fork
+    //   begin
+    //     cvita_payload_t send_payload;
+    //     for (int i = 0; i < SPP/2; i++) begin
+    //       send_payload.push_back(64'(i));
+    //     end
+    //     tb_streamer.send(send_payload);
+    //   end
+    //   begin
+    //     cvita_payload_t recv_payload;
+    //     cvita_metadata_t md;
+    //     logic [63:0] expected_value;
+    //     tb_streamer.recv(recv_payload,md);
+    //     for (int i = 0; i < SPP/2; i++) begin
+    //       expected_value = i;
+    //       $sformat(s, "Incorrect value received! Expected: %0d, Received: %0d", expected_value, recv_payload[i]);
+    //       `ASSERT_ERROR(recv_payload[i] == expected_value, s);
+    //     end
+    //   end
+    // join
+    // `TEST_CASE_DONE(1);
+
+
     fork
       begin
-        cvita_payload_t send_payload;
-        for (int i = 0; i < SPP/2; i++) begin
-          send_payload.push_back(64'(i));
+        real data_float;
+        integer data_int;
+        logic [15:0] data_logic;
+        data_file = $fopen("mnist_validation_data_784x1.dat", "r");
+        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+        if (data_file == 0) begin
+          $display("data_file handle was NULL");
+          $finish;
         end
-        tb_streamer.send(send_payload);
+        $display("Send data from text file");
+        while (!$feof(data_file)) begin
+          scan_file = $fscanf(data_file, "%f", data_float);
+          data_int = data_float * (2**10);
+          data_logic = data_int;
+          if (!$feof(data_file))
+            tb_streamer.push_word({data_logic}, 0 );
+          else
+            tb_streamer.push_word({data_logic}, 1 );
+          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+          //$display(s);
+        end
+        $fclose(data_file);
       end
       begin
-        cvita_payload_t recv_payload;
-        cvita_metadata_t md;
-        logic [63:0] expected_value;
-        tb_streamer.recv(recv_payload,md);
-        for (int i = 0; i < SPP/2; i++) begin
-          expected_value = i;
-          $sformat(s, "Incorrect value received! Expected: %0d, Received: %0d", expected_value, recv_payload[i]);
-          `ASSERT_ERROR(recv_payload[i] == expected_value, s);
+        logic last;
+        logic [15:0] idx_samp, mag_samp;
+        // logic [15:0] idx_ref, mag_ref;
+        // integer idx_samp_int, mag_samp_int, idx_ref_int, mag_ref_int;
+        // $display("Receive FIR filter output");
+        // data_file_ref = $fopen("../../../../data_ref_gmsk.txt", "r");
+        // `ASSERT_FATAL(data_file_ref != 0, "Output data file could not be opened");
+        // data_file_out = $fopen("../../../../data_out_gmsk.txt", "w");
+        // `ASSERT_FATAL(data_file_out != 0, "Output data file could not be opened");
+        // last = 0;
+        for (int ii = 0; ii < 10; ii++) begin
+          tb_streamer.pull_word({idx_samp}, last);
+          // scan_file = $fscanf(data_file_ref, "%d %d\n", idx_ref, mag_ref);
+          // idx_samp_int = idx_samp; mag_samp_int = mag_samp;
+          // idx_ref_int = idx_ref;   mag_ref_int = mag_ref;
+          // // Check I / Q values, should be equivalent to reference
+          // $sformat(s, "Incorrect output value received! Expected: %0d, %0d Received: %0d, %0d", idx_ref_int, mag_ref_int, idx_samp_int, mag_samp_int);
+          // `ASSERT_ERROR((mag_samp_int - mag_ref_int) < 50 && (mag_ref_int-mag_samp_int) > -50, s);
+          // $fwrite(data_file_out,"%d %d\n", idx_samp, mag_samp);
         end
+        // $fclose(data_file_ref);
+        // $fclose(data_file_out);
       end
     join
     `TEST_CASE_DONE(1);
+
+
     `TEST_BENCH_DONE;
 
   end
