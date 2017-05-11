@@ -11,20 +11,24 @@ int main(int argc, char **argv)
   // 1-Layer test
 
   input_t  data[N_LAYER_IN];
-  coeff_t coeffs[N_LAYER_IN][N_LAYER_OUT];
+  coeff_t weights[N_LAYER_IN][N_LAYER_OUT];
   bias_t  biases[N_LAYER_OUT];
   float answer[N_LAYER_OUT];
 
   // Load data from file
   int rval = 0;
   rval = read_file_1D<input_t, N_LAYER_IN>("data/mnist_validation_data_784x1.dat", data);
-  rval = read_file_2D<coeff_t, N_LAYER_IN, N_LAYER_OUT>("data/mnist_layer1_weights_784x10.dat", coeffs);
-  rval = read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer1_biases_10x1.dat", biases);
-  rval = read_file_1D<float, N_LAYER_OUT>("data/mnist_validation_output_10x1.dat", answer);
+    rval = read_file_1D<float, N_LAYER_OUT>("data/mnist_validation_output_10x1.dat", answer);
+//  rval = read_file_2D<coeff_t, N_LAYER_IN, N_LAYER_OUT>("data/mnist_layer1_weights_784x10.dat", weights);
+//  rval = read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer1_biases_10x1.dat", biases);
+//  rval = read_file_1D<input_t, N_LAYER_IN>("data/validation_data_784x1.dat", data);
+//  rval = read_file_2D<coeff_t, N_LAYER_IN, N_LAYER_OUT>("data/mnist_layer1_weights_small_784x256.dat", weights);
+//  rval = read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer1_biases_small_256x1.dat", biases);
+//  rval = read_file_1D<float, N_LAYER_OUT>("data/validation_layer1_small_256x1.dat", answer);
 
   // Run the basic neural net block
   result_t res[N_LAYER_OUT];
-  ex_1layer(data, coeffs, biases, res);
+  ex_1layer(data, res);
 
   // Print result vector
   int err_cnt = 0;
