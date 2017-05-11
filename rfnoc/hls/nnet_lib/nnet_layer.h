@@ -97,9 +97,9 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
 
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
-    #pragma HLS ARRAY_PARTITION variable=weights block factor=32 dim=2
-    #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=32
-	#pragma HLS allocation instances=mul limit=32 operation
+    #pragma HLS ARRAY_PARTITION variable=weights block factor=8 dim=2
+    #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=8
+	#pragma HLS allocation instances=mul limit=8 operation
 
     Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
     #pragma HLS UNROLL
@@ -109,7 +109,7 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
     #pragma HLS PIPELINE
     	data_cache = data[ii];
         Product: for(int jj = 0; jj < N_OUT; jj++) {
-        #pragma HLS UNROLL factor=32
+        #pragma HLS UNROLL factor=8
 		#pragma HLS PIPELINE
             acc[jj] += data_cache * weights[ii][jj];
         }
