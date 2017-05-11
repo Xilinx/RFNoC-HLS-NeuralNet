@@ -14,7 +14,7 @@ void ex_1layer(
 	  result_t  res[N_LAYER_OUT])
 {
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
-//    #pragma HLS INTERFACE ap_ctrl_none port=return
+    #pragma HLS INTERFACE ap_ctrl_none port=return
 
 	nnet::layer<input_t, result_t, coeff_t, bias_t, accum_t> layer1;
 	layer1.compute<N_LAYER_IN, N_LAYER_OUT>(data, res, weights, biases);
