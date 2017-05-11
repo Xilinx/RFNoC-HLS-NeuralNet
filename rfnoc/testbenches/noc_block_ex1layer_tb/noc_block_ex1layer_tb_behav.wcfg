@@ -12,9 +12,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="16374653098fs"></ZoomStartTime>
-      <ZoomEndTime time="17005550417fs"></ZoomEndTime>
-      <Cursor1Time time="16759261000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="31525000001fs"></ZoomEndTime>
+      <Cursor1Time time="16920000000fs"></Cursor1Time>
    </zoom_setting>
    <WVObjectSize size="121" />
    <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/tc_running">
@@ -372,6 +372,10 @@
    <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/s_axis_data_tdata">
       <obj_property name="ElementShortName">s_axis_data_tdata[15:0]</obj_property>
       <obj_property name="ObjectShortName">s_axis_data_tdata[15:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">8</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/s_axis_data_tlast">
       <obj_property name="ElementShortName">s_axis_data_tlast</obj_property>
