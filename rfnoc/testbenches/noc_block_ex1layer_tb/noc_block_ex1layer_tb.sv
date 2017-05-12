@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `define NS_PER_TICK 1
-`define NUM_TEST_CASES 5
+`define NUM_TEST_CASES 4
 
 `include "sim_exec_report.vh"
 `include "sim_clks_rsts.vh"
@@ -15,7 +15,7 @@ module noc_block_ex1layer_tb();
   `RFNOC_SIM_INIT(NUM_CE, NUM_STREAMS, BUS_CLK_PERIOD, CE_CLK_PERIOD);
   `RFNOC_ADD_BLOCK(noc_block_ex1layer, 0);
 
-  localparam SPP = 16; // Samples per packet
+  localparam SPP = 784; // Samples per packet
 
   /********************************************************
   ** Verification
@@ -57,16 +57,15 @@ module noc_block_ex1layer_tb();
     ** Test 4 -- Write / readback user registers
     ********************************************************/
     `TEST_CASE_START("Write / readback user registers");
+    tb_streamer.write_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.SR_SIZE_INPUT, SPP*4);
+    tb_streamer.read_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.RB_SIZE_INPUT, readback);
+    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], SPP*4);
+    `ASSERT_ERROR(readback[31:0] == SPP*4, s);
     random_word = $random();
-    tb_streamer.write_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.SR_TEST_REG_0, random_word);
-    tb_streamer.read_user_reg(sid_noc_block_ex1layer, 0, readback);
-    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], random_word);
-    `ASSERT_ERROR(readback[31:0] == random_word, s);
-    random_word = $random();
-    tb_streamer.write_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.SR_TEST_REG_1, random_word);
-    tb_streamer.read_user_reg(sid_noc_block_ex1layer, 1, readback);
-    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], random_word);
-    `ASSERT_ERROR(readback[31:0] == random_word, s);
+    tb_streamer.write_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.SR_SIZE_OUTPUT, 10*4);
+    tb_streamer.read_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.RB_SIZE_OUTPUT, readback);
+    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10*4);
+    `ASSERT_ERROR(readback[31:0] == 10*4, s);
     `TEST_CASE_DONE(1);
 
     /********************************************************
@@ -125,7 +124,9 @@ module noc_block_ex1layer_tb();
       end
       begin
         logic last;
-        logic [15:0] idx_samp, mag_samp;
+        logic [15:0] res_logic;
+        shortint res_int;
+        real res_float;
         // logic [15:0] idx_ref, mag_ref;
         // integer idx_samp_int, mag_samp_int, idx_ref_int, mag_ref_int;
         // $display("Receive FIR filter output");
@@ -135,7 +136,11 @@ module noc_block_ex1layer_tb();
         // `ASSERT_FATAL(data_file_out != 0, "Output data file could not be opened");
         // last = 0;
         for (int ii = 0; ii < 10; ii++) begin
-          tb_streamer.pull_word({idx_samp}, last);
+          tb_streamer.pull_word({res_logic}, last);
+          res_int = res_logic;
+          res_float =  res_int / 2.0**8;
+          $sformat(s, "Received Value: %f", res_float);
+          $display(s);
           // scan_file = $fscanf(data_file_ref, "%d %d\n", idx_ref, mag_ref);
           // idx_samp_int = idx_samp; mag_samp_int = mag_samp;
           // idx_ref_int = idx_ref;   mag_ref_int = mag_ref;

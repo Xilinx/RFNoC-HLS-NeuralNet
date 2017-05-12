@@ -12,11 +12,11 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="31525000001fs"></ZoomEndTime>
-      <Cursor1Time time="16920000000fs"></Cursor1Time>
+      <ZoomStartTime time="2866666666fs"></ZoomStartTime>
+      <ZoomEndTime time="20066666667fs"></ZoomEndTime>
+      <Cursor1Time time="17200000000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="121" />
+   <WVObjectSize size="120" />
    <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/tc_running">
       <obj_property name="ElementShortName">tc_running</obj_property>
       <obj_property name="ObjectShortName">tc_running</obj_property>
@@ -341,14 +341,6 @@
       <obj_property name="ElementShortName">ce_clk</obj_property>
       <obj_property name="ObjectShortName">ce_clk</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/test_reg_0">
-      <obj_property name="ElementShortName">test_reg_0[31:0]</obj_property>
-      <obj_property name="ObjectShortName">test_reg_0[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/test_reg_1">
-      <obj_property name="ElementShortName">test_reg_1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">test_reg_1[31:0]</obj_property>
-   </wvobject>
    <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/m_axis_data_tdata">
       <obj_property name="ElementShortName">m_axis_data_tdata[15:0]</obj_property>
       <obj_property name="ObjectShortName">m_axis_data_tdata[15:0]</obj_property>
@@ -369,6 +361,46 @@
       <obj_property name="ElementShortName">m_axis_data_tready</obj_property>
       <obj_property name="ObjectShortName">m_axis_data_tready</obj_property>
    </wvobject>
+   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/in_data_tdata">
+      <obj_property name="ElementShortName">in_data_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">in_data_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/in_data_tuser">
+      <obj_property name="ElementShortName">in_data_tuser[127:0]</obj_property>
+      <obj_property name="ObjectShortName">in_data_tuser[127:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/in_data_tlast">
+      <obj_property name="ElementShortName">in_data_tlast</obj_property>
+      <obj_property name="ObjectShortName">in_data_tlast</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/in_data_tvalid">
+      <obj_property name="ElementShortName">in_data_tvalid</obj_property>
+      <obj_property name="ObjectShortName">in_data_tvalid</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/in_data_tready">
+      <obj_property name="ElementShortName">in_data_tready</obj_property>
+      <obj_property name="ObjectShortName">in_data_tready</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/out_data_tdata">
+      <obj_property name="ElementShortName">out_data_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">out_data_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/out_data_tuser">
+      <obj_property name="ElementShortName">out_data_tuser[127:0]</obj_property>
+      <obj_property name="ObjectShortName">out_data_tuser[127:0]</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/out_data_tlast">
+      <obj_property name="ElementShortName">out_data_tlast</obj_property>
+      <obj_property name="ObjectShortName">out_data_tlast</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/out_data_tvalid">
+      <obj_property name="ElementShortName">out_data_tvalid</obj_property>
+      <obj_property name="ObjectShortName">out_data_tvalid</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/out_data_tready">
+      <obj_property name="ElementShortName">out_data_tready</obj_property>
+      <obj_property name="ObjectShortName">out_data_tready</obj_property>
+   </wvobject>
    <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/s_axis_data_tdata">
       <obj_property name="ElementShortName">s_axis_data_tdata[15:0]</obj_property>
       <obj_property name="ObjectShortName">s_axis_data_tdata[15:0]</obj_property>
@@ -388,6 +420,10 @@
    <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/s_axis_data_tready">
       <obj_property name="ElementShortName">s_axis_data_tready</obj_property>
       <obj_property name="ObjectShortName">s_axis_data_tready</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_packet_resizer_out/count">
+      <obj_property name="ElementShortName">count[15:0]</obj_property>
+      <obj_property name="ObjectShortName">count[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="divider108" type="divider">
       <obj_property name="label">NNET LAYER</obj_property>
@@ -468,45 +504,5 @@
    <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/biases_V_address0">
       <obj_property name="ElementShortName">biases_V_address0[3:0]</obj_property>
       <obj_property name="ObjectShortName">biases_V_address0[3:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_9_V_reg_147">
-      <obj_property name="ElementShortName">acc_9_V_reg_147[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_9_V_reg_147[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_8_V_reg_159">
-      <obj_property name="ElementShortName">acc_8_V_reg_159[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_8_V_reg_159[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_7_V_reg_171">
-      <obj_property name="ElementShortName">acc_7_V_reg_171[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_7_V_reg_171[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_6_V_reg_183">
-      <obj_property name="ElementShortName">acc_6_V_reg_183[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_6_V_reg_183[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_5_V_reg_195">
-      <obj_property name="ElementShortName">acc_5_V_reg_195[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_5_V_reg_195[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_4_V_reg_207">
-      <obj_property name="ElementShortName">acc_4_V_reg_207[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_4_V_reg_207[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_3_V_reg_219">
-      <obj_property name="ElementShortName">acc_3_V_reg_219[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_3_V_reg_219[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_2_V_reg_231">
-      <obj_property name="ElementShortName">acc_2_V_reg_231[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_2_V_reg_231[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_1_V_reg_243">
-      <obj_property name="ElementShortName">acc_1_V_reg_243[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_1_V_reg_243[31:0]</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" type="array" fp_name="/noc_block_ex1layer_tb/noc_block_ex1layer/inst_example_layer1/grp_ex_1layer_compute_784_10_s_fu_26/grp_ex_1layer_compute_small_outputs_784_10_s_fu_18/acc_0_V_reg_255">
-      <obj_property name="ElementShortName">acc_0_V_reg_255[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_0_V_reg_255[31:0]</obj_property>
    </wvobject>
 </wave_config>

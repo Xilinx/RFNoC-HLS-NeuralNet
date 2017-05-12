@@ -71,17 +71,19 @@ module noc_block_ex1layer #(
   //
   ////////////////////////////////////////////////////////////
   wire [15:0] m_axis_data_tdata;
+  wire [127:0] m_axis_data_tuser;
   wire        m_axis_data_tlast;
   wire        m_axis_data_tvalid;
   wire        m_axis_data_tready;
 
   wire [15:0] s_axis_data_tdata;
+  wire [127:0] s_axis_data_tuser;
   wire        s_axis_data_tlast;
   wire        s_axis_data_tvalid;
   wire        s_axis_data_tready;
 
   axi_wrapper #(
-    .SIMPLE_MODE(1))
+    .SIMPLE_MODE(0))
   axi_wrapper (
     .clk(ce_clk), .reset(ce_rst),
     .clear_tx_seqnum(clear_tx_seqnum),
@@ -93,12 +95,12 @@ module noc_block_ex1layer #(
     .m_axis_data_tlast(m_axis_data_tlast),
     .m_axis_data_tvalid(m_axis_data_tvalid),
     .m_axis_data_tready(m_axis_data_tready),
-    .m_axis_data_tuser(),
+    .m_axis_data_tuser(m_axis_data_tuser),
     .s_axis_data_tdata(s_axis_data_tdata),
     .s_axis_data_tlast(s_axis_data_tlast),
     .s_axis_data_tvalid(s_axis_data_tvalid),
     .s_axis_data_tready(s_axis_data_tready),
-    .s_axis_data_tuser(),
+    .s_axis_data_tuser(s_axis_data_tuser),
     .m_axis_config_tdata(),
     .m_axis_config_tlast(),
     .m_axis_config_tvalid(),
@@ -146,29 +148,35 @@ module noc_block_ex1layer #(
   //               _____
   //   rb_stb  ___|     |________________     (Invalid / ignored, same cycle as set_stb)
   //
-  localparam [7:0] SR_TEST_REG_0 = SR_USER_REG_BASE;
-  localparam [7:0] SR_TEST_REG_1 = SR_USER_REG_BASE + 8'd1;
+  // localparam [7:0] SR_TEST_REG_0 = SR_USER_REG_BASE;
+  // localparam [7:0] SR_TEST_REG_1 = SR_USER_REG_BASE + 8'd1;
 
-  wire [31:0] test_reg_0;
-  setting_reg #(
-    .my_addr(SR_TEST_REG_0), .awidth(8), .width(32))
-  sr_test_reg_0 (
-    .clk(ce_clk), .rst(ce_rst),
-    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(test_reg_0), .changed());
+  localparam SR_SIZE_INPUT = 129;
+  localparam SR_SIZE_OUTPUT = 130;
 
-  wire [31:0] test_reg_1;
+  localparam RB_SIZE_INPUT = 129;
+  localparam RB_SIZE_OUTPUT = 130;
+
+  wire [31:0] size_input_reg;
   setting_reg #(
-    .my_addr(SR_TEST_REG_1), .awidth(8), .width(32))
-  sr_test_reg_1 (
+    .my_addr(SR_SIZE_INPUT), .awidth(8), .width(32))
+  sr_size_reg_in (
     .clk(ce_clk), .rst(ce_rst),
-    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(test_reg_1), .changed());
+    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(size_input_reg), .changed());
+
+  wire [31:0] size_output_reg;
+  setting_reg #(
+    .my_addr(SR_SIZE_OUTPUT), .awidth(8), .width(32))
+  sr_size_reg_out (
+    .clk(ce_clk), .rst(ce_rst),
+    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(size_output_reg), .changed());
 
   // Readback registers
   // rb_stb set to 1'b1 on NoC Shell
   always @(posedge ce_clk) begin
     case(rb_addr)
-      8'd0 : rb_data <= {32'd0, test_reg_0};
-      8'd1 : rb_data <= {32'd0, test_reg_1};
+      RB_SIZE_INPUT  : rb_data <= {32'd0, size_input_reg};
+      RB_SIZE_OUTPUT : rb_data <= {32'd0, size_output_reg};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
   end
@@ -179,12 +187,52 @@ module noc_block_ex1layer #(
   // assign s_axis_data_tlast  = m_axis_data_tlast;
   // assign s_axis_data_tdata  = m_axis_data_tdata;
 
+  wire [15:0] in_data_tdata, out_data_tdata;
+  wire [127:0] in_data_tuser, out_data_tuser;
+  wire        in_data_tlast, out_data_tlast;
+  wire        in_data_tvalid, out_data_tvalid;
+  wire        in_data_tready, out_data_tready;
+
+  // Modify packet header data, same as input except SRC / DST SID fields.
+  packet_resizer #(
+    .SR_PKT_SIZE(SR_SIZE_INPUT))
+  inst_packet_resizer_in (
+    .clk(ce_clk), .reset(ce_rst),
+    .next_dst_sid(next_dst_sid),
+    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+    .i_tdata(m_axis_data_tdata), .i_tuser(m_axis_data_tuser),
+    .i_tlast(m_axis_data_tlast), .i_tvalid(m_axis_data_tvalid), .i_tready(m_axis_data_tready),
+    .o_tdata(in_data_tdata), .o_tuser(in_data_tuser),
+    .o_tlast(in_data_tlast), .o_tvalid(in_data_tvalid), .o_tready(in_data_tready));
+
+
+  // *************************************************
+  // RF-Neural-NOC
+  // *************************************************
+  // TODO: Convert to axi-stream, propagate tlast
+  // TODO: Wipe operations on unaligned tlast?? 
+  // TODO: Add tuser operations in HLS block
+  // TODO: Hardcode packet size into the HLS block
   ex_1layer inst_example_layer1 (
     .ap_clk(ce_clk), .ap_rst(ce_rst),
-    .data_V_dout(m_axis_data_tdata), .data_V_empty_n(m_axis_data_tvalid), .data_V_read(m_axis_data_tready), 
-    .res_V_din(s_axis_data_tdata), .res_V_full_n(s_axis_data_tready), .res_V_write(s_axis_data_tvalid));
+    .data_V_dout(in_data_tdata), .data_V_empty_n(in_data_tvalid), .data_V_read(in_data_tready), 
+    .res_V_din(out_data_tdata), .res_V_full_n(out_data_tready), .res_V_write(out_data_tvalid));
+
+  assign out_data_tuser = in_data_tuser;
+  assign out_data_tlast = 1'b0;
+
+  packet_resizer #(
+    .SR_PKT_SIZE(SR_SIZE_OUTPUT))
+  inst_packet_resizer_out (
+    .clk(ce_clk), .reset(ce_rst),
+    .next_dst_sid(next_dst_sid),
+    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+    .i_tdata(out_data_tdata), .i_tuser(out_data_tuser),
+    .i_tlast(out_data_tlast), .i_tvalid(out_data_tvalid), .i_tready(out_data_tready),
+    .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser),
+    .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
 
   // Temporarily say tlast = 0
-  assign s_axis_data_tlast = 1'b0;
+  // assign s_axis_data_tlast = 1'b0;
 
 endmodule
