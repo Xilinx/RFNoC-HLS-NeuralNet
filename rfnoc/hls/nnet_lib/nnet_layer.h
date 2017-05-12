@@ -60,25 +60,23 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
 
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
-    #pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
+	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
     #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
 
-    Reset: for(int iacc = 0; iacc < N_OUT; iacc++) {
-        #pragma HLS UNROLL
+    Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
+    #pragma HLS UNROLL
         acc[iacc] = 0;
-    }
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
-        data_cache = data[ii];
+    #pragma HLS PIPELINE
+    	data_cache = data[ii];
         Product: for(int jj = 0; jj < N_OUT; jj++) {
-        #pragma HLS UNROLL factor=8
-        #pragma HLS PIPELINE
             acc[jj] += data_cache * weights[ii][jj];
         }
     }
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
-    #pragma HLS PIPELINE
+	#pragma HLS PIPELINE
         res[ires] = acc[ires] + biases[ires];
 }
 
@@ -102,7 +100,7 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
     #pragma HLS RESOURCE variable=acc core=RAM_2P_LUTRAM
 
     Reset: for(int iacc = 0; iacc < N_OUT; iacc++) {
-        #pragma HLS UNROLL factor=8
+    #pragma HLS UNROLL factor=8
         acc[iacc] = 0;
     }
 
