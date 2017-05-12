@@ -60,27 +60,25 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
 
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
-	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
+    #pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
     #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
 
-    Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
-    #pragma HLS UNROLL
+    Reset: for(int iacc = 0; iacc < N_OUT; iacc++) {
+        #pragma HLS UNROLL
         acc[iacc] = 0;
+    }
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
-    #pragma HLS PIPELINE
-
+        data_cache = data[ii];
         Product: for(int jj = 0; jj < N_OUT; jj++) {
-        #pragma HLS UNROLL
-            if (jj == 0) data_cache = data[ii];
-            weight_T weight = weights[ii][jj];
-            acc[jj] += data_cache * weight;
-            //std::cout << "Multiplying: " << weight << " x " << data_cache[ii] << std::endl;
+        #pragma HLS UNROLL factor=8
+        #pragma HLS PIPELINE
+            acc[jj] += data_cache * weights[ii][jj];
         }
     }
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
-	#pragma HLS PIPELINE
+    #pragma HLS PIPELINE
         res[ires] = acc[ires] + biases[ires];
 }
 
@@ -97,26 +95,28 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
 
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
-    #pragma HLS ARRAY_PARTITION variable=weights block factor=8 dim=2
-    #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=8
-	#pragma HLS allocation instances=mul limit=8 operation
+    #pragma HLS ARRAY_PARTITION variable=weights cyclic factor=8 dim=2
+    #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=8 dim=1
 
-    Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
-    #pragma HLS UNROLL
+    // Optional... Cuts down on a few of the BRAMs
+    #pragma HLS RESOURCE variable=acc core=RAM_2P_LUTRAM
+
+    Reset: for(int iacc = 0; iacc < N_OUT; iacc++) {
+        #pragma HLS UNROLL factor=8
         acc[iacc] = 0;
+    }
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
-    #pragma HLS PIPELINE
-    	data_cache = data[ii];
+        data_cache = data[ii];
         Product: for(int jj = 0; jj < N_OUT; jj++) {
         #pragma HLS UNROLL factor=8
-		#pragma HLS PIPELINE
+        #pragma HLS PIPELINE
             acc[jj] += data_cache * weights[ii][jj];
         }
     }
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
-	#pragma HLS PIPELINE
+    #pragma HLS PIPELINE
         res[ires] = acc[ires] + biases[ires];
 }
 
@@ -133,28 +133,28 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
 
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
-    #pragma HLS ARRAY_RESHAPE variable=weights block factor=256 dim=2
-    #pragma HLS ARRAY_PARTITION variable=acc block factor=256
-	#pragma HLS allocation instances=mul limit=256 operation
+    #pragma HLS ARRAY_PARTITION variable=weights cyclic factor=128 dim=2
+    #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=128 dim=1
 
-    Reset: for(int iacc = 0; iacc < N_OUT; iacc++)
-    #pragma HLS UNROLL
+    // Optional... Cuts down on a few of the BRAMs
+    #pragma HLS RESOURCE variable=acc core=RAM_2P_LUTRAM
+
+    Reset: for(int iacc = 0; iacc < N_OUT; iacc++) {
+        #pragma HLS UNROLL factor=128
         acc[iacc] = 0;
+    }
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
-    #pragma HLS PIPELINE
-
+        data_cache = data[ii];
         Product: for(int jj = 0; jj < N_OUT; jj++) {
-        #pragma HLS UNROLL factor=256
-//        	if (ii == 0) acc[jj] = 0;
-            if (jj == 0) data_cache = data[ii];
-            weight_T weight = weights[ii][jj];
-            acc[jj] += data_cache * weight;
+        #pragma HLS UNROLL factor=128
+        #pragma HLS PIPELINE
+            acc[jj] += data_cache * weights[ii][jj];
         }
     }
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
-	#pragma HLS PIPELINE
+    #pragma HLS PIPELINE
         res[ires] = acc[ires] + biases[ires];
 }
 
