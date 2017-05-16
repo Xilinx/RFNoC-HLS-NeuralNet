@@ -1,3 +1,3 @@
-$(addprefix /home/ejk/prefix/rfnoc/src/rfnoc-fpgannet/rfnoc/fpga-src/, \
-) \
+$(addprefix SOURCES_PATH, \
 noc_block_ex1layer.v \
+)
