@@ -41,6 +41,7 @@ $(abspath noc_block_ex1layer_tb.sv) \
 $(abspath ../../fpga-src/noc_block_ex1layer.v)
 
 INC_SRCS += $(abspath mnist_validation_data_784x1.dat \
+$(abspath mnist_validation_output_10x1.dat) \
 $(HLS_IP_OUTPUT_INCS) \
 )
 

@@ -181,19 +181,52 @@ module noc_block_ex1layer #(
     endcase
   end
 
-  /* Simple Loopback */
-  // assign m_axis_data_tready = s_axis_data_tready;
-  // assign s_axis_data_tvalid = m_axis_data_tvalid;
-  // assign s_axis_data_tlast  = m_axis_data_tlast;
-  // assign s_axis_data_tdata  = m_axis_data_tdata;
+  wire [15:0]  in_data_tdata,  out_data_tdata;
+  wire [127:0] in_data_tuser,  out_data_tuser;
+  wire         in_data_tlast,  out_data_tlast;
+  wire         in_data_tvalid, out_data_tvalid;
+  wire         in_data_tready, out_data_tready;
 
-  wire [15:0] in_data_tdata, out_data_tdata;
-  wire [127:0] in_data_tuser, out_data_tuser;
-  wire        in_data_tlast, out_data_tlast;
-  wire        in_data_tvalid, out_data_tvalid;
-  wire        in_data_tready, out_data_tready;
+  localparam HEADER_FIFO_SIZE = 3;
 
-  // Modify packet header data, same as input except SRC / DST SID fields.
+  reg sof_in  = 1'b1;
+  reg sof_out = 1'b1;
+  always @(posedge ce_clk) begin
+    if (ce_rst) begin
+      sof_in     <= 1'b1;
+      sof_out    <= 1'b1;
+    end else begin
+      if (m_axis_data_tvalid & m_axis_data_tready) begin
+        if (m_axis_data_tlast) begin
+          sof_in  <= 1'b1;
+        end else begin
+          sof_in  <= 1'b0;
+        end
+      end
+      if (s_axis_data_tvalid & s_axis_data_tready) begin
+        if (s_axis_data_tlast) begin
+          sof_out  <= 1'b1;
+        end else begin
+          sof_out  <= 1'b0;
+        end
+      end
+    end
+  end
+
+  wire [127:0] hdr_tuser_int;
+  wire hdr_tuser_valid = sof_in & m_axis_data_tvalid & m_axis_data_tready;
+  wire hdr_tuser_ready = sof_out & s_axis_data_tvalid & s_axis_data_tready;
+
+  axi_fifo #(
+    .WIDTH(128), .SIZE(HEADER_FIFO_SIZE))
+  axi_fifo_header (
+    .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
+    .i_tdata(m_axis_data_tuser),
+    .i_tvalid(hdr_tuser_valid), .i_tready(),
+    .o_tdata(hdr_tuser_int),
+    .o_tvalid(), .o_tready(hdr_tuser_ready), // Consume header on last output sample
+    .space(), .occupied());
+
   packet_resizer #(
     .SR_PKT_SIZE(SR_SIZE_INPUT))
   inst_packet_resizer_in (
@@ -205,10 +238,30 @@ module noc_block_ex1layer #(
     .o_tdata(in_data_tdata), .o_tuser(in_data_tuser),
     .o_tlast(in_data_tlast), .o_tvalid(in_data_tvalid), .o_tready(in_data_tready));
 
+  packet_resizer #(
+    .SR_PKT_SIZE(SR_SIZE_OUTPUT))
+  inst_packet_resizer_out (
+    .clk(ce_clk), .reset(ce_rst),
+    .next_dst_sid(next_dst_sid),
+    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+    .i_tdata(out_data_tdata), .i_tuser(hdr_tuser_int),
+    .i_tlast(out_data_tlast), .i_tvalid(out_data_tvalid), .i_tready(out_data_tready),
+    .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser),
+    .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
+
+  // Temporarily say tlast = 0
+  assign out_data_tlast = 1'b0;
+
+
 
   // *************************************************
   // RF-Neural-NOC
+  //   
+  //  + Insert the HLS generated block below
+  //  + Connect the "in_data" and "out_data" busses 
+  //  + Connect packet_size indicators
   // *************************************************
+
   // TODO: Convert to axi-stream, propagate tlast
   // TODO: Wipe operations on unaligned tlast?? 
   // TODO: Add tuser operations in HLS block
@@ -218,21 +271,5 @@ module noc_block_ex1layer #(
     .data_V_dout(in_data_tdata), .data_V_empty_n(in_data_tvalid), .data_V_read(in_data_tready), 
     .res_V_din(out_data_tdata), .res_V_full_n(out_data_tready), .res_V_write(out_data_tvalid));
 
-  assign out_data_tuser = in_data_tuser;
-  assign out_data_tlast = 1'b0;
-
-  packet_resizer #(
-    .SR_PKT_SIZE(SR_SIZE_OUTPUT))
-  inst_packet_resizer_out (
-    .clk(ce_clk), .reset(ce_rst),
-    .next_dst_sid(next_dst_sid),
-    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
-    .i_tdata(out_data_tdata), .i_tuser(out_data_tuser),
-    .i_tlast(out_data_tlast), .i_tvalid(out_data_tvalid), .i_tready(out_data_tready),
-    .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser),
-    .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
-
-  // Temporarily say tlast = 0
-  // assign s_axis_data_tlast = 1'b0;
 
 endmodule
