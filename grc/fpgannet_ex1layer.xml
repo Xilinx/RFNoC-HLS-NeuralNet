@@ -24,32 +24,6 @@
        * key (makes the value accessible as $keyname, e.g. in the make node)
        * type -->
 
-
-  <param>
-    <name>Host Data Type</name>
-    <key>type</key>
-    <type>enum</type>
-    <option>
-      <name>Complex float32</name>
-      <key>fc32</key>
-      <opt>type:complex</opt>
-    </option>
-    <option>
-      <name>Complex int16</name>
-      <key>sc16</key>
-      <opt>type:sc16</opt>
-    </option>
-    <option>
-      <name>Byte</name>
-      <key>u8</key>
-      <opt>type:byte</opt>
-    </option>
-    <option>
-      <name>VITA word32</name>
-      <key>item32</key>
-      <opt>type:s32</opt>
-    </option>
-  </param>
   <!--RFNoC basic block configuration -->
   <param>
     <name>Device Select</name>
@@ -116,7 +90,7 @@
        * optional (set to 1 for optional inputs) -->
   <sink>
     <name>in</name>
-    <type>type:s16</type>
+    <type>s16</type>
     <vlen>$grvlenin</vlen>
     <domain>rfnoc</domain>
   </sink>
@@ -128,7 +102,7 @@
        * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
-    <type>type:s16</type>
+    <type>s16</type>
     <vlen>$grvlenout</vlen>
     <domain>rfnoc</domain>
   </source>
