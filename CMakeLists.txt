@@ -26,9 +26,11 @@ enable_testing()
 
 
 #install to PyBOMBS target prefix if defined
-if(DEFINED ENV{PYBOMBS_PREFIX})
-    set(CMAKE_INSTALL_PREFIX $ENV{PYBOMBS_PREFIX})
-    message(STATUS "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}")
+if(NOT DEFINED ENV{CMAKE_INSTALL_PREFIX})
+    if(DEFINED ENV{PYBOMBS_PREFIX})
+        set(CMAKE_INSTALL_PREFIX $ENV{PYBOMBS_PREFIX})
+        message(STATUS "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}")
+    endif()
 endif()
 
 
