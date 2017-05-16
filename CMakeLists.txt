@@ -52,6 +52,32 @@ if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
     add_definitions(-fvisibility=hidden)
 endif()
 
+# Configure C++ and C standards
+IF(CMAKE_VERSION VERSION_LESS "3.1")
+    IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    ELSE()
+        MESSAGE(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
+    ENDIF()
+
+    IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+    ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+    ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+    ELSE()
+        MESSAGE(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
+    ENDIF()
+ELSE()
+    SET(CMAKE_C_STANDARD 99)
+    SET(CMAKE_CXX_STANDARD 11)
+ENDIF()
+
 ########################################################################
 # Find boost
 ########################################################################
