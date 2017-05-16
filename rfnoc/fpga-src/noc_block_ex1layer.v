@@ -187,6 +187,16 @@ module noc_block_ex1layer #(
   wire         in_data_tvalid, out_data_tvalid;
   wire         in_data_tready, out_data_tready;
 
+
+  // *************************************************
+  // Neural Net Wrapper
+  //   
+  //  + Force resize input and output packets
+  //  + Save off tuser for the output packet
+  // *************************************************
+
+  // TODO: Pull the wrapper code into a fpga block
+
   localparam HEADER_FIFO_SIZE = 3;
 
   reg sof_in  = 1'b1;
@@ -251,7 +261,6 @@ module noc_block_ex1layer #(
 
   // Temporarily say tlast = 0
   assign out_data_tlast = 1'b0;
-
 
 
   // *************************************************
