@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `define NS_PER_TICK 1
-`define NUM_TEST_CASES 4
+`define NUM_TEST_CASES 5
 
 `include "sim_exec_report.vh"
 `include "sim_clks_rsts.vh"
@@ -72,6 +72,8 @@ module noc_block_ex1layer_tb();
     /********************************************************
     ** Test 5 -- Test sequence
     ********************************************************/
+    
+    `TEST_CASE_START("Test Neural Net Data");
 
     // Run the test twice to make sure we can recreate results
     fork
