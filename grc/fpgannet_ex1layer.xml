@@ -1,24 +1,23 @@
 <?xml version="1.0"?>
 <block>
-  <name>RFNoC: ex1layer</name>
+  <name>RFNoC: 1 Layer Example</name>
   <key>fpgannet_ex1layer</key>
   <category>fpgannet</category>
-  <import>import fpgannet</import>
-  <make>fpgannet.ex1layer(
-          self.device3,
-          uhd.stream_args( # TX Stream Args
-                cpu_format="$type",
-                otw_format="$otw",
-                args="gr_vlen={0},{1}".format(${grvlen}, "" if $grvlen == 1 else "spp={0}".format($grvlen)),
-          ),
-          uhd.stream_args( # RX Stream Args
-                cpu_format="$type",
-                otw_format="$otw",
-                args="gr_vlen={0},{1}".format(${grvlen}, "" if $grvlen == 1 else "spp={0}".format($grvlen)),
-          ),
-          $block_index,
-          $device_index
-  )</make>
+  <import>import ettus</import>
+  <make>ettus.rfnoc_generic(
+    self.device3,
+    uhd.stream_args( \# TX Stream Args
+        cpu_format="s16",
+        otw_format="s16",
+        args="gr_vlen={0},{1}".format(${grvlenin}, "" if $grvlenin == 1 else "spp={0}".format($grvlenin)),
+    ),
+    uhd.stream_args( \# RX Stream Args
+        cpu_format="s16",
+        otw_format="s16",
+        args="gr_vlen={0},{1}".format(${grvlenout}, "" if $grvlenout == 1 else "spp={0}".format($grvlenout)),
+    ),
+    "ex1layer", $block_index, $device_index,
+)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -80,9 +79,15 @@
   </param>
 
   <param>
-    <name>Force Vector Length</name>
-    <key>grvlen</key>
-    <value>1</value>
+    <name>Force Vector Length In</name>
+    <key>grvlenin</key>
+    <value>784</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Force Vector Length Out</name>
+    <key>grvlenout</key>
+    <value>10</value>
     <type>int</type>
   </param>
 
@@ -103,11 +108,6 @@
       <key>u8</key>
     </option>
   </param>
-  <param>
-    <name>...</name>
-    <key>...</key>
-    <type>...</type>
-  </param>
 
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
@@ -116,8 +116,8 @@
        * optional (set to 1 for optional inputs) -->
   <sink>
     <name>in</name>
-    <type>$type.type</type>
-    <vlen>$grvlen</vlen>
+    <type>type:s16</type>
+    <vlen>$grvlenin</vlen>
     <domain>rfnoc</domain>
   </sink>
 
@@ -128,8 +128,8 @@
        * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
-    <type>$type.type</type>
-    <vlen>$grvlen</vlen>
+    <type>type:s16</type>
+    <vlen>$grvlenout</vlen>
     <domain>rfnoc</domain>
   </source>
 </block>

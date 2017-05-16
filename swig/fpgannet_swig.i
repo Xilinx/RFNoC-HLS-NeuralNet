@@ -15,8 +15,4 @@
 %{
 #include "ettus/device3.h"
 #include "ettus/rfnoc_block_impl.h"
-#include "fpgannet/ex1layer.h"
 %}
-
-%include "fpgannet/ex1layer.h"
-GR_SWIG_BLOCK_MAGIC2(fpgannet, ex1layer);
