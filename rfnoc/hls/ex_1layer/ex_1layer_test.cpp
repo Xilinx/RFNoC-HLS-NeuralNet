@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   int err_cnt = 0;
   float err;
   for (int ii = 0; ii < N_LAYER_OUT; ii++) {
-	err = float(res[ii])-answer[ii];
+    err = float(res[ii])-answer[ii];
     std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << "  ErrVal: " << err << std::endl;
     if (abs(err) > 0.5) err_cnt++;
   }
