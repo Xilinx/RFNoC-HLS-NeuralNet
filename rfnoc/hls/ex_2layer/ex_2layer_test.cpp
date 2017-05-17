@@ -32,7 +32,10 @@ int main(int argc, char **argv)
 
   // Run the basic neural net block
   result_t res[N_LAYER_OUT];
-  ex_2layer(data, coeffs1, biases1, coeffs2, biases2, res);
+  unsigned short size_in, size_out;
+  ex_2layer(data, coeffs1, biases1, coeffs2, biases2, res, size_in, size_out);
+
+  std::cout << "Found network size: " << size_in << "x" << size_out << std::endl;
 
   // Print result vector
   int err_cnt = 0;

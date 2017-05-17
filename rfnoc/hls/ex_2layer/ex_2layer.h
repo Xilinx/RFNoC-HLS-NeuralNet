@@ -31,6 +31,8 @@ void ex_2layer(
       bias_t    biases1[N_LAYER1],
       coeff_t   weights2[N_LAYER1][N_LAYER_OUT],
       bias_t    biases2[N_LAYER_OUT],
-      result_t  res[N_LAYER_OUT]);
+      result_t  res[N_LAYER_OUT],
+      unsigned short &const_size_in,
+      unsigned short &const_size_out);
 
 #endif

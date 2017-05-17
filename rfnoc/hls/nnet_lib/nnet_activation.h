@@ -19,13 +19,13 @@ void  relu(data_T data[N_IN], res_T res[N_IN])
     }
 }
 
-template<class data_T, class N_TABLE>
-void init_sigmoid_table(data_T table_out[N_IN])
+template<class data_T, int N_TABLE>
+void init_sigmoid_table(data_T table_out[N_TABLE])
 {
     // "Default" sigmoid function:
     //   result = 1/(1+e^(-x))
-    for (int ii = 0; ii < N_IN; ii++) {
-        float in_val = 8*(ii-N_IN/2)/N_IN;
+    for (int ii = 0; ii < N_TABLE; ii++) {
+        float in_val = 8*(ii-N_TABLE/2)/N_TABLE;
         data_T real_val = 1.0 / (1 + exp(-in_val));
         table_out[ii] = real_val;
     }
@@ -52,19 +52,19 @@ void  sigmoid(data_T data[N_IN], res_T res[N_IN])
     }
 }
 
-template<class data_T, class res_T, int N_IN>
-void  tanh(data_T data[N_IN], res_T res[N_IN])
-{
-    // Use a lookup table for the tanh function
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
-    data_T datareg;
-    for (int ii=0; ii<N_IN; ii++) {
-        datareg = data[ii];
-        if (datareg > 0) res[ii] = datareg;
-        else res[ii] = 0;
-    }
-}
+// template<class data_T, class res_T, int N_IN>
+// void  tanh(data_T data[N_IN], res_T res[N_IN])
+// {
+//     // Use a lookup table for the tanh function
+//     #pragma HLS INTERFACE ap_fifo port=data
+//     #pragma HLS INTERFACE ap_fifo port=res
+//     data_T datareg;
+//     for (int ii=0; ii<N_IN; ii++) {
+//         datareg = data[ii];
+//         if (datareg > 0) res[ii] = datareg;
+//         else res[ii] = 0;
+//     }
+// }
 
 }
 
