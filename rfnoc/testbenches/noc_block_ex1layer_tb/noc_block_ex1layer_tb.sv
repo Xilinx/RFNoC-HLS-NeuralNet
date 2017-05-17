@@ -74,8 +74,8 @@ module noc_block_ex1layer_tb();
     ********************************************************/
     
     `TEST_CASE_START("Test Neural Net Data");
-
     // Run the test twice to make sure we can recreate results
+
     fork
       begin
         real data_float;

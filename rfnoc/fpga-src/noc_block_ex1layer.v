@@ -69,13 +69,13 @@ module noc_block_ex1layer #(
   // Convert RFNoC Shell interface into AXI stream interface
   //
   ////////////////////////////////////////////////////////////
-  wire [15:0] m_axis_data_tdata;
+  wire [31:0] m_axis_data_tdata;
   wire [127:0] m_axis_data_tuser;
   wire        m_axis_data_tlast;
   wire        m_axis_data_tvalid;
   wire        m_axis_data_tready;
 
-  wire [15:0] s_axis_data_tdata;
+  wire [31:0] s_axis_data_tdata;
   wire [127:0] s_axis_data_tuser;
   wire        s_axis_data_tlast;
   wire        s_axis_data_tvalid;
@@ -189,19 +189,20 @@ module noc_block_ex1layer #(
 
   // TODO: Pull the wrapper code into a fpga block
 
-  wire [15:0]  in_data_tdata,  out_data_tdata;
+  wire [32:0]  in_data_tdata,  out_data_tdata;
   wire         in_data_tlast,  out_data_tlast;
   wire         in_data_tvalid, out_data_tvalid;
   wire         in_data_tready, out_data_tready;
 
+  wire [15:0] const_size_in, const_size_out;
+
   nnet_vector_wrapper #(
-    .WIDTH(8),
     .SR_SIZE_INPUT(SR_SIZE_INPUT),
     .SR_SIZE_OUTPUT(SR_SIZE_OUTPUT) ) 
   inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
     .next_dst_sid(next_dst_sid),
-    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+    .pkt_size_in(const_size_in), .pkt_size_out(const_size_out),
     // Interface from axi_wrapper
     .i_tdata(m_axis_data_tdata),
     .i_tlast(m_axis_data_tlast),
@@ -232,16 +233,17 @@ module noc_block_ex1layer #(
   //  + Connect packet_size indicators
   // *************************************************
 
-  // TODO: Convert to axi-stream, propagate tlast
-  // TODO: Wipe operations on unaligned tlast?? 
-  // TODO: Add tuser operations in HLS block
-  // TODO: Hardcode packet size into the HLS block
+  // Assign out_data_tdata MSBs to 0. Currently only using 16 bit data
+  assign out_data_tdata[31:16] = 0;
+  // Assign tlast = 0... currently not propagated in the HLS ports
+  assign out_data_tlast = 1'b0;
+
+  // TODO: Convert to axi-stream. Propagate tlast and other signals. 
+  // TODO : Wipe block on unaligned tlast??
   ex_1layer inst_example_layer1 (
     .ap_clk(ce_clk), .ap_rst(ce_rst),
+    .const_size_in(const_size_in), .const_size_out(const_size_out),
     .data_V_dout(in_data_tdata), .data_V_empty_n(in_data_tvalid), .data_V_read(in_data_tready), 
     .res_V_din(out_data_tdata), .res_V_full_n(out_data_tready), .res_V_write(out_data_tvalid));
-
-  // Temporarily say tlast = 0
-  assign out_data_tlast = 1'b0;
 
 endmodule

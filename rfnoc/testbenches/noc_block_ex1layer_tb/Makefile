@@ -30,6 +30,7 @@ include $(FPGANNET_HLS_DIR)/ex_1layer/Makefile.inc
 RFNOC_SRCS += $(abspath \
 $(HLS_IP_OUTPUT_SRCS) \
 $(abspath ../../fpga-src/nnet_vector_wrapper.v) \
+$(abspath ../../fpga-src/packet_resizer_variable.v) \
 )
 
 # Define only one toplevel module

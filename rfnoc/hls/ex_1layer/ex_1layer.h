@@ -18,7 +18,9 @@ typedef ap_fixed<16,8> result_t;
 // Prototype of top level function for C-synthesis
 void ex_1layer(
 	  input_t data[N_LAYER_IN],
-	  result_t res[N_LAYER_OUT]);
+	  result_t res[N_LAYER_OUT],
+	  unsigned short &const_size_in,
+	  unsigned short &const_size_out);
 
 
 #endif

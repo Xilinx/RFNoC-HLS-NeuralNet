@@ -10,7 +10,7 @@ module nnet_vector_wrapper #(
 )(
   input clk, input reset, input clear,
   input [15:0] next_dst_sid,
-  input set_stb, input [7:0] set_addr, input [31:0] set_data,
+  input [15:0] pkt_size_in, pkt_size_out,
 
   // AXI Interface from axi_wrapper
   input [2*WIDTH-1:0] i_tdata, input i_tlast, input i_tvalid, output i_tready, input [HEADER_WIDTH-1:0] i_tuser,
@@ -23,12 +23,10 @@ module nnet_vector_wrapper #(
 
   wire [HEADER_WIDTH-1:0] m_axis_data_tuser;
 
-  packet_resizer #(
-    .SR_PKT_SIZE(SR_SIZE_INPUT))
-  inst_packet_resizer_in (
+  packet_resizer_variable inst_packet_resizer_in (
     .clk(clk), .reset(reset | clear),
     .next_dst_sid(next_dst_sid),
-    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+    .pkt_size(pkt_size_in),
     .i_tdata(i_tdata), .i_tuser(i_tuser),
     .i_tlast(i_tlast), .i_tvalid(i_tvalid), .i_tready(i_tready),
     .o_tdata(m_axis_data_tdata), .o_tuser(m_axis_data_tuser),
@@ -73,12 +71,10 @@ module nnet_vector_wrapper #(
     .space(), .occupied());
 
 
-  packet_resizer #(
-    .SR_PKT_SIZE(SR_SIZE_OUTPUT))
-  inst_packet_resizer_out (
+  packet_resizer_variable inst_packet_resizer_out (
     .clk(clk), .reset(reset | clear),
     .next_dst_sid(next_dst_sid),
-    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+    .pkt_size(pkt_size_out),
     .i_tdata(s_axis_data_tdata), .i_tuser(hdr_tuser_int),
     .i_tlast(s_axis_data_tlast), .i_tvalid(s_axis_data_tvalid), .i_tready(s_axis_data_tready),
     .o_tdata(o_tdata), .o_tuser(o_tuser),
