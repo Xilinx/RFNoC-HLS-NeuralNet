@@ -22,11 +22,12 @@ void  relu(data_T data[N_IN], res_T res[N_IN])
 template<class data_T, int N_TABLE>
 void init_sigmoid_table(data_T table_out[N_TABLE])
 {
-    // "Default" sigmoid function:
+    // Default logistic sigmoid function:
     //   result = 1/(1+e^(-x))
     for (int ii = 0; ii < N_TABLE; ii++) {
-        float in_val = 8*(ii-N_TABLE/2)/N_TABLE;
+        float in_val = 2*8.0*(ii-float(N_TABLE)/2.0)/float(N_TABLE);
         data_T real_val = 1.0 / (1 + exp(-in_val));
+        //std::cout << "Lookup table In Value: " << in_val << " Result: " << real_val << std::endl;
         table_out[ii] = real_val;
     }
 }
@@ -43,11 +44,13 @@ void  sigmoid(data_T data[N_IN], res_T res[N_IN])
 
     // Index into the lookup table based on data
     data_T datareg;
-    ap_fixed<8,4,AP_RND_ZERO> data_round;
-    short index;
+    int data_round;
+    int index;
     for (int ii=0; ii<N_IN; ii++) {
-        data_round = data[ii];
-        index = data_round << 4;
+        data_round = data[ii]*16;
+        index = data_round + 8*16;
+        if (index < 0)   index = 0;
+        if (index > 255) index = 255;
         res[ii] = sigmoid_table[index];
     }
 }
