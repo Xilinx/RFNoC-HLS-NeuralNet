@@ -29,6 +29,7 @@ include $(FPGANNET_HLS_DIR)/ex_1layer/Makefile.inc
 # Include makefile for HLS files
 RFNOC_SRCS += $(abspath \
 $(HLS_IP_OUTPUT_SRCS) \
+$(abspath ../../fpga-src/nnet_vector_wrapper.v) \
 )
 
 # Define only one toplevel module
