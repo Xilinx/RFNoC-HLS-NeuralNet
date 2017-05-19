@@ -1,8 +1,8 @@
-#include "ex_activations.h"
+#include "test_activations.h"
 #include "nnet_activation.h"
 
 
-void ex_activations(
+void test_activations(
       data_t    data[N_LAYER],
       result_t  result[N_LAYER])
 {

@@ -9,4 +9,4 @@ vivado_hls -f build_prj.tcl
 
 Open the project:
 
-vivado_hls -p ex_activations_prj
+vivado_hls -p test_activations_prj

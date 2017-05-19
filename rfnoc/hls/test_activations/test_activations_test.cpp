@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "ex_activations.h"
+#include "test_activations.h"
 
 int main(int argc, char **argv)
 {
@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 
   // Run the basic neural net block
   result_t res[N_LAYER];
-  ex_activations(data, res);
+  test_activations(data, res);
 
   // Print result vector
   int err_cnt = 0;
