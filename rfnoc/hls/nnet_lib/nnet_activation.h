@@ -37,6 +37,12 @@ void  relu_max(data_T data[N_IN], res_T res[N_IN])
     }
 }
 
+template<class data_T, class res_T, int N_IN>
+void  relu6(data_T data[N_IN], res_T res[N_IN])
+{
+    relu_max<data_T, res_T, N_IN, 6>(data, res);
+}
+
 
 // *************************************************
 //       Sigmoid Activation
