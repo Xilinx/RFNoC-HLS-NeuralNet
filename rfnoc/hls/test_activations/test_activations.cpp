@@ -14,5 +14,6 @@ void test_activations(
     // ****************************************
 
     // Activation function
-    nnet::sigmoid<data_t, result_t, N_LAYER>(data, result);
+    nnet::sigmoid<data_t, result_t, N_LAYER, 256>(data, result);
+//    nnet::tanh<data_t, result_t, N_LAYER>(data, result);
 }
