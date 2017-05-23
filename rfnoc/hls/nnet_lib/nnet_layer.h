@@ -2,6 +2,7 @@
 #define NNET_LAYER_H_
 
 #include "nnet_default.h"
+#include "hls_stream.h"
 
 namespace nnet {
 

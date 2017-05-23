@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include "ap_fixed.h"
+#include "hls_stream.h"
 
 namespace nnet {
 
@@ -11,34 +12,34 @@ namespace nnet {
 //       RELU Activation
 // *************************************************
 template<class data_T, class res_T, int N_IN>
-void  relu(data_T data[N_IN], res_T res[N_IN])
+void  relu(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
     data_T datareg;
     for (int ii=0; ii<N_IN; ii++) {
-        datareg = data[ii];
-        if (datareg > 0) res[ii] = datareg;
-        else res[ii] = 0;
+        datareg = data.read();
+        if (datareg > 0) res << datareg;
+        else res << 0;
     }
 }
 
 template<class data_T, class res_T, int N_IN, int MAX_INT>
-void  relu_max(data_T data[N_IN], res_T res[N_IN])
+void  relu_max(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
     data_T datareg;
     for (int ii=0; ii<N_IN; ii++) {
-        datareg = data[ii];
-        if (datareg < 0) res[ii] = 0;
-        else if (datareg > MAX_INT) res[ii] = MAX_INT;
-        else res[ii] = datareg;
+        datareg = data.read();
+        if (datareg < 0) res << 0;
+        else if (datareg > MAX_INT) res << MAX_INT;
+        else res << datareg;
     }
 }
 
 template<class data_T, class res_T, int N_IN>
-void  relu6(data_T data[N_IN], res_T res[N_IN])
+void  relu6(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
     relu_max<data_T, res_T, N_IN, 6>(data, res);
 }
@@ -67,7 +68,7 @@ void init_sigmoid_table(data_T table_out[N_TABLE])
 }
 
 template<class data_T, class res_T, int N_IN, int TABLE_SIZE/*=1024*/>
-void  sigmoid(data_T data[N_IN], res_T res[N_IN])
+void  sigmoid(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
@@ -82,17 +83,17 @@ void  sigmoid(data_T data[N_IN], res_T res[N_IN])
     int index;
     for (int ii=0; ii<N_IN; ii++) {
     #pragma HLS PIPELINE
-        data_round = data[ii]*TABLE_SIZE/16;
+        data_round = data.read()*TABLE_SIZE/16;
         index = data_round + 8*TABLE_SIZE/16;
         if (index < 0)   index = 0;
         if (index > TABLE_SIZE-1) index = TABLE_SIZE-1;
-        res[ii] = sigmoid_table[index];
+        res << sigmoid_table[index];
     }
 }
 
 // Default table size provided here:
 template<class data_T, class res_T, int N_IN>
-void  sigmoid(data_T data[N_IN], res_T res[N_IN]){ sigmoid<data_T, res_T, N_IN, 1024>(data, res); }
+void  sigmoid(hls::stream<data_T> &data, hls::stream<res_T> &res){ sigmoid<data_T, res_T, N_IN, 1024>(data, res); }
 
 
 // *************************************************
@@ -114,7 +115,7 @@ void init_tanh_table(data_T table_out[N_TABLE])
 
 
 template<class data_T, class res_T, int N_IN, int TABLE_SIZE/*=1024*/>
-void  tanh(data_T data[N_IN], res_T res[N_IN])
+void  tanh(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
     #pragma HLS INTERFACE ap_fifo port=data
     #pragma HLS INTERFACE ap_fifo port=res
@@ -129,18 +130,18 @@ void  tanh(data_T data[N_IN], res_T res[N_IN])
     int index;
     for (int ii=0; ii<N_IN; ii++) {
     #pragma HLS PIPELINE
-        data_round = data[ii]*TABLE_SIZE/8;
+        data_round = data.read()*TABLE_SIZE/8;
         index = data_round + 4*TABLE_SIZE/8;
-        std::cout << "Input: "  << data[ii] << " Round: " << data_round << " Index: " << index << std::endl;
+        //std::cout << "Input: "  << data[ii] << " Round: " << data_round << " Index: " << index << std::endl;
         if (index < 0)   index = 0;
         if (index > TABLE_SIZE-1) index = TABLE_SIZE-1;
-        res[ii] = tanh_table[index];
+        res << tanh_table[index];
     }
 }
 
 // Default table size provided here:
 template<class data_T, class res_T, int N_IN>
-void  tanh(data_T data[N_IN], res_T res[N_IN]){ tanh<data_T, res_T, N_IN, 1024>(data, res); }
+void  tanh(hls::stream<data_T> &data, hls::stream<res_T> &res){ tanh<data_T, res_T, N_IN, 1024>(data, res); }
 
 }
 

@@ -3,6 +3,7 @@
 
 #include <complex>
 #include "ap_fixed.h"
+#include "hls_stream.h"
 
 typedef ap_fixed<16,8> data_t;
 typedef ap_fixed<16,2> result_t;
@@ -13,7 +14,7 @@ typedef ap_fixed<16,2> result_t;
 
 // Prototype of top level function for C-synthesis
 void test_activations(
-		data_t data[N_LAYER],
-      result_t result[N_LAYER]);
+		hls::stream<data_t> &data,
+      hls::stream<result_t> &result);
 
 #endif
