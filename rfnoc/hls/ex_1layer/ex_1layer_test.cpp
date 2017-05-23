@@ -27,18 +27,26 @@ int main(int argc, char **argv)
 //  rval = read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer1_biases_small_256x1.dat", biases);
 
   // Run the basic neural net block
-  result_t res[N_LAYER_OUT];
+//  result_t res[N_LAYER_OUT];
   unsigned short size_in, size_out;
-  ex_1layer(data, res, size_in, size_out);
+
+  hls::stream<input_t> data_str;
+  for (int idat=0; idat < N_LAYER_IN; idat++) {
+    data_str << data[idat];
+  }
+
+  hls::stream<result_t> res_str;
+  ex_1layer(data_str, res_str, size_in, size_out);
 
   std::cout << "Found network size: " << size_in << "x" << size_out << std::endl;
 
   // Print result vector
   int err_cnt = 0;
-  float err;
+  float err, curr_data;
   for (int ii = 0; ii < N_LAYER_OUT; ii++) {
-    err = float(res[ii])-answer[ii];
-    std::cout << " Expected: " << answer[ii] << "   Received: " << res[ii] << "  ErrVal: " << err << std::endl;
+	curr_data = res_str.read();
+    err = curr_data-answer[ii];
+    std::cout << " Expected: " << answer[ii] << "   Received: " << curr_data << "  ErrVal: " << err << std::endl;
     if (abs(err) > 0.5) err_cnt++;
   }
   std::cout<< err_cnt << std::endl;

@@ -5,41 +5,46 @@
 
 namespace nnet {
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
-class layer {
-    protected:
-        template<int N_IN, int N_OUT>
-        void compute_small_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_small_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
+    weight_T  weights[N_IN][N_OUT],
+    bias_T    biases[N_OUT]);
 
-        template<int N_IN, int N_OUT>
-        void compute_medium_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_medium_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
+    weight_T  weights[N_IN][N_OUT],
+    bias_T    biases[N_OUT]);
 
-        template<int N_IN, int N_OUT>
-        void compute_large_outputs(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
-    private:
-    public:
-        layer() { /*Do Nothing (for now)*/};
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_large_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
+    weight_T  weights[N_IN][N_OUT],
+    bias_T    biases[N_OUT]);
 
-        template<int N_IN, int N_OUT>
-        void compute(data_T data[N_IN], res_T res[N_OUT], weight_T weights[N_IN][N_OUT], bias_T biases[N_OUT]);
-};
+// *************************************************
+//       Entry Function
+// *************************************************
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
-template<int N_IN, int N_OUT>
-void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
-    data_T    data[N_IN],
-    res_T     res[N_OUT],
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
     weight_T  weights[N_IN][N_OUT],
     bias_T    biases[N_OUT])
 {
     if (N_OUT >= 512) {
-        compute_large_outputs<N_IN, N_OUT>(data, res, weights, biases);
+        compute_large_layer<data_T, res_T, weight_T, bias_T, acc_T, N_IN, N_OUT>(data, res, weights, biases);
     }
     else if (N_OUT >= 32) {
-        compute_medium_outputs<N_IN, N_OUT>(data, res, weights, biases);
+        compute_medium_layer<data_T, res_T, weight_T, bias_T, acc_T, N_IN, N_OUT>(data, res, weights, biases);
     }
     else {
-        compute_small_outputs<N_IN, N_OUT>(data, res, weights, biases);
+        compute_small_layer<data_T, res_T, weight_T, bias_T, acc_T, N_IN, N_OUT>(data, res, weights, biases);
     }
 }
 
@@ -47,11 +52,11 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute(
 //       Possible implementation options
 // *************************************************
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
-template<int N_IN, int N_OUT>
-void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
-    data_T    data[N_IN],
-    res_T     res[N_OUT],
+
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_small_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
     weight_T  weights[N_IN][N_OUT],
     bias_T    biases[N_OUT])
 {
@@ -69,7 +74,7 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
     #pragma HLS PIPELINE
-    	data_cache = data[ii];
+    	data_cache = data.read();
         Product: for(int jj = 0; jj < N_OUT; jj++) {
             acc[jj] += data_cache * weights[ii][jj];
         }
@@ -77,14 +82,14 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_small_outputs(
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
 	#pragma HLS PIPELINE
-        res[ires] = acc[ires] + biases[ires];
+        res << acc[ires] + biases[ires];
 }
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
-template<int N_IN, int N_OUT>
-void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
-    data_T    data[N_IN],
-    res_T     res[N_OUT],
+
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_medium_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
     weight_T  weights[N_IN][N_OUT],
     bias_T    biases[N_OUT])
 {
@@ -105,7 +110,7 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
     }
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
-        data_cache = data[ii];
+        data_cache = data.read();
         Product: for(int jj = 0; jj < N_OUT; jj++) {
         #pragma HLS UNROLL factor=8
         #pragma HLS PIPELINE
@@ -115,14 +120,14 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_medium_outputs(
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
     #pragma HLS PIPELINE
-        res[ires] = acc[ires] + biases[ires];
+        res << acc[ires] + biases[ires];
 }
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T>
-template<int N_IN, int N_OUT>
-void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
-    data_T    data[N_IN],
-    res_T     res[N_OUT],
+
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
+void compute_large_layer(
+    hls::stream<data_T>    &data,
+    hls::stream<res_T>     &res,
     weight_T  weights[N_IN][N_OUT],
     bias_T    biases[N_OUT])
 {
@@ -143,7 +148,7 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
     }
 
     NewInput: for(int ii = 0; ii < N_IN; ii++) {
-        data_cache = data[ii];
+        data_cache = data.read();
         Product: for(int jj = 0; jj < N_OUT; jj++) {
         #pragma HLS UNROLL factor=128
         #pragma HLS PIPELINE
@@ -153,7 +158,7 @@ void layer<data_T, res_T, weight_T, bias_T, acc_T>::compute_large_outputs(
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
     #pragma HLS PIPELINE
-        res[ires] = acc[ires] + biases[ires];
+        res <<  acc[ires] + biases[ires];
 }
 
 }

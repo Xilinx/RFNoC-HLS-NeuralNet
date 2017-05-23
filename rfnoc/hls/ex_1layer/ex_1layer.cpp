@@ -10,8 +10,8 @@
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
 //void nnet_basic (axis &in, axis &out) {
 void ex_1layer(
-      input_t   data[N_LAYER_IN],
-      result_t  res[N_LAYER_OUT],
+      hls::stream<input_t> &data,
+      hls::stream<result_t> &res,
       unsigned short &const_size_in,
       unsigned short &const_size_out)
 {
@@ -29,6 +29,5 @@ void ex_1layer(
     // ****************************************
 
     // One fully connected layer
-    nnet::layer<input_t, result_t, coeff_t, bias_t, accum_t> layer1;
-    layer1.compute<N_LAYER_IN, N_LAYER_OUT>(data, res, weights, biases);
+    nnet::compute_layer<input_t, result_t, coeff_t, bias_t, accum_t, N_LAYER_IN, N_LAYER_OUT>(data, res, weights, biases);
 }
