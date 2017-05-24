@@ -17,10 +17,11 @@ void conv_iq(
     // Initial directives used from HLS User guide, pg 381
     // (https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_4/ug902-vivado-high-level-synthesis.pdf)
 
-    #pragma HLS DATAFLOW
-    #pragma HLS ARRAY_PARTITION variable=buffer complete
-
+    // #pragma HLS DATAFLOW
     data_T buffer[Y_FILT][2];
+
+    // #pragma HLS ARRAY_PARTITION variable=buffer complete
+    // #pragma HLS ARRAY_PARTITION variable=weights complete
 
     // Horizontal convolution
     RowLoop:for(int row = 0; row < Y_IN; row++) {
@@ -31,6 +32,7 @@ void conv_iq(
         acc_T q_out[CHAN_OUT];
         OutFiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
             OutChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
+            // #pragma HLS pipeline
                 if (jj==0) {
                     // Shift operation for buffer
                     buffer[ii][0] = ii < Y_FILT - 1 ? buffer[ii + 1][0] : i_val;

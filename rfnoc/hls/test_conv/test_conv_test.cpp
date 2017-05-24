@@ -78,9 +78,9 @@ int main_test2()
 int main(int argc, char **argv)
 {
     // RUN TEST1
-    // return main_test1();
+    return main_test1();
 
-    // RUN TEST2
-    return main_test2();
+    // // RUN TEST2
+    // return main_test2();
 }
 
