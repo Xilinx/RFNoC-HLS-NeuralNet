@@ -23,14 +23,16 @@ int main_test1()
   hls::stream<result_t> res;
   test_conv(data_i, data_q, res);
 
-  result_t resval;
-  float err;
+  float err, resval, refval;
   int errcount = 0;
   for (int ii = 0; ii < TEST1_N_OUT; ii++) {
-    resval = float(res.read());
-    err = resval - test1_ref[ii][0];
-    std::cout << "Received: " << resval << ", Err: " << err << std::endl;
-    if (abs(err)>0.0001)  errcount++;
+    for (int jj = 0; jj < TEST1_CHAN_OUT; jj++) {
+      resval = float(res.read());
+      refval = test1_ref[ii][jj];
+      err = resval - refval;
+      std::cout << "Row: " << ii << ", Chan: " << jj << ": " << resval << ", Ref: " << refval << ", Err: " << err << std::endl;
+      if (abs(err)>0.0001)  errcount++;
+    }
   }
 
   return  errcount;
@@ -77,10 +79,10 @@ int main_test2()
 
 int main(int argc, char **argv)
 {
-    // RUN TEST1
-    return main_test1();
+    // // RUN TEST1
+    // return main_test1();
 
-    // // RUN TEST2
-    // return main_test2();
+    // RUN TEST2
+    return main_test2();
 }
 

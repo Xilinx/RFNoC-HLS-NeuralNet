@@ -28,10 +28,10 @@ void test_conv(
     #pragma HLS INTERFACE ap_ctrl_none port=return
 
 
-    // TEST 1
-    nnet::conv_iq<data_t, result_t, weight_t, bias_t, accum_t, TEST1_N_IN, TEST1_N_FILT, TEST1_CHAN_OUT>(data_i, data_q, result, test1_weights, test1_biases);
+    // // TEST 1
+    // nnet::conv_iq<data_t, result_t, weight_t, bias_t, accum_t, TEST1_N_IN, TEST1_N_FILT, TEST1_CHAN_OUT>(data_i, data_q, result, test1_weights, test1_biases);
 
 
-    // // TEST 2
-    // nnet::conv_iq<data_t, result_t, weight_t, bias_t, accum_t, TEST2_N_IN, TEST2_N_FILT, TEST2_CHAN_OUT>(data_i, data_q, result, test2_weights, test2_biases);
+    // TEST 2
+    nnet::conv_iq<data_t, result_t, weight_t, bias_t, accum_t, TEST2_N_IN, TEST2_N_FILT, TEST2_CHAN_OUT>(data_i, data_q, result, test2_weights, test2_biases);
 }

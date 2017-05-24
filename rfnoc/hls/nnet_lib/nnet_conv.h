@@ -19,39 +19,53 @@ void conv_iq(
 
     // #pragma HLS DATAFLOW
     data_T buffer[Y_FILT][2];
+    acc_T i_out[CHAN_OUT];
+    acc_T q_out[CHAN_OUT];
 
-    // #pragma HLS ARRAY_PARTITION variable=buffer complete
-    // #pragma HLS ARRAY_PARTITION variable=weights complete
+    #pragma HLS ARRAY_PARTITION variable=buffer complete
+    #pragma HLS ARRAY_PARTITION variable=i_out complete
+    #pragma HLS ARRAY_PARTITION variable=q_out complete
+    #pragma HLS ARRAY_PARTITION variable=weights complete dim=3
 
     // Horizontal convolution
     RowLoop:for(int row = 0; row < Y_IN; row++) {
         data_T i_val = data_i.read();
         data_T q_val = data_q.read();
         // std::cout << "Read " << i_val << " + " << q_val << "j" << std::endl;
-        acc_T i_out[CHAN_OUT];
-        acc_T q_out[CHAN_OUT];
-        OutFiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
-            OutChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
-            // #pragma HLS pipeline
-                if (jj==0) {
-                    // Shift operation for buffer
-                    buffer[ii][0] = ii < Y_FILT - 1 ? buffer[ii + 1][0] : i_val;
-                    buffer[ii][1] = ii < Y_FILT - 1 ? buffer[ii + 1][1] : q_val;
+
+        BuffLoop:for(int ii = 0; ii < Y_FILT; ii++) {
+        #pragma HLS unroll
+            // Shift operation for buffer
+            buffer[ii][0] = ii < Y_FILT - 1 ? buffer[ii + 1][0] : i_val;
+            buffer[ii][1] = ii < Y_FILT - 1 ? buffer[ii + 1][1] : q_val;
+        }
+
+        AccumReset:for(int jj = 0; jj < CHAN_OUT; jj++) {
+        #pragma HLS unroll
+            i_out[jj] = 0;
+            q_out[jj] = 0;
+        }
+
+        // Wait until we have Y_FILT-1 rows saved in buffer
+        // if (row >= Y_FILT-1) {
+            OutFiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
+                OutChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
+                #pragma HLS unroll
+                    i_out[jj] += buffer[ii][0] * weights[ii][0][jj];
+                    q_out[jj] += buffer[ii][1] * weights[ii][1][jj];
+                    // std::cout << "\tBuffr: " << buffer[ii][0] << " + " << buffer[ii][1] << "j" << std::endl;
+                    // std::cout << "\tWeigt: " << weights[ii][0][jj] << " + " << weights[ii][1][jj] << "j" << std::endl;
+                    // std::cout << "\tAccum: " << i_out[jj] << " + " << q_out[jj] << "j" << std::endl;
                 }
-                if (ii==0){
-                    i_out[jj] = 0;
-                    q_out[jj] = 0;
-                }
-                i_out[jj] += buffer[ii][0] * weights[ii][0][jj];
-                q_out[jj] += buffer[ii][1] * weights[ii][1][jj];
-                // std::cout << "\tBuffr: " << buffer[ii][0] << " + " << buffer[ii][1] << "j" << std::endl;
-                // std::cout << "\tWeigt: " << weights[ii][0][jj] << " + " << weights[ii][1][jj] << "j" << std::endl;
-                // std::cout << "\tAccum: " << i_out[jj] << " + " << q_out[jj] << "j" << std::endl;
-                if (ii==Y_FILT-1 && row >= Y_FILT-1) {
-                    // When we hit the last filter sample, add bias term and output
-                    res << i_out[jj] + q_out[jj] + biases[jj];
-                    // std::cout << "\tResult: " << i_out[jj] + q_out[jj] + biases[jj] << std::endl;
-                }
+            }
+        // }
+
+        OutputLoop:for(int jj = 0; jj < CHAN_OUT; jj++){
+        #pragma HLS pipeline
+            // When we hit the last filter sample, add bias term and output
+            if (row >= Y_FILT-1) {
+                res << i_out[jj] + q_out[jj] + biases[jj];
+                // std::cout << "\tResult: " << i_out[jj] + q_out[jj] + biases[jj] << std::endl;
             }
         }
     }
