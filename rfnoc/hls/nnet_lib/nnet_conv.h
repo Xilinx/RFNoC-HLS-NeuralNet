@@ -27,7 +27,10 @@ void conv_iq(
     #pragma HLS ARRAY_PARTITION variable=q_out complete
     #pragma HLS ARRAY_PARTITION variable=weights complete dim=3
 
-    // Horizontal convolution
+    // NOTE: Currently we only output data after the kernel is full
+    //         (ie: row >= Y_FILT-1)
+    // TODO: Find out what states get saved between runs!
+
     RowLoop:for(int row = 0; row < Y_IN; row++) {
         data_T i_val = data_i.read();
         data_T q_val = data_q.read();
@@ -46,19 +49,16 @@ void conv_iq(
             q_out[jj] = 0;
         }
 
-        // Wait until we have Y_FILT-1 rows saved in buffer
-        // if (row >= Y_FILT-1) {
-            OutFiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
-                OutChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
-                #pragma HLS unroll
-                    i_out[jj] += buffer[ii][0] * weights[ii][0][jj];
-                    q_out[jj] += buffer[ii][1] * weights[ii][1][jj];
-                    // std::cout << "\tBuffr: " << buffer[ii][0] << " + " << buffer[ii][1] << "j" << std::endl;
-                    // std::cout << "\tWeigt: " << weights[ii][0][jj] << " + " << weights[ii][1][jj] << "j" << std::endl;
-                    // std::cout << "\tAccum: " << i_out[jj] << " + " << q_out[jj] << "j" << std::endl;
-                }
+        FiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
+            ChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
+            #pragma HLS unroll
+                i_out[jj] += buffer[ii][0] * weights[ii][0][jj];
+                q_out[jj] += buffer[ii][1] * weights[ii][1][jj];
+                // std::cout << "\tBuffr: " << buffer[ii][0] << " + " << buffer[ii][1] << "j" << std::endl;
+                // std::cout << "\tWeigt: " << weights[ii][0][jj] << " + " << weights[ii][1][jj] << "j" << std::endl;
+                // std::cout << "\tAccum: " << i_out[jj] << " + " << q_out[jj] << "j" << std::endl;
             }
-        // }
+        }
 
         OutputLoop:for(int jj = 0; jj < CHAN_OUT; jj++){
         #pragma HLS pipeline
