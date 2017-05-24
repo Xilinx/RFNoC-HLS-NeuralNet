@@ -17,12 +17,15 @@ typedef float  weight_t;
 typedef float  bias_t;
 typedef float accum_t;
 
+#define TEST1_N_IN        10
+#define TEST1_N_FILT      4
+#define TEST1_CHAN_OUT    1
+#define TEST1_N_OUT       TEST1_N_IN-TEST1_N_FILT+1
 
-
-
-#define N_IN        10
-#define N_FILT      4
-#define CHAN_OUT    1
+#define TEST2_N_IN        10
+#define TEST2_N_FILT      4
+#define TEST2_CHAN_OUT    3
+#define TEST2_N_OUT       TEST2_N_IN-TEST2_N_FILT+1
 
 // Prototype of top level function for C-synthesis
 void test_conv(

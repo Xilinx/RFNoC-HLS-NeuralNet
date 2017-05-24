@@ -26,9 +26,9 @@ void conv_iq(
     RowLoop:for(int row = 0; row < Y_IN; row++) {
         data_T i_val = data_i.read();
         data_T q_val = data_q.read();
-        std::cout << "Read " << i_val << " + " << q_val << "j" << std::endl;
-        acc_T i_out = 0;
-        acc_T q_out = 0;
+        // std::cout << "Read " << i_val << " + " << q_val << "j" << std::endl;
+        acc_T i_out[CHAN_OUT];
+        acc_T q_out[CHAN_OUT];
         OutFiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
             OutChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
                 if (jj==0) {
@@ -36,15 +36,19 @@ void conv_iq(
                     buffer[ii][0] = ii < Y_FILT - 1 ? buffer[ii + 1][0] : i_val;
                     buffer[ii][1] = ii < Y_FILT - 1 ? buffer[ii + 1][1] : q_val;
                 }
-                i_out += buffer[ii][0] * weights[ii][0][jj];
-                q_out += buffer[ii][1] * weights[ii][1][jj];
+                if (ii==0){
+                    i_out[jj] = 0;
+                    q_out[jj] = 0;
+                }
+                i_out[jj] += buffer[ii][0] * weights[ii][0][jj];
+                q_out[jj] += buffer[ii][1] * weights[ii][1][jj];
                 // std::cout << "\tBuffr: " << buffer[ii][0] << " + " << buffer[ii][1] << "j" << std::endl;
                 // std::cout << "\tWeigt: " << weights[ii][0][jj] << " + " << weights[ii][1][jj] << "j" << std::endl;
-                std::cout << "\tAccum: " << i_out << " + " << q_out << "j" << std::endl;
+                // std::cout << "\tAccum: " << i_out[jj] << " + " << q_out[jj] << "j" << std::endl;
                 if (ii==Y_FILT-1 && row >= Y_FILT-1) {
                     // When we hit the last filter sample, add bias term and output
-                    res << i_out + q_out + biases[jj];
-                    std::cout << "\tResult: " << i_out + q_out + biases[jj] << std::endl;
+                    res << i_out[jj] + q_out[jj] + biases[jj];
+                    // std::cout << "\tResult: " << i_out[jj] + q_out[jj] + biases[jj] << std::endl;
                 }
             }
         }
