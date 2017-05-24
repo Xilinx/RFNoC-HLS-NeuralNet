@@ -1,3 +1,22 @@
+//
+//    nnet_lib: Vivado HLS code for neural-net building blocks
+//
+//    Copyright (C) 2017 EJ Kreinar
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 #ifndef NNET_CONV_H_
 #define NNET_CONV_H_
 
@@ -51,6 +70,7 @@ void conv_iq(
 
         FiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
             ChanLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
+            //#pragma HLS unroll factor=16
             #pragma HLS unroll
                 i_out[jj] += buffer[ii][0] * weights[ii][0][jj];
                 q_out[jj] += buffer[ii][1] * weights[ii][1][jj];

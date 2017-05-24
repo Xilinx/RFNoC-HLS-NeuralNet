@@ -86,7 +86,6 @@ void compute_small_layer(
         res << acc[ires] + biases[ires];
 }
 
-
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
 void compute_medium_layer(
     hls::stream<data_T>    &data,
