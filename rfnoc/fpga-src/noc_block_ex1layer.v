@@ -243,7 +243,7 @@ module noc_block_ex1layer #(
   ex_1layer inst_example_layer1 (
     .ap_clk(ce_clk), .ap_rst(ce_rst),
     .const_size_in(const_size_in), .const_size_out(const_size_out),
-    .data_V_dout(in_data_tdata), .data_V_empty_n(in_data_tvalid), .data_V_read(in_data_tready), 
-    .res_V_din(out_data_tdata), .res_V_full_n(out_data_tready), .res_V_write(out_data_tvalid));
+    .data_V_V_dout(in_data_tdata), .data_V_V_empty_n(in_data_tvalid), .data_V_V_read(in_data_tready), 
+    .res_V_V_din(out_data_tdata), .res_V_V_full_n(out_data_tready), .res_V_V_write(out_data_tvalid));
 
 endmodule
