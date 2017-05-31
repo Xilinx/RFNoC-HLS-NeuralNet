@@ -69,17 +69,17 @@ module noc_block_ex1layer #(
   // Convert RFNoC Shell interface into AXI stream interface
   //
   ////////////////////////////////////////////////////////////
-  wire [31:0] m_axis_data_tdata;
-  wire [127:0] m_axis_data_tuser;
-  wire        m_axis_data_tlast;
-  wire        m_axis_data_tvalid;
-  wire        m_axis_data_tready;
+  (* mark_debug = "true", dont_touch = "true" *) wire [31:0] m_axis_data_tdata;
+  (* mark_debug = "true", dont_touch = "true" *) wire [127:0] m_axis_data_tuser;
+  (* mark_debug = "true", dont_touch = "true" *) wire        m_axis_data_tlast;
+  (* mark_debug = "true", dont_touch = "true" *) wire        m_axis_data_tvalid;
+  (* mark_debug = "true", dont_touch = "true" *) wire        m_axis_data_tready;
 
-  wire [31:0] s_axis_data_tdata;
-  wire [127:0] s_axis_data_tuser;
-  wire        s_axis_data_tlast;
-  wire        s_axis_data_tvalid;
-  wire        s_axis_data_tready;
+  (* mark_debug = "true", dont_touch = "true" *) wire [31:0] s_axis_data_tdata;
+  (* mark_debug = "true", dont_touch = "true" *) wire [127:0] s_axis_data_tuser;
+  (* mark_debug = "true", dont_touch = "true" *) wire        s_axis_data_tlast;
+  (* mark_debug = "true", dont_touch = "true" *) wire        s_axis_data_tvalid;
+  (* mark_debug = "true", dont_touch = "true" *) wire        s_axis_data_tready;
 
   axi_wrapper #(
     .SIMPLE_MODE(0))
@@ -189,10 +189,10 @@ module noc_block_ex1layer #(
 
   // TODO: Pull the wrapper code into a fpga block
 
-  wire [32:0]  in_data_tdata,  out_data_tdata;
-  wire         in_data_tlast,  out_data_tlast;
-  wire         in_data_tvalid, out_data_tvalid;
-  wire         in_data_tready, out_data_tready;
+  (* mark_debug = "true", dont_touch = "true" *) wire [32:0]  in_data_tdata,  out_data_tdata;
+  (* mark_debug = "true", dont_touch = "true" *) wire         in_data_tlast,  out_data_tlast;
+  (* mark_debug = "true", dont_touch = "true" *) wire         in_data_tvalid, out_data_tvalid;
+  (* mark_debug = "true", dont_touch = "true" *) wire         in_data_tready, out_data_tready;
 
   wire [15:0] const_size_in, const_size_out;
 
