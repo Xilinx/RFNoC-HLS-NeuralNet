@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "test_conv.h"
+#include "test_conv1d.h"
 
 
 int main_test1()
@@ -122,7 +122,10 @@ int main(int argc, char **argv)
     // // RUN TEST1
     // return main_test1();
 
-    // RUN TEST2
-    return main_test3();
+    // // RUN TEST2
+    // return main_test2();
+
+	// RUN TEST3
+	return main_test3();
 }
 

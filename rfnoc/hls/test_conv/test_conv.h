@@ -1,5 +1,5 @@
-#ifndef TEST_ACTIVATIONS_H_
-#define TEST_ACTIVATIONS_H_
+#ifndef TEST_CONV_H_
+#define TEST_CONV_H_
 
 #include <complex>
 #include "ap_fixed.h"
