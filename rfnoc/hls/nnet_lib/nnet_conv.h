@@ -165,26 +165,38 @@ void conv_iq_manychan(
 
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int Y_IN, int CHAN_IN, int Y_FILT, int CHAN_OUT>
+void dummy_test(
+    hls::stream<data_T> &data, 
+    hls::stream<res_T>  &res, 
+    weight_T weights[Y_FILT][CHAN_IN][CHAN_OUT],
+    bias_T biases[CHAN_IN])
+{
+    res << data.read();
+}
+
+
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int Y_IN, int CHAN_IN, int Y_FILT>
 void conv_1d(
     hls::stream<data_T> &data,
     hls::stream<res_T>  &res,
-    weight_T  weights[Y_FILT][CHAN_IN][CHAN_OUT],
-    bias_T    biases[CHAN_IN][CHAN_OUT])
+    weight_T  weights[Y_FILT][CHAN_IN],
+    bias_T    biases[CHAN_IN])
 {
     // conv_1d: 1-dimensional convolution
     //   - Also includes multiple input channels
     //   - Only allows new data on each ROW
+    // Constrain only ONE output channel per input channel
 
     // Initial directives used from HLS User guide, pg 381
     // (https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_4/ug902-vivado-high-level-synthesis.pdf)
 
-    // #pragma HLS DATAFLOW
+    #pragma HLS DATAFLOW
     data_T buffer[Y_FILT][CHAN_IN];
-    acc_T int_accum[CHAN_OUT];
+    acc_T int_accum;
 
     #pragma HLS ARRAY_PARTITION variable=buffer complete
-    #pragma HLS ARRAY_PARTITION variable=int_accum complete
-    #pragma HLS ARRAY_PARTITION variable=weights complete dim=3
+    // #pragma HLS ARRAY_PARTITION variable=int_accum complete
+    #pragma HLS ARRAY_PARTITION variable=weights complete dim=2
 
     // NOTE: Currently we only output data after the kernel is full
     //         (ie: row >= Y_FILT-1)
@@ -196,33 +208,25 @@ void conv_1d(
             // std::cout << "Read " << val << std::endl;
 
             BuffLoop:for(int ii = 0; ii < Y_FILT; ii++) {
-            #pragma HLS unroll
+            #pragma HLS UNROLL
                 // Shift operation for buffer
                 buffer[ii][chan_in] = ii < Y_FILT - 1 ? buffer[ii + 1][chan_in] : val;
             }
 
-            AccumReset:for(int jj = 0; jj < CHAN_OUT; jj++) {
-            #pragma HLS unroll
-                int_accum[jj] = 0;
-            }
+            int_accum = 0;
 
             FiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
-                ChanOutLoop:for(int jj = 0; jj < CHAN_OUT; jj++) {
-                #pragma HLS unroll
-                    int_accum[jj] += buffer[ii][chan_in] * weights[ii][chan_in][jj];
-                    // std::cout << "\tFiler/ChIn/ChOut: " << ii << "/" << chan_in << "/" << jj << ", Buffer: " << buffer[ii][chan_in] << std::endl;
-                    // std::cout << "\tAccum: " << int_accum[jj] << std::endl;
-                    // std::cout << "\tWeight: " << weights[ii][chan_in][jj] << std::endl;                    
-                }
+            #pragma HLS UNROLL
+                int_accum += buffer[ii][chan_in] * weights[ii][chan_in];
+                // std::cout << "\tFiler/ChIn/ChOut: " << ii << "/" << chan_in << "/" << jj << ", Buffer: " << buffer[ii][chan_in] << std::endl;
+                // std::cout << "\tAccum: " << int_accum[jj] << std::endl;
+                // std::cout << "\tWeight: " << weights[ii][chan_in][jj] << std::endl;
             }
 
-            OutputLoop:for(int jj = 0; jj < CHAN_OUT; jj++){
-            #pragma HLS pipeline
-                // When we hit the last filter sample, add bias term and output
-                if (row >= Y_FILT-1) {
-                    res << int_accum[jj] + biases[chan_in][jj];
-                    // std::cout << "\tResult: " << int_accum[jj] + biases[chan_in][jj]] << std::endl;
-                }
+            // When we hit the last filter sample, add bias term and output
+            if (row >= Y_FILT-1) {
+                res << int_accum + biases[chan_in];
+                // std::cout << "\tResult: " << int_accum[jj] + biases[chan_in][jj]] << std::endl;
             }
         }
     }
