@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>qt_gui</value>
+      <value>no_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -106,6 +106,127 @@
     <param>
       <key>value</key>
       <value>784*100</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_uhd_device3</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>dev_addr</key>
+      <value>type=e3x0</value>
+    </param>
+    <param>
+      <key>dev_args</key>
+      <value>args</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(232, 28)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>variable_uhd_device3_0</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_const_source_x</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(248, 292)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>analog_const_source_x_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(424, 28)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>args</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>args</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>""</value>
     </param>
   </block>
   <block>
@@ -238,7 +359,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(80, 228)</value>
+      <value>(48, 228)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -262,7 +383,62 @@
     </param>
     <param>
       <key>repeat</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_interleave</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>blocksize</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(440, 240)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_interleave_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>2</value>
     </param>
     <param>
       <key>vlen</key>
@@ -336,7 +512,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(312, 236)</value>
+      <value>(264, 236)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -387,7 +563,7 @@
     </param>
     <param>
       <key>otw</key>
-      <value>sc8</value>
+      <value>u8</value>
     </param>
     <param>
       <key>device_index</key>
@@ -415,7 +591,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(736, 236)</value>
+      <value>(576, 252)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -657,7 +833,7 @@
     </param>
     <param>
       <key>otw</key>
-      <value>sc8</value>
+      <value>u8</value>
     </param>
     <param>
       <key>device_index</key>
@@ -681,7 +857,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 228)</value>
+      <value>(800, 244)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -705,6 +881,12 @@
     </param>
   </block>
   <connection>
+    <source_block_id>analog_const_source_x_0</source_block_id>
+    <sink_block_id>blocks_interleave_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_copy_0</source_block_id>
     <sink_block_id>blocks_file_sink_0</sink_block_id>
     <source_key>0</source_key>
@@ -723,6 +905,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_interleave_0</source_block_id>
+    <sink_block_id>fpgannet_ex1layer_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_short_to_float_0</source_block_id>
     <sink_block_id>qtgui_time_raster_sink_x_0</sink_block_id>
     <source_key>0</source_key>
@@ -730,19 +918,19 @@
   </connection>
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>uhd_rfnoc_streamer_fifo_0</sink_block_id>
+    <sink_block_id>blocks_interleave_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>fpgannet_ex1layer_0</source_block_id>
-    <sink_block_id>blocks_copy_0</sink_block_id>
+    <sink_block_id>uhd_rfnoc_streamer_fifo_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>uhd_rfnoc_streamer_fifo_0</source_block_id>
-    <sink_block_id>fpgannet_ex1layer_0</sink_block_id>
+    <sink_block_id>blocks_copy_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
