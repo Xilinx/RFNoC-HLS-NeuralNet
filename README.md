@@ -7,14 +7,10 @@ Open-source components for implementing neural networks in FPGA fabric.
 
 Designed for RF processing, though the HLS portion may be more generally applicable to creating other neural nets, too.
 
-The neural network library (rfnoc-neuralnet) provides an RFNoC OOT module for efficiently deploying a trained neural network to an FPGA. Typically, neural networks are designed, trained, and executed on a conventional processor, often with GPU acceleration. But for embedded devices which may need to process data at multiple-MHz sample rates, the computational requirements can be overwhelming for an embedded processor where no GPU is available, creating a tempting opportunity for FPGA acceleration.
-
-The neural network library here provides pre-optimized neural network building blocks using the Vivado HLS tool to synthesize the desired neural network. RFNoC provides a convenient input/output interface between hardware and software that is compatible with gnuradio. Ideally, the neural network designer will be able to deploy neural networks and evaluate resource vs throughput tradeoffs without needing to develop and maintain the repetitive “glue code” in FPGA and software. Presented examples demonstrate various use-cases in a simulation environment and on the E310, including image classification and modulation recognition, using both fully-connected and convolutional layers.
-
 The HLS neural network library currently supports the following constructs:
  * Fully connected layer
    * Multiple HLS optimization based on the size of the layer
- * 1-Dimensiona convolutional layer with multiple input channels
+ * 1-Dimensional convolutional layer with multiple input channels
  * IQ convolution layer with multiple output channels
    * Notionally optimized for RF data
    * 1-D layer with 2 simultaneous input channels
@@ -25,11 +21,13 @@ The HLS neural network library currently supports the following constructs:
    * tanh
  * Maxpool operation
 
+## Summary
+
+The neural network library (rfnoc-neuralnet) provides an RFNoC OOT module for efficiently deploying a trained neural network to an FPGA. Typically, neural networks are designed, trained, and executed on a conventional processor, often with GPU acceleration. But for embedded devices which may need to process data at multiple-MHz sample rates, the computational requirements can be overwhelming for an embedded processor where no GPU is available, creating a tempting opportunity for FPGA acceleration.
+
+The neural network library here provides pre-optimized neural network building blocks using the Vivado HLS tool to synthesize the desired neural network. RFNoC provides a convenient input/output interface between hardware and software that is compatible with gnuradio. Ideally, the neural network designer will be able to deploy neural networks and evaluate resource vs throughput tradeoffs without needing to develop and maintain the repetitive “glue code” in FPGA and software. Presented examples demonstrate various use-cases in a simulation environment and on the E310, including image classification and modulation recognition, using both fully-connected and convolutional layers.
+
 ## Goals
-
-A neural network cannot be provided as a “one-size-fits-all” solution; the designer’s neural network architecture is a major driver of performance, and the variety of possible architectures is far too large to provide a generalized FPGA solution. Any two neural networks will have dramatically different architectures, including different flavors of convolutional or fully-connected layers, different activation functions, etc. This paradigm essentially reduces the impact of any pre-generated FPGA-based neural network designed fora specific network architecture.
-
-Using a software-only approach, changing the neural net architecture is trivial. However, in hardware, FPGA fabric cannot be arbitrarily reconfigured on the fly; the desired architecture must be synthesized and implemented ahead of time for the optimal tradeoff of resource usage, compute time, and power. Therefore, the true strength of an FPGA-based neural network architecture would be the ability for the designer to regenerate a resource-efficient FPGA implementation in a short amount of time without needing to reinvent the wheel. Based on these assertions, the goals for the RFNoC Neural Network project are as follows:
 
 * Develop an HLS library of common neural network functions
   * The library will include options such as different layers, activation functions, convolutional layers, etc.
@@ -45,7 +43,7 @@ Using a software-only approach, changing the neural net architecture is trivial.
 
 * Develop a demonstration application using the HLS + RFNoC + GRC workflow.
 
-## Pre-Reqs
+# Instructions
 
 [updated 6/3/2017. TBD what stays here depending on merge actions and such...] 
 
@@ -56,6 +54,12 @@ First, a number of edits to uhd-fpga's Makefile system are required to handle HL
 Second, additional edits to uhd-fpga's build system are required to provide OOT modules with the extra flexibility to generate HLS and then plug into a new FPGA build. These updates will let you point to Makefiles in an OOT module, which can then generate IP or HLS, when running "make E310_RFNOC", "make X310_RFNOC_HG", etc. These edits are forked here: https://github.com/ejk43/fpga/tree/new_oot_includes
 
 For the time being, I would recommend merging or cherry picking these updates into uhd-fpga. 
+
+## Workflow
+
+The HLS-RFNoC workflow is a bit involved, yet worthwhile. 
+
+TODO: Discuss
 
 ## Examples
 
