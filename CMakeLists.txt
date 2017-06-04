@@ -25,14 +25,11 @@ project(gr-fpgannet CXX C)
 enable_testing()
 
 
-#install to PyBOMBS target prefix if defined
-if(NOT CMAKE_INSTALL_PREFIX)
-    if(DEFINED ENV{PYBOMBS_PREFIX})
-        set(CMAKE_INSTALL_PREFIX $ENV{PYBOMBS_PREFIX})
-        message(STATUS "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}")
-    endif()
+if(DEFINED ENV{PYBOMBS_PREFIX})
+    set(CMAKE_INSTALL_PREFIX $ENV{PYBOMBS_PREFIX})
+    message(STATUS "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}")
 else()
-    message(STATUS "Found CMAKE_INSTALL_PREFIX")
+    message(STATUS "PyBOMBS not found. Not setting CMAKE_INSTALL_PREFIX")
 endif()
 
 
