@@ -7,14 +7,14 @@
   <make>ettus.rfnoc_generic(
     self.device3,
     uhd.stream_args( \# TX Stream Args
-        cpu_format="s16",
-        otw_format="s16",
-        args="gr_vlen={0},{1}".format(${grvlenin}, "" if $grvlenin == 1 else "spp={0}".format($grvlenin)),
+        cpu_format="$type",
+        otw_format="$otw",
+        args="gr_vlen={0}".format(${grvlenin}),
     ),
     uhd.stream_args( \# RX Stream Args
-        cpu_format="s16",
-        otw_format="s16",
-        args="gr_vlen={0},{1}".format(${grvlenout}, "" if $grvlenout == 1 else "spp={0}".format($grvlenout)),
+        cpu_format="$type",
+        otw_format="$otw",
+        args="gr_vlen={0}".format(${grvlenout}),
     ),
     "ex1layer", $block_index, $device_index,
 )</make>
@@ -53,16 +53,47 @@
   </param>
 
   <param>
-    <name>Force Vector Length In</name>
+    <name>GRC Vector Length In</name>
     <key>grvlenin</key>
     <value>784</value>
     <type>int</type>
   </param>
   <param>
-    <name>Force Vector Length Out</name>
+    <name>GRC Vector Length Out</name>
     <key>grvlenout</key>
     <value>10</value>
     <type>int</type>
+  </param>
+
+  <param>
+    <name>Host Data Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex float32</name>
+      <key>fc32</key>
+      <opt>type:complex</opt>
+    </option>
+    <option>
+      <name>Complex int16</name>
+      <key>sc16</key>
+      <opt>type:sc16</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>s16</key>
+      <opt>type:s16</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>u8</key>
+      <opt>type:byte</opt>
+    </option>
+    <option>
+      <name>VITA word32</name>
+      <key>item32</key>
+      <opt>type:s32</opt>
+    </option>
   </param>
 
   <param>
@@ -78,6 +109,10 @@
       <key>sc8</key>
     </option>
     <option>
+      <name>Short</name>
+      <key>s16</key>
+    </option>
+    <option>
       <name>Byte</name>
       <key>u8</key>
     </option>
@@ -90,10 +125,11 @@
        * optional (set to 1 for optional inputs) -->
   <sink>
     <name>in</name>
-    <type>s16</type>
+    <type>$type.type</type>
     <vlen>$grvlenin</vlen>
     <domain>rfnoc</domain>
   </sink>
+
 
   <!-- Make one 'source' node per output. Sub-nodes:
        * name (an identifier for the GUI)
@@ -102,7 +138,7 @@
        * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
-    <type>s16</type>
+    <type>$type.type</type>
     <vlen>$grvlenout</vlen>
     <domain>rfnoc</domain>
   </source>
