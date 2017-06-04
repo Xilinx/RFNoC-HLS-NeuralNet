@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>nnet_example1_1layer</value>
+      <value>nnet_example_1layer</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -105,7 +105,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>784*100</value>
+      <value>784*1000</value>
     </param>
   </block>
   <block>
@@ -137,53 +137,6 @@
     <param>
       <key>id</key>
       <value>variable_uhd_device3_0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_const_source_x</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(248, 292)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>analog_const_source_x_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
     </param>
   </block>
   <block>
@@ -245,7 +198,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>enabled</key>
@@ -253,7 +206,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(432, 420)</value>
+      <value>(408, 380)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -285,14 +238,14 @@
     </param>
   </block>
   <block>
-    <key>blocks_file_sink</key>
-    <param>
-      <key>append</key>
-      <value>False</value>
-    </param>
+    <key>blocks_deinterleave</key>
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>blocksize</key>
+      <value>1</value>
     </param>
     <param>
       <key>comment</key>
@@ -304,15 +257,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>mnist_rfnoc_output.dat</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(776, 496)</value>
+      <value>(584, 368)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -320,15 +269,23 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_file_sink_0</value>
+      <value>blocks_deinterleave_0</value>
     </param>
     <param>
       <key>type</key>
       <value>short</value>
     </param>
     <param>
-      <key>unbuffered</key>
-      <value>False</value>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>2</value>
     </param>
     <param>
       <key>vlen</key>
@@ -355,15 +312,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>file</key>
-      <value>mnist_rfnoc_input_copy.dat</value>
+      <value>mnist_rfnoc_output.s16</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 596)</value>
+      <value>(776, 348)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -371,7 +328,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_file_sink_0_0</value>
+      <value>blocks_file_sink_0</value>
     </param>
     <param>
       <key>type</key>
@@ -406,7 +363,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>mnist_data_input.dat</value>
+      <value>mnist_data_input.s16</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -434,7 +391,7 @@
     </param>
     <param>
       <key>repeat</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>vlen</key>
@@ -465,7 +422,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(48, 308)</value>
+      <value>(48, 316)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -497,14 +454,14 @@
     </param>
   </block>
   <block>
-    <key>blocks_interleave</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>alias</key>
       <value></value>
     </param>
     <param>
-      <key>blocksize</key>
-      <value>1</value>
+      <key>bus_conns</key>
+      <value>[[0,],]</value>
     </param>
     <param>
       <key>comment</key>
@@ -516,11 +473,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 240)</value>
+      <value>(768, 432)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -528,23 +485,15 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_interleave_0</value>
+      <value>blocks_null_sink_0</value>
     </param>
     <param>
       <key>type</key>
       <value>short</value>
     </param>
     <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>num_streams</key>
-      <value>2</value>
+      <key>num_inputs</key>
+      <value>1</value>
     </param>
     <param>
       <key>vlen</key>
@@ -571,7 +520,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 420)</value>
+      <value>(784, 500)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -614,11 +563,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 236)</value>
+      <value>(312, 236)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -669,7 +618,7 @@
     </param>
     <param>
       <key>otw</key>
-      <value>s16</value>
+      <value>u8</value>
     </param>
     <param>
       <key>device_index</key>
@@ -689,15 +638,15 @@
     </param>
     <param>
       <key>grvlenin</key>
-      <value>1</value>
+      <value>2</value>
     </param>
     <param>
       <key>grvlenout</key>
-      <value>1</value>
+      <value>2</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 252)</value>
+      <value>(816, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -705,7 +654,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>s16</value>
+      <value>u8</value>
     </param>
     <param>
       <key>id</key>
@@ -744,7 +693,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1024, 404)</value>
+      <value>(1000, 484)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -967,7 +916,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(616, 244)</value>
+      <value>(560, 228)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -991,21 +940,21 @@
     </param>
   </block>
   <connection>
-    <source_block_id>analog_const_source_x_0</source_block_id>
-    <sink_block_id>blocks_interleave_0</sink_block_id>
+    <source_block_id>blocks_copy_0</source_block_id>
+    <sink_block_id>blocks_deinterleave_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>1</sink_key>
+    <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_copy_0</source_block_id>
+    <source_block_id>blocks_deinterleave_0</source_block_id>
     <sink_block_id>blocks_file_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_copy_0</source_block_id>
-    <sink_block_id>blocks_short_to_float_0</sink_block_id>
-    <source_key>0</source_key>
+    <source_block_id>blocks_deinterleave_0</source_block_id>
+    <sink_block_id>blocks_null_sink_0</sink_block_id>
+    <source_key>1</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
@@ -1021,26 +970,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_interleave_0</source_block_id>
-    <sink_block_id>uhd_rfnoc_streamer_fifo_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>blocks_short_to_float_0</source_block_id>
     <sink_block_id>qtgui_time_raster_sink_x_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>blocks_file_sink_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>blocks_interleave_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
