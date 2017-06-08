@@ -20,7 +20,9 @@ void ex_modrec(
     #pragma HLS INTERFACE ap_none port=const_size_in
     #pragma HLS INTERFACE ap_none port=const_size_out
     const_size_in   = N_LAYER_IN;
-    const_size_out  = N_LAYER_3;
+    const_size_out  = N_LAYER_OUT;
+
+    #pragma HLS DATAFLOW
 
     // ****************************************
     // NETWORK INSTATIATION
@@ -39,5 +41,15 @@ void ex_modrec(
     // LAYER 3
     hls::stream<layer3_t> logits3, hidden3;
     nnet::compute_layer<layer2_t, layer3_t, weight_t, bias_t, accum_t, N_LAYER_2, N_LAYER_3>(hidden2, logits3, lay3_weights, lay3_biases);
-    nnet::relu6<layer3_t, result_t, N_LAYER_3>(logits3, res);
+    nnet::relu6<layer3_t, layer3_t, N_LAYER_3>(logits3, hidden3);
+
+    // LAYER 4
+    hls::stream<layer4_t> logits4, hidden4;
+    nnet::compute_layer<layer3_t, layer4_t, weight_t, bias_t, accum_t, N_LAYER_3, N_LAYER_4>(hidden3, logits4, lay4_weights, lay4_biases);
+    nnet::relu6<layer4_t, layer4_t, N_LAYER_4>(logits4, hidden4);
+
+    // LAYER 5
+    hls::stream<layer4_t> logits5, hidden5;
+    nnet::compute_layer<layer4_t, layer5_t, weight_t, bias_t, accum_t, N_LAYER_4, N_LAYER_5>(hidden4, logits5, lay5_weights, lay5_biases);
+    nnet::relu6<layer5_t, layer5_t, N_LAYER_5>(logits5, res);
 }
