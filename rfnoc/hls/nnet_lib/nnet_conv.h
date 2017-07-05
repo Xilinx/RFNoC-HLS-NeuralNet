@@ -40,7 +40,6 @@ void conv_iq(
     // Initial directives used from HLS User guide, pg 381
     // (https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_4/ug902-vivado-high-level-synthesis.pdf)
 
-    // #pragma HLS DATAFLOW
     data_T buffer[Y_FILT][2];
     acc_T i_out[CHAN_OUT];
     acc_T q_out[CHAN_OUT];
@@ -117,7 +116,6 @@ void conv_iq_manychan(
     // Initial directives used from HLS User guide, pg 381
     // (https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_4/ug902-vivado-high-level-synthesis.pdf)
 
-    // #pragma HLS DATAFLOW
     data_T buffer[Y_FILT][2];
     data_T temp_i, temp_q;
     acc_T i_out[CHAN_OUT];
@@ -195,8 +193,6 @@ void conv_1d(
 
     // TODO: Figure out how to correctly pipeline FiltLoop-- It sort of needs to be pipelined
     // across iterations of ChanLoop. Otherwise it does not want to consistently hit 10 ns timing
-
-    #pragma HLS DATAFLOW
 
     data_T buffer[Y_FILT][N_CHAN];
     acc_T int_accum[N_CHAN];
