@@ -164,24 +164,27 @@ void conv_iq_manychan(
 }
 
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int Y_IN, int CHAN_IN, int Y_FILT>
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int Y_IN, int N_CHAN, int Y_FILT>
 void conv_1d(
     hls::stream<data_T> &data,
     hls::stream<res_T>  &res,
-    weight_T  weights[Y_FILT][CHAN_IN],
-    bias_T    biases[CHAN_IN])
+    weight_T  weights[Y_FILT][N_CHAN],
+    bias_T    biases[N_CHAN])
 {
     // conv_1d: 1-dimensional convolution
     //   - Also includes multiple input channels
-    //   - Only allows new data on each ROW
-    // Constrain only ONE output channel per input channel
+    //   - Only allows new data on each ROW (i.e. this is NOT a 2D convolution)
+    // Only ONE output channel per input channel
 
     // Initial directives used from HLS User guide, pg 381
     // (https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_4/ug902-vivado-high-level-synthesis.pdf)
 
+    // TODO: Figure out how to correctly pipeline FiltLoop-- It sort of needs to be pipelined
+    // across iterations of ChanLoop. Otherwise it does not want to consistently hit 10 ns timing
+
     #pragma HLS DATAFLOW
-    data_T buffer[Y_FILT][CHAN_IN];
-    acc_T int_accum;
+    data_T buffer[Y_FILT][N_CHAN];
+    acc_T int_accum[N_CHAN];
 
     #pragma HLS ARRAY_PARTITION variable=buffer complete
     #pragma HLS ARRAY_PARTITION variable=weights complete
@@ -191,30 +194,30 @@ void conv_1d(
     // TODO: Find out what states get saved between runs!
 
     RowLoop:for(int row = 0; row < Y_IN; row++) {
-        ChanInLoop:for(int chan_in = 0; chan_in < CHAN_IN; chan_in++){
+        ChanLoop:for(int chan = 0; chan < N_CHAN; chan++){
             data_T val = data.read();
             // std::cout << "Read " << val << std::endl;
 
             BuffLoop:for(int ii = 0; ii < Y_FILT; ii++) {
             #pragma HLS UNROLL
                 // Shift operation for buffer
-                buffer[ii][chan_in] = ii < Y_FILT - 1 ? buffer[ii + 1][chan_in] : val;
+                buffer[ii][chan] = ii < Y_FILT - 1 ? buffer[ii + 1][chan] : val;
             }
 
-            int_accum = 0;
+            int_accum[chan] = 0;
 
             FiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
-            #pragma HLS UNROLL
-                int_accum += buffer[ii][chan_in] * weights[ii][chan_in];
-                // std::cout << "\tFiler/ChIn/ChOut: " << ii << "/" << chan_in << "/" << jj << ", Buffer: " << buffer[ii][chan_in] << std::endl;
+            #pragma HLS UNROLL factor=4
+                int_accum[chan] += buffer[ii][chan] * weights[ii][chan];
+                // std::cout << "\tFiler/ChIn/ChOut: " << ii << "/" << chan << "/" << jj << ", Buffer: " << buffer[ii][chan] << std::endl;
                 // std::cout << "\tAccum: " << int_accum[jj] << std::endl;
-                // std::cout << "\tWeight: " << weights[ii][chan_in][jj] << std::endl;
+                // std::cout << "\tWeight: " << weights[ii][chan][jj] << std::endl;
             }
 
             // When we hit the last filter sample, add bias term and output
             if (row >= Y_FILT-1) {
-                res << int_accum + biases[chan_in];
-                // std::cout << "\tResult: " << int_accum[jj] + biases[chan_in][jj]] << std::endl;
+                res << int_accum[chan] + biases[chan];
+                // std::cout << "\tResult: " << int_accum[jj] + biases[chan][jj]] << std::endl;
             }
         }
     }
@@ -244,7 +247,7 @@ void conv_1d_large(
     // TODO: Find out what states get saved between runs!
 
     RowLoop:for(int row = 0; row < Y_IN; row++) {
-        ChanInLoop:for(int chan_in = 0; chan_in < CHAN_IN; chan_in++){
+        ChanLoop:for(int chan_in = 0; chan_in < CHAN_IN; chan_in++){
             data_T val = data.read();
             // std::cout << "Read " << val << std::endl;
 
