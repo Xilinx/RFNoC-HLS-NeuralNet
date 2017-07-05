@@ -6,7 +6,7 @@
 // (hardcoded)
 //*******************************************************
 
-weight_t test1_weights[TEST1_N_FILT][2][TEST1_CHAN_OUT] =
+weight_t test1_weights[TEST1_N_FILT][2*TEST1_CHAN_OUT] =
           { 1, 1,
             1, 1,
             1, 1,
@@ -15,7 +15,7 @@ weight_t test1_weights[TEST1_N_FILT][2][TEST1_CHAN_OUT] =
 bias_t   test1_biases[TEST1_CHAN_OUT] = { 0.5 };
 
 
-weight_t test2_weights[TEST2_N_FILT][2][TEST2_CHAN_OUT] =
+weight_t test2_weights[TEST2_N_FILT][2*TEST2_CHAN_OUT] =
           { 1, 2, 3, 1, 2, 3,
             1, 2, 3, 1, 2, 3,
             1, 2, 3, 1, 2, 3,
@@ -24,11 +24,11 @@ weight_t test2_weights[TEST2_N_FILT][2][TEST2_CHAN_OUT] =
 bias_t   test2_biases[TEST2_CHAN_OUT] = { 0.25, 0.5, 0.75};
 
 
-void get_test3(weight_t test3_weights[TEST3_N_FILT][2][TEST3_CHAN_OUT], bias_t test3_biases[TEST3_CHAN_OUT]){
+void get_test3(weight_t test3_weights[TEST3_N_FILT][2*TEST3_CHAN_OUT], bias_t test3_biases[TEST3_CHAN_OUT]){
   for (int ii=0; ii<TEST3_N_FILT; ii++){
     for (int jj=0; jj<TEST3_CHAN_OUT; jj++){
-      test3_weights[ii][0][jj]=1.0;
-      test3_weights[ii][1][jj]=-1.0;
+      test3_weights[ii][2*jj]=1.0;
+      test3_weights[ii][2*jj+1]=-1.0;
     }
   }
 
@@ -57,8 +57,8 @@ void test_conv(
   // nnet::conv_iq<data_t, result_t, weight_t, bias_t, accum_t, TEST2_N_IN, TEST2_N_FILT, TEST2_CHAN_OUT>(data_i, data_q, result, test2_weights, test2_biases);
 
   // TEST 3
-  weight_t test3_weights[TEST3_N_FILT][2][TEST3_CHAN_OUT];
+  weight_t test3_weights[TEST3_N_FILT][2*TEST3_CHAN_OUT];
   bias_t test3_biases[TEST3_CHAN_OUT];
   get_test3(test3_weights, test3_biases);
-  nnet::conv_iq_manychan<data_t, result_t, weight_t, bias_t, accum_t, TEST3_N_IN, TEST3_N_FILT, TEST3_CHAN_OUT>(data_i, data_q, result, test3_weights, test3_biases);
+  nnet::conv_iq<data_t, result_t, weight_t, bias_t, accum_t, TEST3_N_IN, TEST3_N_FILT, TEST3_CHAN_OUT>(data_i, data_q, result, test3_weights, test3_biases);
 }

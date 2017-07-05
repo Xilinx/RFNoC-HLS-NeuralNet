@@ -90,8 +90,8 @@ int main_test3()
   data_t test3_data[TEST3_N_IN][2];
   hls::stream<data_t> data_i, data_q;
   for (int ii=0; ii<TEST3_N_IN; ii++){
-    test3_data[ii][0] = ii*0.01;
-    test3_data[ii][1] = -ii*0.01;
+    test3_data[ii][0] = ii*0.0025;
+    test3_data[ii][1] = -ii*0.0025;
     data_i << test3_data[ii][0];
     data_q << test3_data[ii][1];
   }
@@ -105,7 +105,7 @@ int main_test3()
   for (int ii = 0; ii < TEST3_N_OUT; ii++) {
     for (int jj = 0; jj < TEST3_CHAN_OUT; jj++) {
       resval = float(res.read());
-      refval = sum_of_n(ii,ii+TEST3_N_FILT)*0.02 + jj*0.01;
+      refval = sum_of_n(ii,ii+TEST3_N_FILT)*0.005 + jj*0.01;
       err = resval - refval;
       std::cout << "Row: " << ii << ", Chan: " << jj << ": " << resval << ", Ref: " << refval << ", Err: " << err << std::endl;
       if (abs(err)>0.0001)  errcount++;
