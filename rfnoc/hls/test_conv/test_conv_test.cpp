@@ -96,8 +96,6 @@ int main_test3()
     data_q << test3_data[ii][1];
   }
 
-  float test2_ref[TEST3_N_OUT][TEST3_CHAN_OUT];
-
   // Run the basic neural net block
   hls::stream<result_t> res;
   test_conv(data_i, data_q, res);
