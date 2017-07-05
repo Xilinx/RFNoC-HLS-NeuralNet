@@ -106,7 +106,8 @@ void conv_iq_manychan(
     weight_T  weights[Y_FILT][2*CHAN_OUT],
     bias_T    biases[CHAN_OUT])
 {
-    // NOTE: Currently NOT functional!! Does not synthesize well. Needs more work on partitioning
+    // NOTE: Currently NOT functional!! Does not synthesize well.
+    // Needs more work on partitioning + code compatibility
 
     // GOAL:
     // Provide a new conv_iq directive with unrolled channels and RAM weight storage.
