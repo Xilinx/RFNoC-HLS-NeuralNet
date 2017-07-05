@@ -19,15 +19,8 @@ int main(int argc, char **argv)
   int rval = 0;
   rval = read_file_1D<input_t, N_LAYER_IN>("data/mnist_validation_data_784x1.dat", data);
   rval = read_file_1D<float, N_LAYER_OUT>("data/mnist_validation_output_10x1.dat", answer);
-//  rval = read_file_2D<coeff_t, N_LAYER_IN, N_LAYER_OUT>("data/mnist_layer1_weights_784x10.dat", weights);
-//  rval = read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer1_biases_10x1.dat", biases);
-//  rval = read_file_1D<input_t, N_LAYER_IN>("data/validation_data_784x1.dat", data);
-//  rval = read_file_1D<float, N_LAYER_OUT>("data/validation_layer1_small_256x1.dat", answer);
-//  rval = read_file_2D<coeff_t, N_LAYER_IN, N_LAYER_OUT>("data/mnist_layer1_weights_small_784x256.dat", weights);
-//  rval = read_file_1D<bias_t, N_LAYER_OUT>("data/mnist_layer1_biases_small_256x1.dat", biases);
 
   // Run the basic neural net block
-//  result_t res[N_LAYER_OUT];
   unsigned short size_in, size_out;
 
   hls::stream<input_t> data_str;
@@ -44,7 +37,7 @@ int main(int argc, char **argv)
   int err_cnt = 0;
   float err, curr_data;
   for (int ii = 0; ii < N_LAYER_OUT; ii++) {
-	curr_data = res_str.read();
+    curr_data = res_str.read();
     err = curr_data-answer[ii];
     std::cout << " Expected: " << answer[ii] << "   Received: " << curr_data << "  ErrVal: " << err << std::endl;
     if (abs(err) > 0.5) err_cnt++;
