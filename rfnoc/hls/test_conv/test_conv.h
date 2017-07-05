@@ -5,12 +5,6 @@
 #include "ap_fixed.h"
 #include "hls_stream.h"
 
-// typedef ap_fixed<16,12>  data_t;
-// typedef ap_fixed<16,12>  result_t;
-// typedef ap_fixed<16,12>  weight_t;
-// typedef ap_fixed<16,12>  bias_t;
-// typedef ap_fixed<32,10>  accum_t;
-
 typedef ap_fixed<16,3>  data_t;
 typedef ap_fixed<16,5>  result_t;
 typedef ap_fixed<16,3>  weight_t;
@@ -43,6 +37,5 @@ void test_conv(
     hls::stream<data_t>   &data_i,
     hls::stream<data_t>   &data_q,
     hls::stream<result_t> &result);
-
 
 #endif

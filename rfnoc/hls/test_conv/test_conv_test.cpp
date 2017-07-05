@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "test_conv1d.h"
+#include "test_conv.h"
 
 
 int main_test1()
@@ -119,13 +119,18 @@ int main_test3()
 
 int main(int argc, char **argv)
 {
-    // // RUN TEST1
-    // return main_test1();
+  // NOTE: To run the different tests, make sure the function call
+  //       below aligns with the function call in test_conv.cpp.
+  //       I usually just comment/uncomment since this was mostly
+  //       for testing & development...
 
-    // // RUN TEST2
-    // return main_test2();
+  // RUN TEST1
+  // return main_test1();
 
-	// RUN TEST3
-	return main_test3();
+  // RUN TEST2
+  // return main_test2();
+
+  // RUN TEST3
+  return main_test3();
 }
 
