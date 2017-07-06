@@ -117,7 +117,7 @@ The HLS-RFNoC workflow is a bit involved, yet worthwhile.
     nnet::compute_layer<layer4_t, layer5_t, weight_t, bias_t, accum5_t, N_LAYER_4, N_LAYER_5>
                        (hidden4, res, w5, b5);
     ```
-    This may look busy at first, but the neural network code is relatively straightforward after looking past the template declarations. There are two major differences between the HLS-optimized code and a typical C or C++ implementation. 
+    This may look busy at first, but the neural network code is relatively straightforward after looking past the template declarations (dense layer -> relu -> dense layer -> relu -> ... -> dense layer). There are two major differences between the HLS-optimized code and a typical C or C++ implementation. 
 
     First, the input/output interface to each function uses Vivado's hls_stream object, which provides a FIFO buffer that helps developers program C++ code that is naturally conducive to FPGA synthesis. 
 
