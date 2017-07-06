@@ -57,14 +57,12 @@ RFNoC provides a convenient input/output interface between hardware and software
 
 [updated 7/6/2017. TBD what stays here depending on merge actions with uhd-fpga main repo and such...] 
 
-Running simulations and builds on the rfnoc-hls-neuralnet OOT module requires a few edit to the uhd-fpga repo.
-
-First, a number of edits to uhd-fpga's Makefile system are required to handle HLS simulations in the repo. These updates provide: 
+Running simulations and builds on the rfnoc-hls-neuralnet OOT module requires a few edit to the uhd-fpga repo to support HLS simulations and builds. These updates provide: 
 
 1. make xsim_hls for running testbench simulations
 2. Ability to use an HLS include folder when generating the FPGA image 
 
-I have a fork of uhd-fpga here that supports these updates: https://github.com/ejk43/fpga/tree/hls-oot-edits
+I have a fork of uhd-fpga here that provides these updates: https://github.com/ejk43/fpga/tree/hls-oot-edits
 
 To apply the patches:
 
@@ -87,7 +85,7 @@ OOT_DIR = $(BASE_DIR)/../../../rfnoc-hls-neuralnet/rfnoc
 include $(OOT_DIR)/Makefile.inc
 ```
 
-This syntax should be generated correctly if you use the uhd_image_builder or uhd_image_builder_gui scripts, pointing to the rfnoc-hls-neuralnet as an Include file. 
+This syntax should be automatically generated correctly if you use the uhd_image_builder or uhd_image_builder_gui scripts, pointing to the rfnoc-hls-neuralnet as an Include file. 
 
 
 ## Workflow
