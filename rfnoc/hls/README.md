@@ -2,7 +2,7 @@
 
 The sub-projects in this repo fall into roughly 3 categories:
 
-1. Neural Network Library: Contains the function definitions with compiler directives for efficient FPGA synthesis
+1. Neural Network Library: Contains templatized function definitions with compiler directives for efficient FPGA synthesis of neural network building blocks
     * nnet_lib
     
 2. Code Examples: Contains working examples meant to demonstrate a relevant neural network instantiation
