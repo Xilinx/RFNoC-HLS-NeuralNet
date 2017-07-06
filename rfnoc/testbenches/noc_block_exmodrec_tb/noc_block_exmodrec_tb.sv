@@ -50,8 +50,8 @@ module noc_block_exmodrec_tb();
     ** Test 3 -- Connect RFNoC blocks
     ********************************************************/
     `TEST_CASE_START("Connect RFNoC blocks");
-    `RFNOC_CONNECT(noc_block_tb,noc_block_exmodrec,SC16,SPP);
-    `RFNOC_CONNECT(noc_block_exmodrec,noc_block_tb,SC16,SPP);
+    `RFNOC_CONNECT(noc_block_tb,noc_block_exmodrec,S16,SPP);
+    `RFNOC_CONNECT(noc_block_exmodrec,noc_block_tb,S16,SPP);
     `TEST_CASE_DONE(1);
 
     /********************************************************
@@ -88,7 +88,87 @@ module noc_block_exmodrec_tb();
         $display("Send data from text file");
         while (!$feof(data_file)) begin
           scan_file = $fscanf(data_file, "%f", data_float);
-          data_int = data_float * (2**22);
+          data_int = data_float * (2**13);
+          data_logic = data_int;
+          if (!$feof(data_file))
+            tb_streamer.push_word({data_logic}, 0 );
+          else
+            tb_streamer.push_word({data_logic}, 1 );
+          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+          //$display(s);
+        end
+        $fclose(data_file);
+
+        data_file = $fopen("ex_modrec_input_10x1.dat", "r");
+        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+        if (data_file == 0) begin
+          $display("data_file handle was NULL");
+          $finish;
+        end
+        $display("Send data from text file");
+        while (!$feof(data_file)) begin
+          scan_file = $fscanf(data_file, "%f", data_float);
+          data_int = data_float * (2**13);
+          data_logic = data_int;
+          if (!$feof(data_file))
+            tb_streamer.push_word({data_logic}, 0 );
+          else
+            tb_streamer.push_word({data_logic}, 1 );
+          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+          //$display(s);
+        end
+        $fclose(data_file);
+
+        data_file = $fopen("ex_modrec_input_10x1.dat", "r");
+        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+        if (data_file == 0) begin
+          $display("data_file handle was NULL");
+          $finish;
+        end
+        $display("Send data from text file");
+        while (!$feof(data_file)) begin
+          scan_file = $fscanf(data_file, "%f", data_float);
+          data_int = data_float * (2**13);
+          data_logic = data_int;
+          if (!$feof(data_file))
+            tb_streamer.push_word({data_logic}, 0 );
+          else
+            tb_streamer.push_word({data_logic}, 1 );
+          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+          //$display(s);
+        end
+        $fclose(data_file);
+
+        data_file = $fopen("ex_modrec_input_10x1.dat", "r");
+        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+        if (data_file == 0) begin
+          $display("data_file handle was NULL");
+          $finish;
+        end
+        $display("Send data from text file");
+        while (!$feof(data_file)) begin
+          scan_file = $fscanf(data_file, "%f", data_float);
+          data_int = data_float * (2**13);
+          data_logic = data_int;
+          if (!$feof(data_file))
+            tb_streamer.push_word({data_logic}, 0 );
+          else
+            tb_streamer.push_word({data_logic}, 1 );
+          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+          //$display(s);
+        end
+        $fclose(data_file);
+
+        data_file = $fopen("ex_modrec_input_10x1.dat", "r");
+        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+        if (data_file == 0) begin
+          $display("data_file handle was NULL");
+          $finish;
+        end
+        $display("Send data from text file");
+        while (!$feof(data_file)) begin
+          scan_file = $fscanf(data_file, "%f", data_float);
+          data_int = data_float * (2**13);
           data_logic = data_int;
           if (!$feof(data_file))
             tb_streamer.push_word({data_logic}, 0 );
@@ -110,11 +190,11 @@ module noc_block_exmodrec_tb();
         for (int ii = 0; ii < 10; ii++) begin
           tb_streamer.pull_word({res_logic}, last);
           res_int = res_logic;
-          result_float =  res_int / 2.0**10;
+          result_float =  res_int / 2.0**7;
           $sformat(s, "Received Value: %f, %h", result_float, res_logic); $display(s);
           scan_file = $fscanf(data_file_ref, "%f\n", reference_float);
           $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float);
-          `ASSERT_ERROR((result_float-reference_float) < 0.1 && (reference_float-result_float) > -0.1, s);
+          `ASSERT_ERROR((result_float-reference_float) < 0.5 && (reference_float-result_float) > -0.5, s);
         end
         $fclose(data_file_ref);
       end

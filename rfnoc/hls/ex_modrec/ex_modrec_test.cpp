@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
   ex_modrec(data_strm, res_strm, size_in, size_out);
 
-  std::cout << "Found network size: " << size_in << "x" << size_out << std::endl;
+//  std::cout << "Found network size: " << size_in << "x" << size_out << std::endl;
 
   // Print result vector
   int err_cnt = 0;

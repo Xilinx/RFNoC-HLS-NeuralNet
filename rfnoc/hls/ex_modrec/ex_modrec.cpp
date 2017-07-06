@@ -6,6 +6,16 @@
 // #include "data/ex_modrec_weights.h"
 #include "data/ex_modrec_consts.h"
 
+template<class in_T, class out_T, int N_IN>
+void change_type(hls::stream<in_T> &in, hls::stream<out_T> &out)
+{
+    in_T datareg;
+    hls::stream<out_T> input_trunc;
+    for (int ii=0; ii<N_IN; ii++) {
+        out << (out_T) in.read();
+    }
+}
+
 template<class data_T, int N_IN>
 void  hls_stream_debug(hls::stream<data_T> &data, hls::stream<data_T> &res)
 {
@@ -29,6 +39,8 @@ void ex_modrec(
     #pragma HLS INTERFACE ap_ctrl_none port=return
 
     // Connect size indicators
+    #pragma HLS INTERFACE axis port=data
+    #pragma HLS INTERFACE axis port=res
     #pragma HLS INTERFACE ap_none port=const_size_in
     #pragma HLS INTERFACE ap_none port=const_size_out
     const_size_in   = N_LAYER_IN;
@@ -40,9 +52,13 @@ void ex_modrec(
     // NETWORK INSTATIATION
     // ****************************************
 
+    // Change data type from input_t to layer0_t
+    hls::stream<layer0_t> data_trunc;
+    change_type<input_t, layer0_t, N_LAYER_IN>(data, data_trunc);
+
     // LAYER 1
     hls::stream<layer1_t> logits1, hidden1;
-    nnet::compute_layer<input_t, layer1_t, weight_t, bias_t, accum_t, N_LAYER_IN, N_LAYER_1>(data, logits1, w1, b1);
+    nnet::compute_layer<layer0_t, layer1_t, weight_t, bias_t, accum_t, N_LAYER_IN, N_LAYER_1>(data_trunc, logits1, w1, b1);
     nnet::relu6<layer1_t, layer1_t, N_LAYER_1>(logits1, hidden1);
 
     // LAYER 2

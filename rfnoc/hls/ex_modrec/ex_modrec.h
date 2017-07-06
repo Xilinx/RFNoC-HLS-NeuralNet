@@ -6,18 +6,19 @@
 #include "ap_fixed.h"
 #include "hls_stream.h"
 
-typedef ap_fixed<16,6> input_t;
-typedef ap_fixed<32,10> result_t;
+typedef ap_fixed<16,3> input_t;
+typedef ap_fixed<16,9> result_t;
 typedef ap_fixed<16,3> weight_t;
 typedef ap_fixed<16,3> bias_t;
 typedef ap_fixed<32,6> accum_t;
 typedef ap_fixed<32,10> accum5_t;
 
+typedef ap_fixed<18,4> layer0_t;
 typedef ap_fixed<18,4> layer1_t;
 typedef ap_fixed<18,4> layer2_t;
 typedef ap_fixed<18,4> layer3_t;
 typedef ap_fixed<18,4> layer4_t;
-typedef ap_fixed<32,10> layer5_t;
+typedef ap_fixed<16,9> layer5_t;
 
 // typedef float input_t;
 // typedef float result_t;

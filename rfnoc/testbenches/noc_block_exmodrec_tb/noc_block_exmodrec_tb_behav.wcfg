@@ -12,11 +12,11 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="6900302000fs"></ZoomStartTime>
-      <ZoomEndTime time="7116502001fs"></ZoomEndTime>
-      <Cursor1Time time="6924102000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="15100000001fs"></ZoomEndTime>
+      <Cursor1Time time="15100000000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="102" />
+   <WVObjectSize size="103" />
    <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/tc_running">
       <obj_property name="ElementShortName">tc_running</obj_property>
       <obj_property name="ObjectShortName">tc_running</obj_property>
@@ -420,6 +420,254 @@
    <wvobject db_ref_id="1" type="array" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata">
       <obj_property name="ElementShortName">out_data_tdata[31:0]</obj_property>
       <obj_property name="ObjectShortName">out_data_tdata[31:0]</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[31]">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[31]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[30]">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[30]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[29]">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[29]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[28]">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[28]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[27]">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[27]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[26]">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[26]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[25]">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[25]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[24]">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[24]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[23]">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[23]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[22]">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[22]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[21]">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[21]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[20]">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[20]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[19]">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[19]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[18]">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[18]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[17]">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[17]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[16]">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[16]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[15]">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[15]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[14]">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[14]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[13]">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[13]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[12]">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[12]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[11]">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[11]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[10]">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[10]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[9]">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[9]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[8]">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[8]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[7]">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[7]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[6]">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[6]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[5]">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[5]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[4]">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[4]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[3]">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[3]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[2]">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[2]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[1]">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[1]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[0]">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[0]</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">7</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject db_ref_id="1" type="vbus" fp_name="vbus215">
+      <obj_property name="label">Data</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">7</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[15]">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[15]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[14]">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[14]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[13]">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[13]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[12]">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[12]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[11]">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[11]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[10]">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[10]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[9]">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[9]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[8]">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[8]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[7]">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[7]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[6]">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[6]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[5]">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[5]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[4]">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[4]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[3]">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[3]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[2]">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[2]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[1]">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[1]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tdata[0]">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">out_data_tdata[0]</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_exmodrec_tb/noc_block_exmodrec/out_data_tlast">
       <obj_property name="ElementShortName">out_data_tlast</obj_property>

@@ -150,32 +150,17 @@ module noc_block_exmodrec #(
   // localparam [7:0] SR_TEST_REG_0 = SR_USER_REG_BASE;
   // localparam [7:0] SR_TEST_REG_1 = SR_USER_REG_BASE + 8'd1;
 
-  localparam SR_SIZE_INPUT = 129;
-  localparam SR_SIZE_OUTPUT = 130;
-
   localparam RB_SIZE_INPUT = 129;
   localparam RB_SIZE_OUTPUT = 130;
 
-  wire [31:0] size_input_reg;
-  setting_reg #(
-    .my_addr(SR_SIZE_INPUT), .awidth(8), .width(32))
-  sr_size_reg_in (
-    .clk(ce_clk), .rst(ce_rst),
-    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(size_input_reg), .changed());
-
-  wire [31:0] size_output_reg;
-  setting_reg #(
-    .my_addr(SR_SIZE_OUTPUT), .awidth(8), .width(32))
-  sr_size_reg_out (
-    .clk(ce_clk), .rst(ce_rst),
-    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(size_output_reg), .changed());
+  wire [15:0] const_size_in, const_size_out;
 
   // Readback registers
   // rb_stb set to 1'b1 on NoC Shell
   always @(posedge ce_clk) begin
     case(rb_addr)
-      RB_SIZE_INPUT  : rb_data <= {32'd0, size_input_reg};
-      RB_SIZE_OUTPUT : rb_data <= {32'd0, size_output_reg};
+      RB_SIZE_INPUT  : rb_data <= {48'd0, const_size_in};
+      RB_SIZE_OUTPUT : rb_data <= {48'd0, const_size_out};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
   end
@@ -187,17 +172,12 @@ module noc_block_exmodrec #(
   //  + Save off tuser for the output packet
   // *************************************************
 
-  wire [32:0]  in_data_tdata,  out_data_tdata;
+  wire [31:0]  in_data_tdata,  out_data_tdata;
   wire         in_data_tlast,  out_data_tlast;
   wire         in_data_tvalid, out_data_tvalid;
   wire         in_data_tready, out_data_tready;
 
-  wire [15:0] const_size_in, const_size_out;
-
-  nnet_vector_wrapper #(
-    .SR_SIZE_INPUT(SR_SIZE_INPUT),
-    .SR_SIZE_OUTPUT(SR_SIZE_OUTPUT) ) 
-  inst_nnet_wrapper (
+  nnet_vector_wrapper inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
     .next_dst_sid(next_dst_sid),
     .pkt_size_in(const_size_in), .pkt_size_out(const_size_out),
@@ -236,10 +216,16 @@ module noc_block_exmodrec #(
   // Assign tlast = 0... currently not propagated in the HLS ports
   assign out_data_tlast = 1'b0;
 
+  // ex_modrec inst_example_modrec (
+  //   .ap_clk(ce_clk), .ap_rst(ce_rst),
+  //   .const_size_in(const_size_in), .const_size_out(const_size_out),
+  //   .data_V_V_dout(in_data_tdata), .data_V_V_empty_n(in_data_tvalid), .data_V_V_read(in_data_tready), 
+  //   .res_V_V_din(out_data_tdata), .res_V_V_full_n(out_data_tready), .res_V_V_write(out_data_tvalid));
+
   ex_modrec inst_example_modrec (
-    .ap_clk(ce_clk), .ap_rst(ce_rst),
+    .ap_clk(ce_clk), .ap_rst_n(~ce_rst),
     .const_size_in(const_size_in), .const_size_out(const_size_out),
-    .data_V_V_dout(in_data_tdata), .data_V_V_empty_n(in_data_tvalid), .data_V_V_read(in_data_tready), 
-    .res_V_V_din(out_data_tdata), .res_V_V_full_n(out_data_tready), .res_V_V_write(out_data_tvalid));
+    .data_V_V_TDATA(in_data_tdata), .data_V_V_TVALID(in_data_tvalid), .data_V_V_TREADY(in_data_tready), 
+    .res_V_V_TDATA(out_data_tdata), .res_V_V_TVALID(out_data_tvalid), .res_V_V_TREADY(out_data_tready));
 
 endmodule
