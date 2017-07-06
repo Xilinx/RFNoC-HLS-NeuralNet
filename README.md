@@ -27,6 +27,8 @@ The neural network library (rfnoc-neuralnet) provides an RFNoC OOT module for ef
 
 The neural network library here provides pre-optimized neural network building blocks using the Vivado HLS tool to synthesize the desired neural network. RFNoC provides a convenient input/output interface between hardware and software that is compatible with gnuradio. Ideally, the neural network designer will be able to deploy neural networks and evaluate resource vs throughput tradeoffs without needing to develop and maintain the repetitive “glue code” in FPGA and software. Presented examples demonstrate various use-cases in a simulation environment and on the E310, including image classification and modulation recognition, using both fully-connected and convolutional layers.
 
+![HLS NeuralNet Block Diagram](/images/block-diagram.png)
+
 ## Goals
 
 * Develop an HLS library of common neural network functions
@@ -59,19 +61,43 @@ For the time being, I would recommend merging or cherry picking these updates in
 
 The HLS-RFNoC workflow is a bit involved, yet worthwhile. 
 
-1) **HLS Floating-point Simulation**: In the initial stage, the developer first implements and simulates the desired neural network using floating point datatypes in C++ using the provided code from rfnoc-hls-neuralnet. The general goal in this step is to identically replicate the performance of the selected neural network algorithm in the HLS framework. See the HLS readme for more detailed information. 
+![HLS NeuralNet Workflow Diagram](/images/workflow-diagram.png)
+
+1) **HLS Floating-point Simulation**: In the initial stage, the developer first implements and simulates the desired neural network using floating point datatypes in C++ using the provided code from rfnoc-hls-neuralnet. The general goal in this step is to identically replicate the performance of the selected neural network algorithm in the HLS framework.
+
+    This code,  for example,  is pulled straight from ex_modrec.cpp:
+    
+    ```C++
+    // LAYER 1
+    hls::stream<layer1_t> logits1, hidden1;
+    nnet::compute_layer<layer0_t, layer1_t, weight_t, bias_t, accum_t, N_LAYER_IN, N_LAYER_1>
+                       (data_trunc, logits1, w1, b1);
+    nnet::relu6<layer1_t, layer1_t, N_LAYER_1>(logits1, hidden1);
+
+    // LAYER 2
+    hls::stream<layer2_t> logits2, hidden2;
+    nnet::compute_layer<layer1_t, layer2_t, weight_t, bias_t, accum_t, N_LAYER_1, N_LAYER_2>
+                       (hidden1, logits2, w2, b2);
+    nnet::relu6<layer2_t, layer2_t, N_LAYER_2>(logits2, hidden2);
+
+    [...]
+
+    // LAYER 5
+    nnet::compute_layer<layer4_t, layer5_t, weight_t, bias_t, accum5_t, N_LAYER_4, N_LAYER_5>
+                       (hidden4, res, w5, b5);
+    ```
 
     Note that while the neural network code is relatively straightforward, there two major differences between the HLS-optimized code and a typical C or C++ implementation. First, the input/output interface to each function uses Vivado's hls_stream object, which provides a FIFO buffer that helps developers program C++ code that is naturally conducive to FPGA synthesis. Second, the neural network function library extensively uses template programming. When working with Vivado HLS, template programming allows the designer to specify a variety of useful constants to the HLS compiler, including both datatypes and network size. All of the layer sizes and weight/bias datatypes are specified using predefined typedefs in the example header.
 
-2) **HLS Synthesis**: Next, the floating point data types of Step 1 are then converted into fixed point data types. Vivado provides a C++ class (ap_fixed) that simplifies the use of fixed point numbers. The "real world" value of the fixed point number may be used interchangeably with floating point; but the rounding, conversion, overflow, and all arithmetic/multiplication operations are handled by the HLS compiler. The designer will switch data types to fixed point numbers, compare results to simulation, and then adjust the fixed point data type format as required to meet the test vector. The process repeats until the fixed point results agree with the floating point results. 
+2) **HLS Synthesis**: Next, the floating point data types of Step 1 are then converted into fixed point data types. Vivado provides a C++ class (ap_fixed) that simplifies the use of fixed point numbers. The "real world" value of the fixed point number may be used interchangeably with floating point; but the rounding, conversion, overflow, and all arithmetic/multiplication operations are handled by the HLS compiler. The designer will switch data types to fixed point numbers (typically performed via typedefs in the respective \*.h files), compare results to simulation, and then adjust the fixed point data type format as required to meet the test vector. The process repeats until the fixed point results agree with the floating point results. 
 
-    After the neural network is implemented in fixed point, HLS synthesis may run to create HDL code. The HLS directives in the neural network library have been optimized to provide an acceptable tradeoff of resources versus throughput results for a few network sizes-- if necessary, edit HLS directives to improve resource usage or algorithm throughput. 
+    After the neural network is implemented in fixed point, HLS synthesis may run to create HDL code. Of course, synthesis may be ran with floating point data types-- but the resource performance is often 2-4x higher than expected. The HLS directives in the neural network library have been optimized to provide an acceptable tradeoff of resources versus throughput results for a few network sizes-- if necessary, edit HLS directives to improve resource usage or algorithm throughput. 
 
-3) **RFNoC HDL Compute Engine and Testbench**: After HDL is generated, the resulting module is inserted into an RFNoC CE. The RFNoC CE attaches to the RFNoC crossbar, which provides data routing throughout the rest of the FPGA and to the procesor. The neural network user logic does not typically contain the same number of inputs as outputs; therefore, simple mode of the axi_wrapper block must be set to zero, and the user connects the input and output axi-stream buses to the nnet_vector_wrapper. The nnet_vector_wrapper is a lightweight wrapping block that simply frames the data according to the neural network size from HLS. 
+3) **RFNoC HDL Compute Engine and Testbench**: After HDL is generated, the resulting module is inserted into an RFNoC CE. The RFNoC CE attaches to the RFNoC crossbar, which provides data routing throughout the rest of the FPGA and to the procesor. The neural network user logic does not typically contain the same number of inputs as outputs; therefore, simple mode of the axi_wrapper block must be set to zero, and the user connects the input and output axi-stream buses to the nnet_vector_wrapper. The nnet_vector_wrapper is a lightweight wrapping block that simply frames the data according to the neural network size from HLS. The examples provided in both noc_block_ex1layer.v and noc_block_modrec.v can be followed to demonstrate how to correctly wrap the generated output for either ap_fifo output ports or ais-stream output ports. 
 
     Once the RFNoC CE is created, the user testbench can be created to stimulate the CE. In the provided examples, the test stimulus is chosen to be exactly the same as the HLS testbench data; using the same test stimulus provides a comforting knowledge that the synthesized FPGA code is functionally equivalent to the simulated C++ code. In the testbench folder, run the simulation to validate the CE functionality. Refer to the included readme files for simulation instructions. The RFNoC CE is now ready to be inserted into an FPGA image.
 
-4) **Hardware Integration**: Finally, the CE is built into an FPGA image using the typical RFNoC image building workflow. At this point, the FPGA image can be programmed to the Ettus hardware of choice. The newly-created RFNoC block does not require custom C++ drivers, but it does need several xml definitions to be used in GRC. The rfnoc-hls-neuralnet module provides some basic examples of how to interface with the generated block. Inside rfnoc-hls-neuralnet/grc, the xml file identifies the block interface to GRC; this can be found in fpgannet_exmodrec.xml. Once the GRC xml file is ready, the RFNoC block can be inserted into a GRC flowgraph for user input and output, and then run locally or on the E300 series embedded devices. 
+4) **Hardware Integration**: Finally, the CE is built into an FPGA image using the typical RFNoC image building workflow. At this point, the FPGA image can be programmed to the Ettus hardware of choice. The newly-created RFNoC block does not require custom C++ drivers, but it does need several xml definitions to be used in GRC. The rfnoc-hls-neuralnet module provides some basic examples of how to interface with the generated block. Inside rfnoc-hls-neuralnet/grc, the xml file identifies the block interface to GRC; this can be found in fpgannet_exmodrec.xml. Once the GRC xml file is ready, the RFNoC block can be inserted into a GRC flowgraph for user input and output, and then run locally or on the E300 series embedded devices.
 
 ## Examples
 
@@ -84,7 +110,7 @@ In rfnoc-neuralnet/examples, there are a few pre-generated example RFNoC blocks 
 
 The first two examples, ex_1layer and ex_modrec, have been developed through the full HLS workflow and tested on an E310 using basic file input/input to confirm functionality. Note these blocks have not (yet) been tested with streaming RF data in order to perform unit tests in a constrained environment. A brief instruction on these examples are detailed below:  
 
-#### noc_block_ex1layer
+### noc_block_ex1layer
 
 The neural network in this RFNoC block is modeled after the [first Tensorflow example](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/udacity) (specifically, 2_fullyconnected.ipynb) in the online [Udacity course on Deep Learning](https://www.udacity.com/course/deep-learning--ud730). This is a relatively simple one-layer fully-connected network, which I put together from the example notebook, then saved the pretrained weights and biases. The network is designed to accept 28 x 28 grayscale images from the "not_MNIST" dataset and to classify into 10 categories representing letters A-J.
 
@@ -96,7 +122,7 @@ The neural network in this RFNoC block is modeled after the [first Tensorflow ex
 
 Optionally, in the nnet_example_1layer.grc flowgraph, enable the file source for ex1_binary_validation_data.s16. This contains all the validation data from the Udacity tensorflow course. I've saved this data on [my google drive](https://drive.google.com/open?id=0B4jB60EiIiLPLU95X3Jja280M0E) in order to avoid putting it on the git repo. Move the validation data to the E310 and run the python flowgraph pointing to the larger validation set.
 
-#### noc_block_modrec
+### noc_block_modrec
 
 The neural network in this RFNoC block is modeled on modulation recognition work using expert "moment based" features [from grcon 2016](https://pubs.gnuradio.org/index.php/grcon/article/view/7). The idea is that certain features will be calculated on a segment of RF data and fed into the multi-layer network. This network requires 5 layers of essentially 40x40 fully-connected layers. Coincidentally, there are 10x input features and 10x output classifications.
 
@@ -108,3 +134,16 @@ The neural network in this RFNoC block is modeled on modulation recognition work
 
 Optionally, in the nnet_example_modrec.grc flowgraph, enable the file source for ex_modrec_validation_data.s16. This contains a larger set of 2000 modrec feature sets. I've saved this data on [my google drive](https://drive.google.com/open?id=0B4jB60EiIiLPLU95X3Jja280M0E) in order to avoid putting it on the git repo. Move the validation data to the E310 and run the python flowgraph pointing to the larger validation set. 
 
+
+## Follow-Up
+
+There remain, of course, many improvements I would like to see to this module. Here's an assorted list in order of decreasing priority, for public reference and for my own memory...
+
+* **Additional neural network layer types**: While the fully-connected layers and convolutional layers cover many types of neural networks for RF processing, a few more building blocks could be helpful as part of the library, specifically 1) 2D convolutional layers, 2) recurrent neural networks, and 3) softmax operation (while usually only needed on the output of a network during training, it's nevertheless a common structure often used in software).
+* **Work out 32-bit vs 16-bit datatypes**: There's some gymnastics going on with the data type sizing on the FPGA, and I hit two odd stumbling blocks in this area... 1) As is obvious in the GRC flowgraphs, the RFNoC architecture is primarily designed for 32 bit sample streaming (16-bits I,  16-bits Q). It's less clear how exactly to handle sequential 16-bit chunks of data correctly. I found *something* that works in the flowgraph examples, but this appears to use a good deal more processing horsepower on the embedded device than should be needed. 2) HLS failed at generating outputs with 32-bit sizes when developing the ex_modrec example. This was a real struggle-- HLS said that everything passed, yet the noc_block_modrec_tv.sv simulation consistently failed to get valid data out of the HLS generated IP block when I used 32-bit outputs. Anyway, the data type issues need to be worked out.
+* **Test with live streaming data**: The current repo demonstrates example RFNoC neural network blocks on hardware, but does not take the additional step of integrating with live RF data. Live integration at a high data rate would be an excellent demonstration application for the rfnoc-hls-neuralnet library.
+* **Programmable weights**: Programmable neural network weights were originally on the development roadmap, but were eventually deemed too ambitious for the proof-of-concept architecture presented here. In order to maintain simplicity, weights are required to be fixed in the current implementation; however, programmable weights could become a higher priority improvement depending on demand. 
+    Notionally, a reprogrammable implementation would require the HLS library to include an empty memory bank of the correct size and expose a programming interface; software would then require a C++ driver to program weights upon initialization. While it's a plausible approach, it adds a significant amount complexity to the FPGA and software wrappers.  
+* **Improve weight storage**: The BRAM usage of Vivado HLS generated code tends to be higher than expected. This is due to HLS's BRAM packing algorithms and that HLS apparently uses BRAM18s while BRAM36s may also be available. It is likely that most neural networks synthesized for the RFNoC architecture will be memory-limited rather than computationally limited. 
+    A few options here: The BRAM could be moved to outside of the HLS code and into hand-coded HDL, which may be slightly more efficient, though more difficult to implement. As a different (related) option, a hardware platform might have FPGA access to onboard RAM, which could be used to store large amounts of neural network coefficients. Unfortunately, RFNoC does not currently provide an interface to on-chip RAM; this improvement would necessarily manifest as an application-specific task.
+* **Provide alternate neural network architectures**: Researchers have shown that binarized neural networks can be very efficient on FPGAs while maintaining high performance levels. A binarized neural network could efficiently store weights and perform multiplications (which evaluate into basic binary operations for one bit values), but this manifests as a slightly different HLS structure than assumed here. 
