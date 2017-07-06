@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>RFNoC: 1 Layer Example</name>
+  <name>RFNoC: Mod-Rec Example</name>
   <key>fpgannet_exmodrec</key>
   <category>fpgannet</category>
   <import>import ettus</import>

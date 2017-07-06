@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>nnet_example_1layer</value>
+      <value>nnet_example_modrec</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -105,7 +105,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>784*1000</value>
+      <value>10*10000</value>
     </param>
   </block>
   <block>
@@ -316,7 +316,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>mnist_rfnoc_output.s16</value>
+      <value>modrec_rfnoc_output.s16</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -363,7 +363,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>mnist_data_input.s16</value>
+      <value>modrec_data_input.s16</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -603,7 +603,7 @@
     </param>
   </block>
   <block>
-    <key>fpgannet_ex1layer</key>
+    <key>fpgannet_exmodrec</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -634,7 +634,7 @@
     </param>
     <param>
       <key>fpga_module_name</key>
-      <value>noc_block_ex1layer</value>
+      <value>noc_block_exmodrec</value>
     </param>
     <param>
       <key>grvlenin</key>
@@ -646,7 +646,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(864, 244)</value>
+      <value>(856, 244)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -658,7 +658,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>fpgannet_ex1layer_0</value>
+      <value>fpgannet_exmodrec_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -982,14 +982,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>fpgannet_ex1layer_0</source_block_id>
+    <source_block_id>fpgannet_exmodrec_0</source_block_id>
     <sink_block_id>blocks_copy_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>uhd_rfnoc_streamer_fifo_0</source_block_id>
-    <sink_block_id>fpgannet_ex1layer_0</sink_block_id>
+    <sink_block_id>fpgannet_exmodrec_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
