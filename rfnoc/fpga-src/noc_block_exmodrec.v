@@ -187,8 +187,6 @@ module noc_block_exmodrec #(
   //  + Save off tuser for the output packet
   // *************************************************
 
-  // TODO: Pull the wrapper code into a fpga block
-
   wire [32:0]  in_data_tdata,  out_data_tdata;
   wire         in_data_tlast,  out_data_tlast;
   wire         in_data_tvalid, out_data_tvalid;
