@@ -1,5 +1,5 @@
 //
-//    nnet_lib: Vivado HLS code for neural-net building blocks
+//    rfnoc-hls-neuralnet: Vivado HLS code for neural-net building blocks
 //
 //    Copyright (C) 2017 EJ Kreinar
 //

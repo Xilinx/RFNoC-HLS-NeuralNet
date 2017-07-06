@@ -1,1 +1,2 @@
 add_subdirectory(noc_block_ex1layer_tb)
+add_subdirectory(noc_block_exmodrec_tb)
