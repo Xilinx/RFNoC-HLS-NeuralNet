@@ -55,15 +55,40 @@ RFNoC provides a convenient input/output interface between hardware and software
 
 # Instructions
 
-[updated 6/3/2017. TBD what stays here depending on merge actions and such...] 
+[updated 7/6/2017. TBD what stays here depending on merge actions with uhd-fpga main repo and such...] 
 
-Running simulations and builds on the rfnoc-neuralnet OOT module requires some edits to the uhd-fpga repo.
+Running simulations and builds on the rfnoc-hls-neuralnet OOT module requires a few edit to the uhd-fpga repo.
 
-First, a number of edits to uhd-fpga's Makefile system are required to handle HLS simulations in the repo. These updates will let you run "make xsim_hls" correctly in the OOT module's testbenches folder. I have a fork of uhd-fpga here that supports these updates: https://github.com/ejk43/fpga/tree/ejk/hls_testbench
+First, a number of edits to uhd-fpga's Makefile system are required to handle HLS simulations in the repo. These updates provide: 
 
-Second, additional edits to uhd-fpga's build system are required to provide OOT modules with the extra flexibility to generate HLS and then plug into a new FPGA build. These updates will let you point to Makefiles in an OOT module, which can then generate IP or HLS, when running "make E310_RFNOC", "make X310_RFNOC_HG", etc. These edits are forked here: https://github.com/ejk43/fpga/tree/new_oot_includes
+1. make xsim_hls for running testbench simulations
+2. Ability to use an HLS include folder when generating the FPGA image 
 
-For the time being, I would recommend merging or cherry picking these updates into uhd-fpga. 
+I have a fork of uhd-fpga here that supports these updates: https://github.com/ejk43/fpga/tree/hls-oot-edits
+
+To apply the patches:
+
+1. cd into your uhd-fpga repo
+2. `git remote add ejk https://github.com/ejk43/fpga.git`
+3. `git fetch ejk hls-oot-edits`
+4. `git checkout hls-oot-edits`  (alternatively, cherry-pick the relevant updates, or merge into your working repo, etc)
+
+From here, you are set up to do the following operations:
+
+1. In the [HLS folder](rfnoc/hls), generate an HLS project for one of the example or test projects. Re-synthesize HLS outputs to evaluate resource usage and throughput. Follow the readme for instructions.
+2. In the [testbench](rfnoc/testbenches) folder, run `make xsim_hls` in the example of your choice to stimulate the full neural network RFNoC compute engine
+3. In uhd-fpga/usrp3/top/e300 (or uhd-fpga/usrp3/top/x300), add the rfnoc-hls-neuralnet repo to your Makefile.OOT.inc file,  then generate an RFNOC image for a device
+4. After an FPGA image is created, compile a [GRC flowgraph example](examples) and run to interact with the FPGA and perform basic unit tests of the network operation. 
+
+When generating a new FPGA image, the following lines need to be in the Makefile.OOT.inc (where rfnoc-hls-neuralnet is the name of the cloned repo):
+
+```
+OOT_DIR = $(BASE_DIR)/../../../rfnoc-hls-neuralnet/rfnoc
+include $(OOT_DIR)/Makefile.inc
+```
+
+This syntax should be generated correctly if you use the uhd_image_builder or uhd_image_builder_gui scripts, pointing to the rfnoc-hls-neuralnet as an Include file. 
+
 
 ## Workflow
 
