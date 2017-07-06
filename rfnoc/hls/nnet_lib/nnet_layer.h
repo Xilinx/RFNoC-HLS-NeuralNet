@@ -64,8 +64,6 @@ void compute_small_layer(
     data_T data_cache;
     acc_T acc[N_OUT];
 
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
 	#pragma HLS ARRAY_RESHAPE variable=weights complete dim=2
     #pragma HLS ARRAY_PARTITION variable=acc complete dim=1
 
@@ -83,7 +81,7 @@ void compute_small_layer(
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
 	#pragma HLS PIPELINE
-        res << acc[ires] + biases[ires];
+        res << (res_T) (acc[ires] + (acc_T) biases[ires]);
 }
 
 template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int N_IN, int N_OUT>
@@ -96,8 +94,6 @@ void compute_medium_layer(
     data_T data_cache;
     acc_T acc[N_OUT];
 
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
     #pragma HLS ARRAY_PARTITION variable=weights cyclic factor=8 dim=2
     #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=8 dim=1
 
@@ -120,7 +116,7 @@ void compute_medium_layer(
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
     #pragma HLS PIPELINE
-        res << acc[ires] + biases[ires];
+        res << (res_T) (acc[ires] + (acc_T) biases[ires]);
 }
 
 
@@ -134,8 +130,6 @@ void compute_large_layer(
     data_T data_cache;
     acc_T acc[N_OUT];
 
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
     #pragma HLS ARRAY_PARTITION variable=weights cyclic factor=128 dim=2
     #pragma HLS ARRAY_PARTITION variable=acc cyclic factor=128 dim=1
 
@@ -158,7 +152,7 @@ void compute_large_layer(
 
     Result: for(int ires = 0; ires < N_OUT; ires++)
     #pragma HLS PIPELINE
-        res <<  acc[ires] + biases[ires];
+        res << (res_T) (acc[ires] + (acc_T) biases[ires]);
 }
 
 }

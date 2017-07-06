@@ -33,8 +33,6 @@ namespace nnet {
 template<class data_T, class res_T, int N_IN>
 void  relu(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
     data_T datareg;
     for (int ii=0; ii<N_IN; ii++) {
         datareg = data.read();
@@ -46,8 +44,6 @@ void  relu(hls::stream<data_T> &data, hls::stream<res_T> &res)
 template<class data_T, class res_T, int N_IN, int MAX_INT>
 void  relu_max(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
     data_T datareg;
     for (int ii=0; ii<N_IN; ii++) {
         datareg = data.read();
@@ -89,9 +85,6 @@ void init_sigmoid_table(data_T table_out[N_TABLE])
 template<class data_T, class res_T, int N_IN, int TABLE_SIZE/*=1024*/>
 void  sigmoid(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
-
     // Initialize the lookup table
     res_T sigmoid_table[TABLE_SIZE];
     init_sigmoid_table<res_T, TABLE_SIZE>(sigmoid_table);
@@ -136,9 +129,6 @@ void init_tanh_table(data_T table_out[N_TABLE])
 template<class data_T, class res_T, int N_IN, int TABLE_SIZE/*=1024*/>
 void  tanh(hls::stream<data_T> &data, hls::stream<res_T> &res)
 {
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
-
     // Initialize the lookup table
     res_T tanh_table[TABLE_SIZE];
     init_tanh_table<res_T, TABLE_SIZE>(tanh_table);

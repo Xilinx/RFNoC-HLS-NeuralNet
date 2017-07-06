@@ -44,9 +44,6 @@ void conv_iq(
     acc_T i_out[CHAN_OUT];
     acc_T q_out[CHAN_OUT];
 
-    #pragma HLS INTERFACE ap_fifo port=data_i
-    #pragma HLS INTERFACE ap_fifo port=data_q
-    #pragma HLS INTERFACE ap_fifo port=res
     #pragma HLS ARRAY_PARTITION variable=buffer complete
     #pragma HLS ARRAY_PARTITION variable=i_out complete
     #pragma HLS ARRAY_PARTITION variable=q_out complete
@@ -122,9 +119,6 @@ void conv_iq_manychan(
     acc_T i_out[CHAN_OUT];
     acc_T q_out[CHAN_OUT];
 
-    #pragma HLS INTERFACE ap_fifo port=data_i
-    #pragma HLS INTERFACE ap_fifo port=data_q
-    #pragma HLS INTERFACE ap_fifo port=res
     #pragma HLS ARRAY_PARTITION variable=buffer complete
     #pragma HLS ARRAY_PARTITION variable=i_out cyclic factor=32 dim=1
     #pragma HLS ARRAY_PARTITION variable=q_out cyclic factor=32 dim=1
@@ -198,8 +192,6 @@ void conv_1d(
     data_T buffer[Y_FILT][N_CHAN];
     acc_T int_accum[N_CHAN];
 
-    #pragma HLS INTERFACE ap_fifo port=data
-    #pragma HLS INTERFACE ap_fifo port=res
     #pragma HLS ARRAY_PARTITION variable=buffer complete
     #pragma HLS ARRAY_PARTITION variable=weights complete
 
