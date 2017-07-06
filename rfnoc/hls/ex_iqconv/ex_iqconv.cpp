@@ -6,7 +6,6 @@
 #include "nnet_pooling.h"
 
 #include "ex_iqconv.h"
-#include "data/ex_modrec_consts.h"
 
 void get_consts_1(weight_t test3_weights[N_IQCONV_FILT][2*N_IQCONV_CHAN], bias_t test3_biases[N_IQCONV_CHAN]){
   for (int ii=0; ii<N_IQCONV_FILT; ii++){
