@@ -7,15 +7,16 @@
 
 #include "ex_iqconv.h"
 
-void get_consts_1(weight_t test3_weights[N_IQCONV_FILT][2*N_IQCONV_CHAN], bias_t test3_biases[N_IQCONV_CHAN]){
+void init_w1(weight_t w1[N_IQCONV_FILT][2*N_IQCONV_CHAN]){
   for (int ii=0; ii<N_IQCONV_FILT; ii++){
     for (int jj=0; jj<N_IQCONV_CHAN; jj++){
-      test3_weights[ii][2*jj]=1.0;
-      test3_weights[ii][2*jj+1]=-1.0;
+      w1[ii][2*jj]=1.0;
+      w1[ii][2*jj+1]=-1.0;
     }
   }
-
-  for (int ii=0; ii<N_IQCONV_CHAN; ii++) test3_biases[ii]=ii*0.01;
+}
+void init_b1(bias_t b1[N_IQCONV_CHAN]){
+  for (int ii=0; ii<N_IQCONV_CHAN; ii++) b1[ii]=ii*0.01;
 }
 
 
@@ -28,11 +29,17 @@ void ex_iqconv(
       unsigned short &const_size_in,
       unsigned short &const_size_out)
 {
+    weight_t w1 [N_IN][2*N_IQCONV_CHAN];
+    init_w1(w1);
+    bias_t   b1 [N_IQCONV_CHAN];
+    init_b1(b1);
+
     // Remove ap ctrl ports (ap_start, ap_ready, ap_idle, etc) since we only use the AXI-Stream ports
     #pragma HLS INTERFACE ap_ctrl_none port=return
 
     // Connect size indicators
-    #pragma HLS INTERFACE axis port=data
+    #pragma HLS INTERFACE axis port=data_i
+    #pragma HLS INTERFACE axis port=data_q
     #pragma HLS INTERFACE axis port=res
     #pragma HLS INTERFACE ap_none port=const_size_in
     #pragma HLS INTERFACE ap_none port=const_size_out
@@ -46,10 +53,6 @@ void ex_iqconv(
     // ****************************************
 
     // IQ Convolution
-    weight_t w1 [N_IN][2*N_IQCONV_CHAN];
-    bias_t   b1 [N_IQCONV_CHAN];
-    get_consts_1(w1, b1);
-
     hls::stream<result_t> logits1, hidden1;
     nnet::conv_iq<input_t, result_t, weight_t, bias_t, accum1_t, N_IN, N_IQCONV_FILT, N_IQCONV_CHAN>
                  (data_i, data_q, logits1, w1, b1);
