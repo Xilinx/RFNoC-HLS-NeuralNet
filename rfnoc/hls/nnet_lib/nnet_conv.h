@@ -78,7 +78,7 @@ void conv_iq(
                 i_out[jj] += buffer[ii][0] * weights[ii][2*jj];
                 q_out[jj] += buffer[ii][1] * weights[ii][2*jj+1];
                 // std::cout << "\tBuffr: " << buffer[ii][0] << " + " << buffer[ii][1] << "j" << std::endl;
-                // std::cout << "\tWeigt: " << weights[ii][0][jj] << " + " << weights[ii][1][jj] << "j" << std::endl;
+                // std::cout << "\tWeigt: " << weights[ii][2*jj] << " + " << weights[ii][2*jj+1] << "j" << std::endl;
                 // std::cout << "\tFiler/Chan: " << ii << "/" << jj << ", Accum: " << i_out[jj] << " + " << q_out[jj] << "j" << std::endl;
             }
         }

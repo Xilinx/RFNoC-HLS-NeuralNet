@@ -3,14 +3,28 @@
 #include "nnet_activation.h"
 #include "nnet_layer.h"
 #include "nnet_helpers.h"
+#include "nnet_pooling.h"
 
-#include "ex_modrec.h"
+#include "ex_iqconv.h"
 #include "data/ex_modrec_consts.h"
+
+void get_consts_1(weight_t test3_weights[N_IQCONV_FILT][2*N_IQCONV_CHAN], bias_t test3_biases[N_IQCONV_CHAN]){
+  for (int ii=0; ii<N_IQCONV_FILT; ii++){
+    for (int jj=0; jj<N_IQCONV_CHAN; jj++){
+      test3_weights[ii][2*jj]=1.0;
+      test3_weights[ii][2*jj+1]=-1.0;
+    }
+  }
+
+  for (int ii=0; ii<N_IQCONV_CHAN; ii++) test3_biases[ii]=ii*0.01;
+}
+
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
 void ex_iqconv(
-      hls::stream<input_t> &data,
+      hls::stream<input_t> &data_i,
+      hls::stream<input_t> &data_q,
       hls::stream<result_t> &res,
       unsigned short &const_size_in,
       unsigned short &const_size_out)
@@ -32,26 +46,17 @@ void ex_iqconv(
     // NETWORK INSTATIATION
     // ****************************************
 
-    // LAYER 1
-    hls::stream<layer1_t> logits1, hidden1;
-    nnet::iqconv<layer0_t, layer1_t, weight_t, bias_t, accum_t, N_LAYER_IN, N_LAYER_1>(data_trunc, logits1, w1, b1);
-    nnet::relu<layer1_t, layer1_t, N_LAYER_1>(logits1, hidden1);
+    // IQ Convolution
+    weight_t w1 [N_IN][2*N_IQCONV_CHAN];
+    bias_t   b1 [N_IQCONV_CHAN];
+    get_consts_1(w1, b1);
 
-    // LAYER 2
-    hls::stream<layer2_t> logits2, hidden2;
-    nnet::compute_layer<layer1_t, layer2_t, weight_t, bias_t, accum_t, N_LAYER_1, N_LAYER_2>(hidden1, logits2, w2, b2);
-    nnet::relu6<layer2_t, layer2_t, N_LAYER_2>(logits2, hidden2);
+    hls::stream<result_t> logits1, hidden1;
+    nnet::conv_iq<input_t, result_t, weight_t, bias_t, accum1_t, N_IN, N_IQCONV_FILT, N_IQCONV_CHAN>
+                 (data_i, data_q, logits1, w1, b1);
+    nnet::relu<result_t, result_t, N_IQCONV_FLAT>(logits1, hidden1);
 
-    // LAYER 3
-    hls::stream<layer3_t> logits3, hidden3;
-    nnet::compute_layer<layer2_t, layer3_t, weight_t, bias_t, accum_t, N_LAYER_2, N_LAYER_3>(hidden2, logits3, w3, b3);
-    nnet::relu6<layer3_t, layer3_t, N_LAYER_3>(logits3, hidden3);
-
-    // LAYER 4
-    hls::stream<layer4_t> logits4, hidden4;
-    nnet::compute_layer<layer3_t, layer4_t, weight_t, bias_t, accum_t, N_LAYER_3, N_LAYER_4>(hidden3, logits4, w4, b4);
-    nnet::relu6<layer4_t, layer4_t, N_LAYER_4>(logits4, hidden4);
-
-    // LAYER 5
-    nnet::compute_layer<layer4_t, layer5_t, weight_t, bias_t, accum5_t, N_LAYER_4, N_LAYER_5>(hidden4, res, w5, b5);
+    // Maxpool operation
+    hls::stream<result_t> maxpool1;
+    nnet::maxpool_2x<result_t, N_IQCONV_OUT, N_IQCONV_CHAN>(hidden1, res);
 }
