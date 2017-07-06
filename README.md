@@ -1,11 +1,17 @@
-# rfnoc-machinelearn
+# rfnoc-hls-neuralnet
+
+EJ Kreinar (ejkreinar@gmail.com)
+
+With support from: Darek Kawamoto, Dan CaJacob, Hawkeye 360 (http://www.he360.com/)
+
+## What is it?
 
 Open-source components for implementing neural networks in FPGA fabric. 
 
 - Uses the RF Network-on-Chip ([RFNOC](https://www.ettus.com/sdr-software/detail/rf-network-on-chip)) framework for the software/FPGA IO interfaces. 
 - Uses [Vivado HLS](https://www.xilinx.com/products/design-tools/vivado/integration/esl-design.html) to generate custom HDL.
 
-Designed for RF processing, though the HLS portion may be more generally applicable to creating other neural nets, too.
+Designed primarily for RF processing research and development, though the HLS neural network library may be generally applicable to other types of neural nets (image processing, for example).
 
 The HLS neural network library currently supports the following constructs:
  * Fully connected layer
