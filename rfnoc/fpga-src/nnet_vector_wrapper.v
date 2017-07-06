@@ -4,9 +4,7 @@
 module nnet_vector_wrapper #(
   parameter WIDTH = 16,
   parameter HEADER_WIDTH = 128, 
-  parameter HEADER_FIFO_SIZE = 3,
-  parameter SR_SIZE_INPUT = 129,
-  parameter SR_SIZE_OUTPUT = 130
+  parameter HEADER_FIFO_SIZE = 3
 )(
   input clk, input reset, input clear,
   input [15:0] next_dst_sid,
