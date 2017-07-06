@@ -6,10 +6,14 @@
 #include "ap_fixed.h"
 #include "hls_stream.h"
 
+#define USE_FIXEDPT 1
+
+#if USE_FIXEDPT
+
 typedef ap_fixed<16,4> input_t;
 typedef ap_fixed<16,8> result_t;
-typedef ap_fixed<16,8> weight_t;
-typedef ap_fixed<16,8> bias_t;
+typedef ap_fixed<16,4> weight_t;
+typedef ap_fixed<16,4> bias_t;
 
 typedef ap_fixed<32,12> accum1_t;
 typedef ap_fixed<16,8> layerIQ_t;
@@ -17,30 +21,35 @@ typedef ap_fixed<16,8> layerIQ_t;
 typedef ap_fixed<32,12> accum2_t;
 typedef ap_fixed<16,8> layer1D_t;
 
+typedef ap_fixed<32,12> accumX_t;
 typedef ap_fixed<16,8> layer1_t;
 typedef ap_fixed<16,8> layer2_t;
 typedef ap_fixed<16,8> layer3_t;
 typedef ap_fixed<16,8> layer4_t;
 typedef ap_fixed<16,8> layer5_t;
 
+#else
 
-// typedef float input_t;
-// typedef float result_t;
-// typedef float weight_t;
-// typedef float bias_t;
+typedef float input_t;
+typedef float result_t;
+typedef float weight_t;
+typedef float bias_t;
 
-// typedef float accum1_t;
-// typedef float layerIQ_t;
+typedef float accum1_t;
+typedef float layerIQ_t;
 
-// typedef float accum2_t;
-// typedef float layer1D_t;
+typedef float accum2_t;
+typedef float layer1D_t;
 
-// typedef float accumX_t;
-// typedef float layer1_t;
-// typedef float layer2_t;
-// typedef float layer3_t;
-// typedef float layer4_t;
-// typedef float layer5_t;
+typedef float accumX_t;
+typedef float layer1_t;
+typedef float layer2_t;
+typedef float layer3_t;
+typedef float layer4_t;
+typedef float layer5_t;
+
+#endif
+
 
 #define N_IN            128
 #define N_IQCONV_FILT   8

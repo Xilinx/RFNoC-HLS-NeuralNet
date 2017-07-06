@@ -25,8 +25,8 @@ int main(int argc, char **argv)
   // Print result vector
   int err_cnt = 0;
   float err, curr_data;
-  for (int ii = 0; ii < 22; ii++) {
-    for (int jj = 0; jj < 32; jj++) {
+  for (int ii = 0; ii < N_LAYER_OUT; ii++) {
+    for (int jj = 0; jj < 1; jj++) {
       curr_data = float(res_strm.read());
       // err = curr_data-answer[ii];
       // std::cout << "   Received: " << curr_data << std::endl;
