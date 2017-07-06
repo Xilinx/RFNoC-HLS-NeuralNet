@@ -1,31 +1,10 @@
 
 #include "nnet_layer.h"
 #include "nnet_activation.h"
+#include "nnet_helpers.h"
 
 #include "ex_modrec.h"
-// #include "data/ex_modrec_weights.h"
 #include "data/ex_modrec_consts.h"
-
-template<class in_T, class out_T, int N_IN>
-void change_type(hls::stream<in_T> &in, hls::stream<out_T> &out)
-{
-    in_T datareg;
-    hls::stream<out_T> input_trunc;
-    for (int ii=0; ii<N_IN; ii++) {
-        out << (out_T) in.read();
-    }
-}
-
-template<class data_T, int N_IN>
-void  hls_stream_debug(hls::stream<data_T> &data, hls::stream<data_T> &res)
-{
-    data_T datareg;
-    for (int ii=0; ii<N_IN; ii++) {
-        datareg = data.read();
-        std::cout << "[" << ii << "]: " << datareg << std::endl;
-        res << datareg;
-    }
-}
 
 // AXI-Stream port type is compatible with pointer, reference, & array input / ouputs only
 // See UG902 Vivado High Level Synthesis guide (2014.4) pg 157 Figure 1-49
@@ -54,7 +33,7 @@ void ex_modrec(
 
     // Change data type from input_t to layer0_t
     hls::stream<layer0_t> data_trunc;
-    change_type<input_t, layer0_t, N_LAYER_IN>(data, data_trunc);
+    nnet::change_type<input_t, layer0_t, N_LAYER_IN>(data, data_trunc);
 
     // LAYER 1
     hls::stream<layer1_t> logits1, hidden1;

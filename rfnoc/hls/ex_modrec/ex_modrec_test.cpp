@@ -13,8 +13,8 @@ int main(int argc, char **argv)
   float     answer[N_LAYER_OUT];
 
   int rval = 0;
-  rval = read_file_1D<input_t, N_LAYER_IN>("data/ex_modrec_input_10x1.dat", data);
-  rval = read_file_1D<float, N_LAYER_OUT>("data/ex_modrec_output_10x1.dat", answer);
+  rval = nnet::read_file_1D<input_t, N_LAYER_IN>("data/ex_modrec_input_10x1.dat", data);
+  rval = nnet::read_file_1D<float, N_LAYER_OUT>("data/ex_modrec_output_10x1.dat", answer);
 
   hls::stream<input_t> data_strm;
   for (int idat=0; idat < N_LAYER_IN; idat++) {

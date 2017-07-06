@@ -23,6 +23,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "hls_stream.h"
+
+namespace nnet {
 
 template <class dataType, unsigned int nrows>
 int read_file_1D(const char * filename, dataType data[nrows])
@@ -66,6 +69,29 @@ int read_file_2D(const char * filename, dataType data[nrows][ncols])
   }
   fclose(fp);
   return 0;
+}
+
+template<class in_T, class out_T, int N_IN>
+void change_type(hls::stream<in_T> &in, hls::stream<out_T> &out)
+{
+    in_T datareg;
+    hls::stream<out_T> input_trunc;
+    for (int ii=0; ii<N_IN; ii++) {
+        out << (out_T) in.read();
+    }
+}
+
+template<class data_T, int N_IN>
+void  hls_stream_debug(hls::stream<data_T> &data, hls::stream<data_T> &res)
+{
+    data_T datareg;
+    for (int ii=0; ii<N_IN; ii++) {
+        datareg = data.read();
+        std::cout << "[" << ii << "]: " << datareg << std::endl;
+        res << datareg;
+    }
+}
+
 }
 
 #endif

@@ -15,8 +15,8 @@ int main(int argc, char **argv)
 
   // Load data from file
   int rval = 1;
-  rval += read_file_1D<input_t, N_LAYER_IN>("data/validation_data_784x1.dat", data);
-  rval += read_file_1D<float, N_LAYER_OUT>("data/validation_layer2_small_10x1.dat", answer);
+  rval += nnet::read_file_1D<input_t, N_LAYER_IN>("data/validation_data_784x1.dat", data);
+  rval += nnet::read_file_1D<float, N_LAYER_OUT>("data/validation_layer2_small_10x1.dat", answer);
   if (rval == 0) {
 	  std::cout << "Failed to open files" << std::endl;
 	  return -1;

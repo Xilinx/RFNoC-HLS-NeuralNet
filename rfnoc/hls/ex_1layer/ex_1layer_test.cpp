@@ -17,8 +17,8 @@ int main(int argc, char **argv)
 
   // Load data from file
   int rval = 0;
-  rval = read_file_1D<input_t, N_LAYER_IN>("data/mnist_validation_data_784x1.dat", data);
-  rval = read_file_1D<float, N_LAYER_OUT>("data/mnist_validation_output_10x1.dat", answer);
+  rval = nnet::read_file_1D<input_t, N_LAYER_IN>("data/mnist_validation_data_784x1.dat", data);
+  rval = nnet::read_file_1D<float, N_LAYER_OUT>("data/mnist_validation_output_10x1.dat", answer);
 
   // Run the basic neural net block
   unsigned short size_in, size_out;
