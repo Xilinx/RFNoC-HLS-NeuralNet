@@ -94,8 +94,8 @@ module noc_block_exmodrec_tb();
             tb_streamer.push_word({data_logic}, 0 );
           else
             tb_streamer.push_word({data_logic}, 1 );
-          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
-          //$display(s);
+          $sformat(s, "Pushing word: %f, %d, %h", data_float, data_int, data_int);
+          $display(s);
         end
         $fclose(data_file);
       end
