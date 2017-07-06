@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--Default XML file-->
+<nocblock>
+  <name>exmodrec</name>
+  <blockname>exmodrec</blockname>
+  <ids>
+    <id revision="0">ABCD080D2EC00000</id>
+  </ids>
+  <!--One input, one output. If this is used, better have all the info the C++ file.-->
+  <ports>
+    <sink>
+      <name>in</name>
+    </sink>
+    <source>
+      <name>out</name>
+    </source>
+  </ports>
+</nocblock>
