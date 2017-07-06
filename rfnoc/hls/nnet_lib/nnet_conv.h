@@ -171,7 +171,7 @@ void conv_iq_manychan(
 }
 
 
-template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int Y_IN, int N_CHAN, int Y_FILT>
+template<class data_T, class res_T, class weight_T, class bias_T, class acc_T, int Y_IN, int Y_FILT, int N_CHAN>
 void conv_1d(
     hls::stream<data_T> &data,
     hls::stream<res_T>  &res,
@@ -215,9 +215,9 @@ void conv_1d(
             FiltLoop:for(int ii = 0; ii < Y_FILT; ii++){
             #pragma HLS UNROLL factor=4
                 int_accum[chan] += buffer[ii][chan] * weights[ii][chan];
-                // std::cout << "\tFiler/ChIn/ChOut: " << ii << "/" << chan << "/" << jj << ", Buffer: " << buffer[ii][chan] << std::endl;
-                // std::cout << "\tAccum: " << int_accum[jj] << std::endl;
-                // std::cout << "\tWeight: " << weights[ii][chan][jj] << std::endl;
+                // std::cout << "\tFilter/ChIn: " << ii << "/" << chan << ", Buffer: " << buffer[ii][chan] << std::endl;
+                // std::cout << "\tAccum: " << int_accum[chan] << std::endl;
+                // std::cout << "\tWeight: " << weights[ii][chan] << std::endl;
             }
 
             // When we hit the last filter sample, add bias term and output

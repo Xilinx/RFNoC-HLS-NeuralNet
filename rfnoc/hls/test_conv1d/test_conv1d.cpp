@@ -41,5 +41,5 @@ void test_conv1d(
   weight_t test2_weights[TEST2_N_FILT][TEST2_CHAN];
   bias_t test2_biases[TEST2_CHAN];
   get_test2(test2_weights, test2_biases);
-  nnet::conv_1d<data_t, result_t, weight_t, bias_t, accum_t, TEST2_N_IN, TEST2_CHAN, TEST2_N_FILT>(data, result, test2_weights, test2_biases);
+  nnet::conv_1d<data_t, result_t, weight_t, bias_t, accum_t, TEST2_N_IN, TEST2_N_FILT, TEST2_CHAN>(data, result, test2_weights, test2_biases);
 }

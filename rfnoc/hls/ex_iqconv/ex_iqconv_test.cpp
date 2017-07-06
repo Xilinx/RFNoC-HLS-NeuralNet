@@ -25,8 +25,8 @@ int main(int argc, char **argv)
   // Print result vector
   int err_cnt = 0;
   float err, curr_data;
-  for (int ii = 0; ii < 60; ii++) {
-    for (int jj = 0; jj < 64; jj++) {
+  for (int ii = 0; ii < 22; ii++) {
+    for (int jj = 0; jj < 32; jj++) {
       curr_data = float(res_strm.read());
       // err = curr_data-answer[ii];
       // std::cout << "   Received: " << curr_data << std::endl;
@@ -36,6 +36,10 @@ int main(int argc, char **argv)
     }
   }
   std::cout<< "Done read" << std::endl;
+  // std::cout << res_strm.read() << std::endl;
+  // std::cout << res_strm.read() << std::endl;
+  // std::cout << res_strm.read() << std::endl;
+  // std::cout << res_strm.read() << std::endl;
   // std::cout<< err_cnt << std::endl;
   return err_cnt;
 }

@@ -38,6 +38,7 @@ void  maxpool_2x(hls::stream<data_T> &data, hls::stream<data_T> &pool)
     data_T buffer[2][N_CHAN];
     data_T datareg, arg0, arg1, arg2, arg3, temp;
     ap_ufixed<1,1> row_count, chan_count;
+    ap_ufixed<16,16> out_count;
     row_count = 0;
     for (int ii=0; ii<N_IN; ii++) {
         row_count = row_count + 1;
@@ -47,8 +48,8 @@ void  maxpool_2x(hls::stream<data_T> &data, hls::stream<data_T> &pool)
             buffer[0][jj] = data.read();
             if (ii > 0 && jj > 0 && chan_count == 0 && row_count == 0) {
                 // Output the max pool...
-                // Note: this clearly doesnt scale
-                // TODO: Make this scale 
+                // NOTE: this clearly doesnt scale
+                // TODO: Make this scale
                 arg0 = buffer[1][jj-1];
                 arg1 = buffer[1][jj];
                 arg2 = buffer[0][jj-1];
@@ -74,7 +75,7 @@ void  maxpool_2x(hls::stream<data_T> &data, hls::stream<data_T> &pool)
                     }
                 }
                 pool << temp;
-                std::cout << "[" << ii << "][" << jj << "]: MAX = " << temp << " Vals: " <<  arg0 << ", " << arg1 << ", " << arg2 << ", " << arg3 << std::endl; 
+                //std::cout << "[" << out_count++ << "]" << "[" << ii << "][" << jj << "]: MAX = " << temp << " Vals: " <<  arg0 << ", " << arg1 << ", " << arg2 << ", " << arg3 << std::endl;
             }
         }
 

@@ -6,19 +6,6 @@
 #include "ap_fixed.h"
 #include "hls_stream.h"
 
-// typedef ap_fixed<16,3> input_t;
-// typedef ap_fixed<16,9> result_t;
-// typedef ap_fixed<16,3> weight_t;
-// typedef ap_fixed<16,3> bias_t;
-// typedef ap_fixed<32,6> accum_t;
-// typedef ap_fixed<32,10> accum5_t;
-
-// typedef ap_fixed<18,4> layer0_t;
-// typedef ap_fixed<18,4> layer1_t;
-// typedef ap_fixed<18,4> layer2_t;
-// typedef ap_fixed<18,4> layer3_t;
-// typedef ap_fixed<18,4> layer4_t;
-// typedef ap_fixed<16,9> layer5_t;
 typedef ap_fixed<16,4> input_t;
 typedef ap_fixed<16,8> result_t;
 typedef ap_fixed<16,8> weight_t;
@@ -48,6 +35,7 @@ typedef ap_fixed<16,8> layer5_t;
 // typedef float accum2_t;
 // typedef float layer1D_t;
 
+// typedef float accumX_t;
 // typedef float layer1_t;
 // typedef float layer2_t;
 // typedef float layer3_t;
@@ -55,7 +43,6 @@ typedef ap_fixed<16,8> layer5_t;
 // typedef float layer5_t;
 
 #define N_IN            128
-
 #define N_IQCONV_FILT   8
 #define N_IQCONV_CHAN   128
 #define N_IQCONV_OUT    121
@@ -63,14 +50,19 @@ typedef ap_fixed<16,8> layer5_t;
 
 #define MAXPOOL_SIZE_1   2
 #define MAXPOOL_STRIDE_1 2
+#define N_MAXPOOL_FLAT_1 3840
 
+#define N_1DCONV_IN     60
 #define N_1DCONV_FILT   16
 #define N_1DCONV_CHAN   64
+#define N_1DCONV_OUT    45
+#define N_1DCONV_FLAT   2880
 
-#define N_MAXPOOL2       2
-#define STRIDE_MAXPOOL2  2
+#define MAXPOOL_SIZE_2   2
+#define MAXPOOL_STRIDE_2 2
+#define N_MAXPOOL_FLAT_2 704
 
-#define N_LAYER_IN      1408
+#define N_LAYER_IN      704
 #define N_LAYER_1       128
 #define N_LAYER_2       64
 #define N_LAYER_3       32
