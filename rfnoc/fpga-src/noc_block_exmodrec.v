@@ -1,8 +1,8 @@
 //
 // Copyright 2015 Ettus Research
 //
-module noc_block_ex1layer #(
-  parameter NOC_ID = 64'hABCD000101A7E200,
+module noc_block_exmodrec #(
+  parameter NOC_ID = 64'hABCD080D2EC00000,
   parameter STR_SINK_FIFOSIZE = 11)
 (
   input bus_clk, input bus_rst,
@@ -238,7 +238,7 @@ module noc_block_ex1layer #(
   // Assign tlast = 0... currently not propagated in the HLS ports
   assign out_data_tlast = 1'b0;
 
-  ex_1layer inst_example_layer1 (
+  ex_modrec inst_example_modrec (
     .ap_clk(ce_clk), .ap_rst(ce_rst),
     .const_size_in(const_size_in), .const_size_out(const_size_out),
     .data_V_V_dout(in_data_tdata), .data_V_V_empty_n(in_data_tvalid), .data_V_V_read(in_data_tready), 
