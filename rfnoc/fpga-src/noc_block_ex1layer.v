@@ -187,17 +187,14 @@ module noc_block_ex1layer #(
   //  + Save off tuser for the output packet
   // *************************************************
 
-  wire [32:0]  in_data_tdata,  out_data_tdata;
+  wire [31:0]  in_data_tdata,  out_data_tdata;
   wire         in_data_tlast,  out_data_tlast;
   wire         in_data_tvalid, out_data_tvalid;
   wire         in_data_tready, out_data_tready;
 
   wire [15:0] const_size_in, const_size_out;
 
-  nnet_vector_wrapper #(
-    .SR_SIZE_INPUT(SR_SIZE_INPUT),
-    .SR_SIZE_OUTPUT(SR_SIZE_OUTPUT) ) 
-  inst_nnet_wrapper (
+  nnet_vector_wrapper  inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
     .next_dst_sid(next_dst_sid),
     .pkt_size_in(const_size_in), .pkt_size_out(const_size_out),
