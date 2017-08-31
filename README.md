@@ -59,7 +59,7 @@ RFNoC provides a convenient input/output interface between hardware and software
 
 First, make sure you have an rfnoc gnuradio prefix installed according to Ettus's [Getting Started with RFNoC guide](https://kb.ettus.com/Getting_Started_with_RFNoC_Development). 
 
-Next, clone the rfnoc-hls-neuralnet repo into the prefix/src directory: `git clone rfnoc-hls-neuralnet https://github.com/Xilinx/RFNoC-HLS-NeuralNet.git`
+Next, clone the rfnoc-hls-neuralnet repo into the prefix/src directory: `git clone https://github.com/Xilinx/RFNoC-HLS-NeuralNet.git rfnoc-hls-neuralnet`
 
 Finally, running simulations and builds on the rfnoc-hls-neuralnet OOT module currently requires a few edit to the uhd-fpga repo. These updates provide: 
 
