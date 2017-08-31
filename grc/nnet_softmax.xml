@@ -1,0 +1,55 @@
+<block>
+  <name>Neural Net Softmax</name>
+  <key>nnet_softmax</key>
+  <category>fpgannet</category>
+  <import>from fpgannet.nnet_softmax import nnet_softmax</import>
+  <make>nnet_softmax($vectorlen)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Softmax Length</name>
+    <key>vectorlen</key>
+    <value>10</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Use Vector IO?</name>
+    <key>use_vector</key>
+    <value>No</value>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>float</type>
+    <vlen>$vectorlen if $use_vector else 1</vlen>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>float</type>
+    <vlen>$vectorlen if $use_vector else 1</vlen>
+  </source>
+</block>
