@@ -19,7 +19,9 @@
         # args="gr_vlen={0},{1}".format(${grvlenout}, "" if $grvlenout == 1 else "spp={0}".format($grvlenout)),
     ),
     "exmodrec", $block_index, $device_index,
-)</make>
+)
+if $spp > 0:
+    self.$(id).set_arg("spp", $spp)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -37,7 +39,7 @@
   </param>
 
   <param>
-    <name>EXmodrec Select</name>
+    <name>exmodrec Select</name>
     <key>block_index</key>
     <value>-1</value>
     <type>int</type>
@@ -64,6 +66,13 @@
     <name>GRC Vector Length Out</name>
     <key>grvlenout</key>
     <value>1</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>SPP Out</name>
+    <key>spp</key>
+    <value>0</value>
     <type>int</type>
   </param>
 

@@ -6,6 +6,30 @@
   <ids>
     <id revision="0">ABCD080D2EC00000</id>
   </ids>
+  <!--Register/Arg to interface with nnet_vector_wrapper -->
+  <registers>
+    <readback>
+      <name>NNET_SIZE_IN</name>
+      <address>128</address>
+    </readback>
+    <readback>
+      <name>NNET_SIZE_OUT</name>
+      <address>129</address>
+    </readback>
+    <setreg>
+      <name>SPP</name>
+      <address>131</address>
+    </setreg>
+  </registers>
+  <args>
+    <arg>
+      <name>spp</name>
+      <type>int</type>
+      <check>GE($spp, 0) AND LE($spp, 1024)</check>
+      <check_message>SPP is not in range 0-1024</check_message>
+      <action>SR_WRITE("SPP", $spp)</action>
+    </arg>
+  </args>
   <!--One input, one output. If this is used, better have all the info the C++ file.-->
   <ports>
     <sink>
