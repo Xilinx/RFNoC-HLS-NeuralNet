@@ -152,6 +152,8 @@ module noc_block_exmodrec #(
 
   localparam RB_SIZE_INPUT = 129;
   localparam RB_SIZE_OUTPUT = 130;
+  localparam SR_USER_SPP = 131;
+  localparam RB_USER_SPP = 131;
 
   wire [15:0] const_size_in, const_size_out;
 
@@ -161,6 +163,7 @@ module noc_block_exmodrec #(
     case(rb_addr)
       RB_SIZE_INPUT  : rb_data <= {48'd0, const_size_in};
       RB_SIZE_OUTPUT : rb_data <= {48'd0, const_size_out};
+      SR_USER_SPP    : rb_data <= {48'd0, const_size_out};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
   end
@@ -180,7 +183,10 @@ module noc_block_exmodrec #(
   nnet_vector_wrapper inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
     .next_dst_sid(next_dst_sid),
-    .pkt_size_in(const_size_in << 6), .pkt_size_out(const_size_out << 6),
+    .nnet_size_in(const_size_in), .nnet_size_out(const_size_out),
+    .spp_out(),
+    // Setting Registers
+    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
     // Interface from axi_wrapper
     .i_tdata(m_axis_data_tdata),
     .i_tlast(m_axis_data_tlast),
