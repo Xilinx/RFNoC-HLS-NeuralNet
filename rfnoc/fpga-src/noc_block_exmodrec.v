@@ -180,7 +180,7 @@ module noc_block_exmodrec #(
   nnet_vector_wrapper inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
     .next_dst_sid(next_dst_sid),
-    .pkt_size_in(const_size_in), .pkt_size_out(const_size_out),
+    .pkt_size_in(const_size_in << 6), .pkt_size_out(const_size_out << 6),
     // Interface from axi_wrapper
     .i_tdata(m_axis_data_tdata),
     .i_tlast(m_axis_data_tlast),
