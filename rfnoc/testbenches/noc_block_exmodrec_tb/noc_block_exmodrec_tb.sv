@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `define NS_PER_TICK 1
-`define NUM_TEST_CASES 5
+`define NUM_TEST_CASES 6
 
 `include "sim_exec_report.vh"
 `include "sim_clks_rsts.vh"
@@ -59,11 +59,13 @@ module noc_block_exmodrec_tb();
     ********************************************************/
     `TEST_CASE_START("Write / readback user registers");
     tb_streamer.read_user_reg(sid_noc_block_exmodrec, noc_block_exmodrec.RB_SIZE_INPUT, readback);
-    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10);
+    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", 10, readback[31:0]);
     `ASSERT_ERROR(readback[31:0] == 10, s);
-    random_word = $random();
     tb_streamer.read_user_reg(sid_noc_block_exmodrec, noc_block_exmodrec.RB_SIZE_OUTPUT, readback);
-    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10);
+    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", 10, readback[31:0]);
+    `ASSERT_ERROR(readback[31:0] == 10, s);
+    tb_streamer.read_user_reg(sid_noc_block_exmodrec, noc_block_exmodrec.RB_USER_SPP, readback);
+    $sformat(s, "SPP register incorrect readback! Expected: %0d, Actual %0d", 10, readback[31:0]);
     `ASSERT_ERROR(readback[31:0] == 10, s);
     `TEST_CASE_DONE(1);
 
@@ -166,6 +168,18 @@ module noc_block_exmodrec_tb();
         $fclose(data_file_ref);
       end
     join
+    `TEST_CASE_DONE(1);
+
+    /********************************************************
+    ** Test 6 -- Larger SPP
+    ********************************************************/
+    
+    `TEST_CASE_START("Test Neural Net Data with Larger SPP");
+
+    tb_streamer.write_user_reg(sid_noc_block_exmodrec, noc_block_exmodrec.SR_USER_SPP, 20);
+    tb_streamer.read_user_reg(sid_noc_block_exmodrec, noc_block_exmodrec.RB_USER_SPP, readback);
+    $sformat(s, "SPP register incorrect readback! Expected: %0d, Actual %0d", 20, readback[31:0]);
+    `ASSERT_ERROR(readback[31:0] == 20, s);
     
     fork
       begin
@@ -191,23 +205,83 @@ module noc_block_exmodrec_tb();
           //$display(s);
         end
         $fclose(data_file);
+        data_file = $fopen("ex_modrec_input_10x1.dat", "r");
+        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+        if (data_file == 0) begin
+          $display("data_file handle was NULL");
+          $finish;
+        end
+        $display("Send data from text file");
+        while (!$feof(data_file)) begin
+          scan_file = $fscanf(data_file, "%f", data_float);
+          data_int = data_float * (2**13);
+          data_logic = data_int;
+          if (!$feof(data_file))
+            tb_streamer.push_word({data_logic}, 0 );
+          else
+            tb_streamer.push_word({data_logic}, 1 );
+          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+          //$display(s);
+        end
+        $fclose(data_file);
       end
       begin
-        logic last;
-        logic [15:0] res_logic;
-        shortint res_int;
-        real result_float;
+        cvita_payload_t recv_payload;
+        cvita_metadata_t md;
+        logic [63:0] rx_value;
+        logic [15:0] val1, val2;
+        integer index, start_sample;
+        logic [15:0] res_logic1, res_logic2;
+        shortint res_int1, res_int2;
+        real result_float1, result_float2;
         real reference_float;
+
+        // Pull a single packet
+        tb_streamer.recv(recv_payload, md);
+
         data_file_ref = $fopen("ex_modrec_output_10x1.dat", "r");
         `ASSERT_FATAL(data_file_ref != 0, "Output data file could not be opened");
-        for (int ii = 0; ii < 10; ii++) begin
-          tb_streamer.pull_word({res_logic}, last);
-          res_int = res_logic;
-          result_float =  res_int / 2.0**7;
-          $sformat(s, "Received Value: %f, %h", result_float, res_logic); $display(s);
+        for (int ii = 0; ii < 5; ii++) begin
+          rx_value = recv_payload[ii];
+          res_logic1 = rx_value[47:32];
+          res_int1 = res_logic1;
+          result_float1 = res_int1 / 2.0**7;
+          $sformat(s, "Received Value: %f, %h", result_float1, res_logic1); $display(s);
           scan_file = $fscanf(data_file_ref, "%f\n", reference_float);
-          $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float);
-          `ASSERT_ERROR((result_float-reference_float) < 0.5 && (reference_float-result_float) > -0.5, s);
+          $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float1);
+          `ASSERT_ERROR((result_float1-reference_float) < 0.5 && (reference_float-result_float1) > -0.5, s);
+
+
+          res_logic2 = rx_value[15:0];
+          res_int2 = res_logic2;
+          result_float2 = res_int2 / 2.0**7;
+          $sformat(s, "Received Value: %f, %h", result_float2, res_logic2); $display(s);
+          scan_file = $fscanf(data_file_ref, "%f\n", reference_float);
+          $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float2);
+          `ASSERT_ERROR((result_float2-reference_float) < 0.5 && (reference_float-result_float2) > -0.5, s);
+        end
+        $fclose(data_file_ref);
+
+        data_file_ref = $fopen("ex_modrec_output_10x1.dat", "r");
+        `ASSERT_FATAL(data_file_ref != 0, "Output data file could not be opened");
+        for (int ii = 0; ii < 5; ii++) begin
+          rx_value = recv_payload[ii];
+          res_logic1 = rx_value[47:32];
+          res_int1 = res_logic1;
+          result_float1 = res_int1 / 2.0**7;
+          $sformat(s, "Received Value: %f, %h", result_float1, res_logic1); $display(s);
+          scan_file = $fscanf(data_file_ref, "%f\n", reference_float);
+          $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float1);
+          `ASSERT_ERROR((result_float1-reference_float) < 0.5 && (reference_float-result_float1) > -0.5, s);
+
+
+          res_logic2 = rx_value[15:0];
+          res_int2 = res_logic2;
+          result_float2 = res_int2 / 2.0**7;
+          $sformat(s, "Received Value: %f, %h", result_float2, res_logic2); $display(s);
+          scan_file = $fscanf(data_file_ref, "%f\n", reference_float);
+          $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float2);
+          `ASSERT_ERROR((result_float2-reference_float) < 0.5 && (reference_float-result_float2) > -0.5, s);
         end
         $fclose(data_file_ref);
       end

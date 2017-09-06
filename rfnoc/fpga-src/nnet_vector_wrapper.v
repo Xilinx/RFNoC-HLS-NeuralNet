@@ -75,6 +75,7 @@ module nnet_vector_wrapper #(
     .strobe(set_stb), .addr(set_addr), .in(set_data), .out(spp_user), .changed(spp_changed));
 
   reg [15:0] spp_reg;
+  assign spp_out = spp_reg;
   always @(posedge clk)
   if(reset | clear)
     spp_reg <= nnet_size_out;
