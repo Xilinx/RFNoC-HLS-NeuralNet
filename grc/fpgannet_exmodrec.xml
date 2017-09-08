@@ -9,13 +9,13 @@
     uhd.stream_args( \# TX Stream Args
         cpu_format="$type",
         otw_format="$otw",
-        args="gr_vlen={0}".format(${grvlenin}), # Dont edit spp based on grvlen for the neural net blocks
+        args="gr_vlen={0},{1}".format(${grvlenin}, "" if $spp == 0 else "spp={0}".format($spp)), # Dont edit spp based on grvlen for the neural net blocks
         # args="gr_vlen={0},{1}".format(${grvlenin}, "" if $grvlenin == 1 else "spp={0}".format($grvlenin)),
     ),
     uhd.stream_args( \# RX Stream Args
         cpu_format="$type",
         otw_format="$otw",
-        args="gr_vlen={0}".format(${grvlenout}), # Dont edit spp based on grvlen for the neural net blocks
+        args="gr_vlen={0},{1}".format(${grvlenout}, "" if $spp == 0 else "spp={0}".format($spp)), # Dont edit spp based on grvlen for the neural net blocks
         # args="gr_vlen={0},{1}".format(${grvlenout}, "" if $grvlenout == 1 else "spp={0}".format($grvlenout)),
     ),
     "exmodrec", $block_index, $device_index,
