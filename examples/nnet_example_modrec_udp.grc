@@ -105,7 +105,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"10.10.0.112"</value>
+      <value>"10.10.0.2"</value>
     </param>
   </block>
   <block>
@@ -132,7 +132,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5*10000</value>
+      <value>10*10000</value>
     </param>
   </block>
   <block>
@@ -551,7 +551,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 260)</value>
+      <value>(328, 260)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -664,10 +664,6 @@
       <value>-1</value>
     </param>
     <param>
-      <key>block_index</key>
-      <value>-1</value>
-    </param>
-    <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
@@ -685,7 +681,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 244)</value>
+      <value>(800, 240)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -706,6 +702,14 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>spp</key>
+      <value>500</value>
+    </param>
+    <param>
+      <key>block_index</key>
+      <value>-1</value>
     </param>
   </block>
   <block>
@@ -748,7 +752,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 252)</value>
+      <value>(552, 252)</value>
     </param>
     <param>
       <key>_rotation</key>
