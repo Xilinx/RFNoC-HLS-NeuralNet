@@ -25,6 +25,10 @@
 #include "ap_fixed.h"
 #include "hls_stream.h"
 
+#define USE_FIXED
+
+#ifdef USE_FIXED
+
 typedef ap_fixed<16,3> input_t;
 typedef ap_fixed<16,9> result_t;
 typedef ap_fixed<16,3> weight_t;
@@ -39,17 +43,23 @@ typedef ap_fixed<18,4> layer3_t;
 typedef ap_fixed<18,4> layer4_t;
 typedef ap_fixed<16,9> layer5_t;
 
-// typedef float input_t;
-// typedef float result_t;
-// typedef float weight_t;
-// typedef float bias_t;
-// typedef float accum_t;
+#else
 
-// typedef float layer1_t;
-// typedef float layer2_t;
-// typedef float layer3_t;
-// typedef float layer4_t;
-// typedef float layer5_t;
+ typedef float input_t;
+ typedef float result_t;
+ typedef float weight_t;
+ typedef float bias_t;
+ typedef float accum_t;
+ typedef float accum5_t;
+
+ typedef float layer0_t;
+ typedef float layer1_t;
+ typedef float layer2_t;
+ typedef float layer3_t;
+ typedef float layer4_t;
+ typedef float layer5_t;
+
+#endif
 
 #define N_LAYER_IN      10
 #define N_LAYER_1       40
