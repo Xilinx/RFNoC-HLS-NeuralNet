@@ -150,32 +150,22 @@ module noc_block_ex1layer #(
   // localparam [7:0] SR_TEST_REG_0 = SR_USER_REG_BASE;
   // localparam [7:0] SR_TEST_REG_1 = SR_USER_REG_BASE + 8'd1;
 
-  localparam SR_SIZE_INPUT = 129;
-  localparam SR_SIZE_OUTPUT = 130;
-
+  
   localparam RB_SIZE_INPUT = 129;
   localparam RB_SIZE_OUTPUT = 130;
+  localparam SR_USER_SPP = 131;
+  localparam RB_USER_SPP = 131;
 
-  wire [31:0] size_input_reg;
-  setting_reg #(
-    .my_addr(SR_SIZE_INPUT), .awidth(8), .width(32))
-  sr_size_reg_in (
-    .clk(ce_clk), .rst(ce_rst),
-    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(size_input_reg), .changed());
-
-  wire [31:0] size_output_reg;
-  setting_reg #(
-    .my_addr(SR_SIZE_OUTPUT), .awidth(8), .width(32))
-  sr_size_reg_out (
-    .clk(ce_clk), .rst(ce_rst),
-    .strobe(set_stb), .addr(set_addr), .in(set_data), .out(size_output_reg), .changed());
+  wire [15:0] const_size_in, const_size_out;
+  wire [15:0] spp_user;
 
   // Readback registers
   // rb_stb set to 1'b1 on NoC Shell
   always @(posedge ce_clk) begin
     case(rb_addr)
-      RB_SIZE_INPUT  : rb_data <= {32'd0, size_input_reg};
-      RB_SIZE_OUTPUT : rb_data <= {32'd0, size_output_reg};
+      RB_SIZE_INPUT  : rb_data <= {48'd0, const_size_in};
+      RB_SIZE_OUTPUT : rb_data <= {48'd0, const_size_out};
+      RB_USER_SPP    : rb_data <= {48'd0, spp_user};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
   end
@@ -192,12 +182,13 @@ module noc_block_ex1layer #(
   wire         in_data_tvalid, out_data_tvalid;
   wire         in_data_tready, out_data_tready;
 
-  wire [15:0] const_size_in, const_size_out;
-
-  nnet_vector_wrapper  inst_nnet_wrapper (
+  nnet_vector_wrapper #(.SR_USER_SPP(SR_USER_SPP)) inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
     .next_dst_sid(next_dst_sid),
-    .pkt_size_in(const_size_in), .pkt_size_out(const_size_out),
+    .nnet_size_in(const_size_in), .nnet_size_out(const_size_out),
+    .spp_out(spp_user),
+    // Setting Registers
+    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
     // Interface from axi_wrapper
     .i_tdata(m_axis_data_tdata),
     .i_tlast(m_axis_data_tlast),

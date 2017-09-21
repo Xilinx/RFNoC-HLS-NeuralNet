@@ -58,15 +58,13 @@ module noc_block_ex1layer_tb();
     ** Test 4 -- Write / readback user registers
     ********************************************************/
     `TEST_CASE_START("Write / readback user registers");
-    tb_streamer.write_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.SR_SIZE_INPUT, SPP*4);
     tb_streamer.read_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.RB_SIZE_INPUT, readback);
-    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], SPP*4);
-    `ASSERT_ERROR(readback[31:0] == SPP*4, s);
+    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 784);
+    `ASSERT_ERROR(readback[31:0] == 784, s);
     random_word = $random();
-    tb_streamer.write_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.SR_SIZE_OUTPUT, 10*4);
     tb_streamer.read_user_reg(sid_noc_block_ex1layer, noc_block_ex1layer.RB_SIZE_OUTPUT, readback);
-    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10*4);
-    `ASSERT_ERROR(readback[31:0] == 10*4, s);
+    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10);
+    `ASSERT_ERROR(readback[31:0] == 10, s);
     `TEST_CASE_DONE(1);
 
     /********************************************************
