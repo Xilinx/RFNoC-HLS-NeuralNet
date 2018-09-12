@@ -1,1 +1,0 @@
-cmake .. -Wno-dev -DCMAKE_TOOLCHAIN_FILE=/gnuradio_target/oe-sdk_cross.cmake -DENABLE_DOXYGEN=OFF -DCMAKE_INSTALL_PREFIX=/usr
