@@ -1,0 +1,4 @@
+[submodule "rfnoc/hls4ml"]
+	path = rfnoc/hls4ml
+	url = git@github.com:hls-fpga-machine-learning/hls4ml.git
+	branch = master
