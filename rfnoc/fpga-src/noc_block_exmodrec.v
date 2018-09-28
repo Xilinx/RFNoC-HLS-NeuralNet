@@ -85,6 +85,7 @@ module noc_block_exmodrec #(
     .SIMPLE_MODE(0))
   axi_wrapper (
     .clk(ce_clk), .reset(ce_rst),
+    .bus_clk(bus_clk), .bus_rst(bus_rst),
     .clear_tx_seqnum(clear_tx_seqnum),
     .next_dst(next_dst_sid),
     .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
