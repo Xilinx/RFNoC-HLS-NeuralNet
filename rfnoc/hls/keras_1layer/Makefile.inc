@@ -10,7 +10,7 @@ FPGANNET_INCLUDE_DIR = $(FPGANNET_HLS_DIR)/../hls4ml/nnet_utils
 
 # Add C/C++/tcl files relative to usrp3/lib/hls/<ip> directory
 HLS_IP_$(HLS_IP_NAME)_SRCS = \
-$(HLS_IP_NAME).cpp \
+firmware/$(HLS_IP_NAME).cpp \
 $(HLS_IP_NAME).tcl
 
 # Setup build targets, don't remove this

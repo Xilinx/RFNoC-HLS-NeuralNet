@@ -24,7 +24,7 @@ OOT_DIR = $(abspath ../../)
 FPGANNET_HLS_DIR = $(OOT_DIR)/hls
 
 # Add HLS IP to build
-include $(FPGANNET_HLS_DIR)/ex_1layer/Makefile.inc
+include $(FPGANNET_HLS_DIR)/keras_1layer/Makefile.inc
 
 # Include makefile for HLS files
 RFNOC_SRCS += $(abspath \
@@ -34,18 +34,17 @@ $(abspath ../../fpga-src/packet_resizer_variable.v) \
 )
 
 # Define only one toplevel module
-SIM_TOP = noc_block_ex1layer_tb
+SIM_TOP = noc_block_keras1layer_tb
 
 # Add test bench, user design under test, and
 # additional user created files
 SIM_SRCS = \
-$(abspath noc_block_ex1layer_tb.sv) \
-$(abspath ../../fpga-src/noc_block_ex1layer.v)
+$(abspath noc_block_keras1layer_tb.sv) \
+$(abspath ../../fpga-src/noc_block_keras1layer.v)
 
-INC_SRCS += $(abspath mnist_validation_data_784x1.dat \
+INC_SRCS += $(abspath mnist_validation_data_784x1.dat) \
 $(abspath mnist_validation_output_10x1.dat) \
 $(HLS_IP_OUTPUT_INCS) \
-)
 
 #-------------------------------------------------
 # Bottom-of-Makefile
