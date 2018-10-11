@@ -15,7 +15,7 @@ module noc_block_keras1layer_tb();
   `RFNOC_SIM_INIT(NUM_CE, NUM_STREAMS, BUS_CLK_PERIOD, CE_CLK_PERIOD);
   `RFNOC_ADD_BLOCK(noc_block_keras1layer, 0);
 
-  localparam SPP = 784; // Samples per packet
+  localparam SPP = 10; // Samples per packet
 
   /********************************************************
   ** Verification
@@ -59,18 +59,18 @@ module noc_block_keras1layer_tb();
     ********************************************************/
     `TEST_CASE_START("Write / readback user registers");
     tb_streamer.read_user_reg(sid_noc_block_keras1layer, noc_block_keras1layer.RB_SIZE_INPUT, readback);
-    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 784);
-    `ASSERT_ERROR(readback[31:0] == 784, s);
+    $sformat(s, "User register 0 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10);
+    `ASSERT_ERROR(readback[31:0] == 10, s);
     random_word = $random();
     tb_streamer.read_user_reg(sid_noc_block_keras1layer, noc_block_keras1layer.RB_SIZE_OUTPUT, readback);
-    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 10);
-    `ASSERT_ERROR(readback[31:0] == 10, s);
+    $sformat(s, "User register 1 incorrect readback! Expected: %0d, Actual %0d", readback[31:0], 1);
+    `ASSERT_ERROR(readback[31:0] == 1, s);
     `TEST_CASE_DONE(1);
 
     /********************************************************
     ** Test 5 -- Test sequence
     ********************************************************/
-    
+
     `TEST_CASE_START("Test Neural Net Data");
     // Run the test twice to make sure we can recreate results
 
@@ -79,25 +79,29 @@ module noc_block_keras1layer_tb();
         real data_float;
         integer data_int;
         logic [15:0] data_logic;
-        data_file = $fopen("mnist_validation_data_784x1.dat", "r");
-        `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
-        if (data_file == 0) begin
-          $display("data_file handle was NULL");
-          $finish;
+        // NOTE: Feed the core! It needs a stream of data in order
+        // to keep clocking stuff through
+        for (int ii = 0; ii < 10; ii++) begin
+          data_file = $fopen("test_data_10x1.txt", "r");
+          `ASSERT_FATAL(data_file != 0, "Data file could not be opened");
+          if (data_file == 0) begin
+            $display("data_file handle was NULL");
+            $finish;
+          end
+          $display("Send data from text file");
+          while (!$feof(data_file)) begin
+            scan_file = $fscanf(data_file, "%f", data_float);
+            data_int = data_float * (2**10); // multiply by 2^(num fractional bits)
+            data_logic = data_int;
+            if (!$feof(data_file))
+              tb_streamer.push_word({data_logic}, 0 );
+            else
+              tb_streamer.push_word({data_logic}, 1 );
+            $sformat(s, "Pushing word: %f, %d", data_float, data_int);
+            //$display(s);
+          end
+          $fclose(data_file);
         end
-        $display("Send data from text file");
-        while (!$feof(data_file)) begin
-          scan_file = $fscanf(data_file, "%f", data_float);
-          data_int = data_float * (2**10);
-          data_logic = data_int;
-          if (!$feof(data_file))
-            tb_streamer.push_word({data_logic}, 0 );
-          else
-            tb_streamer.push_word({data_logic}, 1 );
-          $sformat(s, "Pushing word: %f, %d", data_float, data_int);
-          //$display(s);
-        end
-        $fclose(data_file);
       end
       begin
         logic last;
@@ -105,12 +109,12 @@ module noc_block_keras1layer_tb();
         shortint res_int;
         real result_float;
         real reference_float;
-        data_file_ref = $fopen("mnist_validation_output_10x1.dat", "r");
+        data_file_ref = $fopen("output_data_1x1.txt", "r");
         `ASSERT_FATAL(data_file_ref != 0, "Output data file could not be opened");
-        for (int ii = 0; ii < 10; ii++) begin
+        for (int ii = 0; ii < 1; ii++) begin
           tb_streamer.pull_word({res_logic}, last);
           res_int = res_logic;
-          result_float =  res_int / 2.0**8;
+          result_float =  res_int / 2.0**10;  // divide by 2^(num fractional bits)
           $sformat(s, "Received Value: %f, %h", result_float, res_logic); $display(s);
           scan_file = $fscanf(data_file_ref, "%f\n", reference_float);
           $sformat(s, "Incorrect output value received! Expected: %0f, Received: %0f", reference_float, result_float);
@@ -119,6 +123,7 @@ module noc_block_keras1layer_tb();
         $fclose(data_file_ref);
       end
     join
+    `TEST_CASE_DONE(1);
 
     `TEST_BENCH_DONE;
 

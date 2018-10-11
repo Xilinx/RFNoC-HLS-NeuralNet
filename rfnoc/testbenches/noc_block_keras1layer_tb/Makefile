@@ -42,8 +42,8 @@ SIM_SRCS = \
 $(abspath noc_block_keras1layer_tb.sv) \
 $(abspath ../../fpga-src/noc_block_keras1layer.v)
 
-INC_SRCS += $(abspath mnist_validation_data_784x1.dat) \
-$(abspath mnist_validation_output_10x1.dat) \
+INC_SRCS += $(abspath test_data_10x1.txt) \
+$(abspath output_data_1x1.txt) \
 $(HLS_IP_OUTPUT_INCS) \
 
 #-------------------------------------------------
