@@ -20,25 +20,27 @@
 // nnet_vector_wrapper is designed to read the network input and output sizes from
 // a user-generated neural network.
 //
-// - The nnet_vector_wrapper will wrangle the tlasts and tusers to be
+// - The nnet_vector_wrapper will wrangle the tlasts to be
 //   compatible with the rfnoc crossbar and the neural net HLS code
-// - Also, provide a "samples-per-packet" settings register that lets you
+// - For better or worse, this ignores tuser
+// - Provides a "samples-per-packet" settings register that lets you
 //   manually set the output packet size.
 //    -> This is recommended for SMALL network outputs (otherwise, it seems
 //       the processor gets bogged down due to too many small packets)
-
-// NOTE: Overall, I'm not really sure what EXACTLY the resizers are doing to tuser.
-// But, I've done my best to maintain the tuser propagation through the packet_resizers
-// There may be some EOB stuff that needs to carry through -- or something?
+// - Performs bit-width conversion between the XBAR_WIDTH (32 bits default)
+//   and desired width for the network
+// - Network widths are specific in units of bytes (valid options: {1, 2, 4})
+//   and are determined at compile time
 
 module nnet_vector_wrapper #(
-  parameter WIDTH = 16,
-  parameter HEADER_WIDTH = 128, 
-  parameter HEADER_FIFO_SIZE = 3,
+  parameter XBAR_WIDTH = 32,
+  parameter NNET_BYTES_IN = 4,
+  parameter NNET_BYTES_OUT = 4,
+  parameter HEADER_WIDTH = 128,
   parameter SR_USER_SPP = 131
 )(
   input clk, input reset, input clear,
-  input [15:0] next_dst_sid,
+  input [15:0] next_dst_sid, input [15:0] src_sid,
   input [15:0] nnet_size_in, nnet_size_out,
   output [15:0] spp_out,
 
@@ -46,22 +48,13 @@ module nnet_vector_wrapper #(
   input [31:0] set_data, input [7:0] set_addr, input set_stb,
 
   // AXI Interface from axi_wrapper
-  input [2*WIDTH-1:0] i_tdata, input i_tlast, input i_tvalid, output i_tready, input [HEADER_WIDTH-1:0] i_tuser,
-  output [2*WIDTH-1:0] o_tdata, output o_tlast, output o_tvalid, input o_tready, output [HEADER_WIDTH-1:0] o_tuser,
+  input [XBAR_WIDTH-1:0] i_tdata, input i_tlast, input i_tvalid, output i_tready, input [HEADER_WIDTH-1:0] i_tuser,
+  output [XBAR_WIDTH-1:0] o_tdata, output o_tlast, output o_tvalid, input o_tready, output [HEADER_WIDTH-1:0] o_tuser,
 
   // AXI Interface to user code
-  output [2*WIDTH-1:0] m_axis_data_tdata, output m_axis_data_tlast, output m_axis_data_tvalid, input m_axis_data_tready,
-  input [2*WIDTH-1:0] s_axis_data_tdata, input s_axis_data_tlast, input s_axis_data_tvalid, output s_axis_data_tready
+  output [8*NNET_BYTES_IN-1:0] m_axis_data_tdata, output m_axis_data_tlast, output m_axis_data_tvalid, input m_axis_data_tready,
+  input [8*NNET_BYTES_OUT-1:0] s_axis_data_tdata, input s_axis_data_tlast, input s_axis_data_tvalid, output s_axis_data_tready
 );
-
-  wire [HEADER_WIDTH-1:0] m_axis_data_tuser;
-
-  wire [2*WIDTH-1:0] int_tdata;
-  wire [HEADER_WIDTH-1:0] int_tuser;
-  wire int_tlast;
-  wire int_tvalid;
-  wire int_tready;
-
 
   // Create a little setting register to override SPP
   // At SR_USER_SPP, provide 15 bits of packet_length
@@ -77,79 +70,89 @@ module nnet_vector_wrapper #(
   reg [15:0] spp_reg;
   assign spp_out = spp_reg;
   always @(posedge clk)
-  if(reset | clear)
-    spp_reg <= nnet_size_out;
-  else if(spp_changed)
+  if(reset | clear) begin
+    spp_reg <= NNET_BYTES_OUT == 4 ? nnet_size_out << 2 :
+               NNET_BYTES_OUT == 2 ? nnet_size_out << 1 :
+               nnet_size_out;
+  end else if(spp_changed) begin
     spp_reg <= spp_user;
-
-
-  // Resize the input packet to the target length
-  packet_resizer_variable inst_packet_resizer_in (
-    .clk(clk), .reset(reset | clear),
-    .next_dst_sid(next_dst_sid),
-    .pkt_size(nnet_size_in),
-    .i_tdata(i_tdata), .i_tuser(i_tuser),
-    .i_tlast(i_tlast), .i_tvalid(i_tvalid), .i_tready(i_tready),
-    .o_tdata(m_axis_data_tdata), .o_tuser(m_axis_data_tuser),
-    .o_tlast(m_axis_data_tlast), .o_tvalid(m_axis_data_tvalid), .o_tready(m_axis_data_tready));
-
-  reg sof_in  = 1'b1;
-  reg sof_out = 1'b1;
-  always @(posedge clk) begin
-    if (reset | clear) begin
-      sof_in     <= 1'b1;
-      sof_out    <= 1'b1;
-    end else begin
-      if (m_axis_data_tvalid & m_axis_data_tready) begin
-        if (m_axis_data_tlast) begin
-          sof_in  <= 1'b1;
-        end else begin
-          sof_in  <= 1'b0;
-        end
-      end
-      if (o_tvalid & o_tready) begin
-        if (o_tlast) begin
-          sof_out  <= 1'b1;
-        end else begin
-          sof_out  <= 1'b0;
-        end
-      end
-    end
   end
 
-  wire [127:0] hdr_tuser_int;
-  wire hdr_tuser_valid = sof_in & m_axis_data_tvalid & m_axis_data_tready;
-  wire hdr_tuser_ready = sof_out & o_tvalid & o_tready;
+  cvita_hdr_encoder cvita_hdr_encoder (
+    .pkt_type(2'd0), .eob(1'b0), .has_time(1'b0),
+    .seqnum(12'd0), .payload_length(spp_out), .dst_sid(next_dst_sid), .src_sid(src_sid),
+    .vita_time(64'd0),
+    .header(o_tuser));
 
-  // Store the input headers (tuser)
-  axi_fifo #(
-    .WIDTH(HEADER_WIDTH), .SIZE(HEADER_FIFO_SIZE))
-  axi_fifo_header (
-    .clk(clk), .reset(reset), .clear(clear),
-    .i_tdata(m_axis_data_tuser),
-    .i_tvalid(hdr_tuser_valid), .i_tready(),
-    .o_tdata(hdr_tuser_int),
-    .o_tvalid(), .o_tready(hdr_tuser_ready), // Consume header on last output sample
-    .space(), .occupied());
+  generate
+    if (NNET_BYTES_IN == 1) begin
+      axis_dwidth_converter_4B_to_1B dwidth_converter_in (
+        .aclk(clk),
+        .aresetn(reset | clear),
+        .s_axis_tdata(i_tdata),
+        .s_axis_tlast(i_tlast),
+        .s_axis_tvalid(i_tvalid),
+        .s_axis_tready(i_tready),
+        .m_axis_tdata(m_axis_data_tdata),
+        .m_axis_tlast(m_axis_data_tlast),
+        .m_axis_tvalid(m_axis_data_tvalid),
+        .m_axis_tready(m_axis_data_tready)
+      );
+    end else if (NNET_BYTES_IN == 2) begin
+      axis_dwidth_converter_4B_to_2B dwidth_converter_in (
+        .aclk(clk),
+        .aresetn(reset | clear),
+        .s_axis_tdata(i_tdata),
+        .s_axis_tlast(i_tlast),
+        .s_axis_tvalid(i_tvalid),
+        .s_axis_tready(i_tready),
+        .m_axis_tdata(m_axis_data_tdata),
+        .m_axis_tlast(m_axis_data_tlast),
+        .m_axis_tvalid(m_axis_data_tvalid),
+        .m_axis_tready(m_axis_data_tready)
+      );
+    end else begin
+      assign m_axis_data_tdata = i_tdata;
+      assign m_axis_data_tlast = i_tlast;
+      assign m_axis_data_tvalid = i_tvalid;
+      assign i_tready = m_axis_data_tready;
+    end
+  endgenerate
 
-  // This resizer pulls tuser out of the header FIFO
-  packet_resizer_variable inst_packet_resizer_out (
-    .clk(clk), .reset(reset | clear),
-    .next_dst_sid(next_dst_sid),
-    .pkt_size(nnet_size_out),
-    .i_tdata(s_axis_data_tdata), .i_tuser(hdr_tuser_int),
-    .i_tlast(s_axis_data_tlast), .i_tvalid(s_axis_data_tvalid), .i_tready(s_axis_data_tready),
-    .o_tdata(int_tdata), .o_tuser(int_tuser),
-    .o_tlast(int_tlast), .o_tvalid(int_tvalid), .o_tready(int_tready));
 
-  // Resize to the desired SPP
-  packet_resizer_variable inst_packet_resizer_out_variable (
-    .clk(clk), .reset(reset | clear),
-    .next_dst_sid(next_dst_sid),
-    .pkt_size(spp_reg),
-    .i_tdata(int_tdata), .i_tuser(int_tuser),
-    .i_tlast(int_tlast), .i_tvalid(int_tvalid), .i_tready(int_tready),
-    .o_tdata(o_tdata), .o_tuser(o_tuser),
-    .o_tlast(o_tlast), .o_tvalid(o_tvalid), .o_tready(o_tready));
+  generate
+    if (NNET_BYTES_OUT == 1) begin
+      axis_dwidth_converter_1B_to_4B dwidth_converter_out (
+        .aclk(clk),
+        .aresetn(reset | clear),
+        .s_axis_tdata(s_axis_data_tdata),
+        .s_axis_tlast(s_axis_data_tlast),
+        .s_axis_tvalid(s_axis_data_tvalid),
+        .s_axis_tready(s_axis_data_tready),
+        .m_axis_tdata(o_tdata),
+        .m_axis_tlast(o_tlast),
+        .m_axis_tvalid(o_tvalid),
+        .m_axis_tready(o_tready)
+      );
+    end else if (NNET_BYTES_OUT == 2) begin
+      axis_dwidth_converter_2B_to_4B dwidth_converter_out (
+        .aclk(clk),
+        .aresetn(reset | clear),
+        .s_axis_tdata(s_axis_data_tdata),
+        .s_axis_tlast(s_axis_data_tlast),
+        .s_axis_tvalid(s_axis_data_tvalid),
+        .s_axis_tready(s_axis_data_tready),
+        .m_axis_tdata(o_tdata),
+        .m_axis_tlast(o_tlast),
+        .m_axis_tvalid(o_tvalid),
+        .m_axis_tready(o_tready)
+      );
+    end else begin
+      assign o_tdata = s_axis_data_tdata;
+      assign o_tlast = s_axis_data_tlast;
+      assign o_tvalid = s_axis_data_tvalid;
+      assign s_axis_data_tready = o_tready;
+    end
+  endgenerate
 
 endmodule
