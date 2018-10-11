@@ -82,7 +82,8 @@ module noc_block_keras1layer #(
   wire        s_axis_data_tready;
 
   axi_wrapper #(
-    .SIMPLE_MODE(0))
+    .SIMPLE_MODE(0),
+    .RESIZE_OUTPUT_PACKET(1))
   axi_wrapper (
     .clk(ce_clk), .reset(ce_rst),
     .bus_clk(bus_clk), .bus_rst(bus_rst),
@@ -173,8 +174,8 @@ module noc_block_keras1layer #(
   // *************************************************
   // Neural Net Wrapper
   //
-  //  + Force resize input and output packets
-  //  + Save off tuser for the output packet
+  //  + Handle data width conversions (and packing)
+  //  + Write tuser output to desired packet size
   // *************************************************
 
   wire [31:0]  in_data_tdata,  out_data_tdata;
@@ -182,9 +183,13 @@ module noc_block_keras1layer #(
   wire         in_data_tvalid, out_data_tvalid;
   wire         in_data_tready, out_data_tready;
 
-  nnet_vector_wrapper #(.SR_USER_SPP(SR_USER_SPP)) inst_nnet_wrapper (
+  nnet_vector_wrapper #(
+    .SR_USER_SPP(SR_USER_SPP),
+    .NNET_BYTES_IN(4),
+    .NNET_BYTES_OUT(4))
+  inst_nnet_wrapper (
     .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
-    .next_dst_sid(next_dst_sid),
+    .next_dst_sid(next_dst_sid), .src_sid(src_sid),
     .nnet_size_in(const_size_in), .nnet_size_out(const_size_out),
     .spp_out(spp_user),
     // Setting Registers
