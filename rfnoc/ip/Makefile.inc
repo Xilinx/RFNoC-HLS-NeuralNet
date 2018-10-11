@@ -1,0 +1,26 @@
+#
+# Copyright 2016 Ettus Research
+#
+
+include $(RFNOC_NEURALNET_DIR)/ip/axis_dwidth_converter_1B_to_4B/Makefile.inc
+include $(RFNOC_NEURALNET_DIR)/ip/axis_dwidth_converter_2B_to_4B/Makefile.inc
+include $(RFNOC_NEURALNET_DIR)/ip/axis_dwidth_converter_4B_to_1B/Makefile.inc
+include $(RFNOC_NEURALNET_DIR)/ip/axis_dwidth_converter_4B_to_2B/Makefile.inc
+
+LIB_OOT_IP_XCI_SRCS = \
+$(LIB_IP_AXIS_DWIDTH_1B_TO_4B_SRCS)\
+$(LIB_IP_AXIS_DWIDTH_2B_TO_4B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_4B_TO_1B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_4B_TO_2B_OUTS)
+
+LIB_OOT_IP_SYNTH_OUTPUTS = \
+$(LIB_IP_AXIS_DWIDTH_1B_TO_4B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_2B_TO_4B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_4B_TO_1B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_4B_TO_2B_OUTS)
+
+LIB_IP_XCI_SRCS += \
+$(LIB_IP_AXIS_DWIDTH_1B_TO_4B_SRCS)\
+$(LIB_IP_AXIS_DWIDTH_2B_TO_4B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_4B_TO_1B_OUTS)\
+$(LIB_IP_AXIS_DWIDTH_4B_TO_2B_OUTS)
