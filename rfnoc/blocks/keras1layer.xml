@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!--Default XML file-->
 <nocblock>
-  <name>ex1layer</name>
-  <blockname>ex1layer</blockname>
+  <name>keras_1layer</name>
+  <blockname>keras_1layer</blockname>
   <ids>
-    <id revision="0">ABCD000101A7E200</id>
+    <id revision="0">732A5000101A7E200</id>
   </ids>
   <!--Register/Arg to interface with nnet_vector_wrapper -->
   <registers>
@@ -25,8 +25,8 @@
     <arg>
       <name>spp</name>
       <type>int</type>
-      <check>GE($spp, 0) AND LE($spp, 1024)</check>
-      <check_message>SPP is not in range 0-1024</check_message>
+      <check>GE($spp, 0) AND LE($spp, 4000)</check>
+      <check_message>SPP is not in range 0-4000</check_message>
       <action>SR_WRITE("SPP", $spp)</action>
     </arg>
   </args>
