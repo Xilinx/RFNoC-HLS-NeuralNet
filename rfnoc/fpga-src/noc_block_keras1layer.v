@@ -221,7 +221,9 @@ module noc_block_keras1layer #(
   //
   //  + Insert the HLS generated block below
   //  + Connect the "in_data" and "out_data" busses
+  //  + Verify bitwidths (make to accommodate any zero-padding)
   //  + Connect packet_size indicators
+  //  + Hold ap_start high to keep the core running
   // *************************************************
 
   // Assign out_data_tdata MSBs to 0. Currently only using 16 bit data
@@ -231,10 +233,10 @@ module noc_block_keras1layer #(
 
   keras_1layer inst_keras_1layer (
     .ap_clk(ce_clk), .ap_rst_n(~ce_rst),
-    .ap_start(), .ap_done(), .ap_ready(), .ap_idle(),
+    .ap_start(1'b1), .ap_done(), .ap_ready(), .ap_idle(),
     .const_size_in(const_size_in), .const_size_out(const_size_out),
     .const_size_in_ap_vld(), .const_size_out_ap_vld(),
-    .data_V_TDATA(in_data_tdata[17:0]), .data_V_TVALID(in_data_tvalid), .data_V_TREADY(in_data_tready),
+    .data_V_TDATA({8'b0, in_data_tdata[17:0]}), .data_V_TVALID(in_data_tvalid), .data_V_TREADY(in_data_tready),
     .res_V_TDATA(out_data_tdata[17:0]), .res_V_TVALID(out_data_tvalid), .res_V_TREADY(out_data_tready));
 
 endmodule
