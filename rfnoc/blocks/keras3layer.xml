@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--Default XML file-->
+<nocblock>
+  <name>keras_3layer</name>
+  <blockname>keras_3layer</blockname>
+  <ids>
+    <id revision="0">732A5000301A7E200</id>
+  </ids>
+  <!--Register/Arg to interface with nnet_vector_wrapper -->
+  <registers>
+    <readback>
+      <name>NNET_SIZE_IN</name>
+      <address>128</address>
+    </readback>
+    <readback>
+      <name>NNET_SIZE_OUT</name>
+      <address>129</address>
+    </readback>
+    <setreg>
+      <name>SPP</name>
+      <address>131</address>
+    </setreg>
+  </registers>
+  <args>
+    <arg>
+      <name>spp</name>
+      <type>int</type>
+      <check>GE($spp, 0) AND LE($spp, 4000)</check>
+      <check_message>SPP is not in range 0-4000</check_message>
+      <action>SR_WRITE("SPP", $spp)</action>
+    </arg>
+  </args>
+  <!--One input, one output. If this is used, better have all the info the C++ file.-->
+  <ports>
+    <sink>
+      <name>in</name>
+    </sink>
+    <source>
+      <name>out</name>
+    </source>
+  </ports>
+</nocblock>
