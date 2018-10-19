@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<block>
+  <name>RFNoC: 1 Layer Example</name>
+  <key>fpgannet_ex1layer</key>
+  <category>fpgannet</category>
+  <import>import ettus</import>
+  <make>ettus.rfnoc_generic(
+    self.device3,
+    uhd.stream_args( \# TX Stream Args
+        cpu_format="$type",
+        otw_format="$otw",
+        args="gr_vlen={0},{1}".format(${grvlenin}, "" if $spp == 0 else "spp={0}".format($spp)), # Dont edit spp based on grvlen for the neural net blocks
+        # args="gr_vlen={0},{1}".format(${grvlenin}, "" if $grvlenin == 1 else "spp={0}".format($grvlenin)),
+    ),
+    uhd.stream_args( \# RX Stream Args
+        cpu_format="$type",
+        otw_format="$otw",
+        args="gr_vlen={0},{1}".format(${grvlenout}, "" if $spp == 0 else "spp={0}".format($spp)), # Dont edit spp based on grvlen for the neural net blocks
+        # args="gr_vlen={0},{1}".format(${grvlenout}, "" if $grvlenout == 1 else "spp={0}".format($grvlenout)),
+    ),
+    "keras3layer", $block_index, $device_index,
+)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+
+  <!--RFNoC basic block configuration -->
+  <param>
+    <name>Device Select</name>
+    <key>device_index</key>
+    <value>-1</value>
+    <type>int</type>
+    <hide>#if int($device_index()) &lt; 0 then 'part' else 'none'#</hide>
+    <tab>RFNoC Config</tab>
+  </param>
+
+  <param>
+    <name>Block Select</name>
+    <key>block_index</key>
+    <value>-1</value>
+    <type>int</type>
+    <hide>#if int($block_index()) &lt; 0 then 'part' else 'none'#</hide>
+    <tab>RFNoC Config</tab>
+  </param>
+
+  <param>
+    <name>FPGA Module Name</name>
+    <key>fpga_module_name</key>
+    <value>noc_block_ex1layer</value>
+    <type>string</type>
+    <hide>all</hide>
+    <tab>RFNoC Config</tab>
+  </param>
+
+  <param>
+    <name>GRC Vector Length In</name>
+    <key>grvlenin</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>GRC Vector Length Out</name>
+    <key>grvlenout</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Host Data Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex float32</name>
+      <key>fc32</key>
+      <opt>type:complex</opt>
+    </option>
+    <option>
+      <name>Complex int16</name>
+      <key>sc16</key>
+      <opt>type:sc16</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>s16</key>
+      <opt>type:s16</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>u8</key>
+      <opt>type:byte</opt>
+    </option>
+    <option>
+      <name>VITA word32</name>
+      <key>item32</key>
+      <opt>type:s32</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Device Format</name>
+    <key>otw</key>
+    <type>enum</type>
+    <option>
+      <name>Complex int16</name>
+      <key>sc16</key>
+    </option>
+    <option>
+      <name>Complex int8</name>
+      <key>sc8</key>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>s16</key>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>u8</key>
+    </option>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>$type.type</type>
+    <vlen>$grvlenin</vlen>
+    <domain>rfnoc</domain>
+  </sink>
+
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>$type.type</type>
+    <vlen>$grvlenout</vlen>
+    <domain>rfnoc</domain>
+  </source>
+</block>
