@@ -7,8 +7,8 @@ include $(TOOLS_DIR)/make/viv_hls_ip_builder.mak
 FPGANNET_HLS_DIR := $(OOT_DIR)/hls
 
 # Add HLS IP to build
-include $(FPGANNET_HLS_DIR)/ex_1layer/Makefile.inc
-include $(FPGANNET_HLS_DIR)/ex_modrec/Makefile.inc
+include $(FPGANNET_HLS_DIR)/keras_1layer/Makefile.inc
+include $(FPGANNET_HLS_DIR)/keras_3layer/Makefile.inc
 
 hls_ip: $(HLS_IP_BUILD_TARGETS)
 
