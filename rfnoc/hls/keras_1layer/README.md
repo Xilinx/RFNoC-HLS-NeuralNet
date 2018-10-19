@@ -9,9 +9,6 @@ To recreate code generation:
 
 Step 2 will use the local config file (keras-1layer-config.yml) to regenerate the C++ code to synthesize the 1-layer example.
 
-For Vivado 2017.4:
-  - Remove the `config_array_partition` directive inside the build_prj.tcl
-
 To build the project with HLS:
 
 1. Run build_prj.tcl: `vivado_hls -f build_prj.tcl`
