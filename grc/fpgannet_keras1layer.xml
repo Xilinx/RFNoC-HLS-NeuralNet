@@ -18,7 +18,7 @@
         args="gr_vlen={0},{1}".format(${grvlenout}, "" if $spp == 0 else "spp={0}".format($spp)), # Dont edit spp based on grvlen for the neural net blocks
         # args="gr_vlen={0},{1}".format(${grvlenout}, "" if $grvlenout == 1 else "spp={0}".format($grvlenout)),
     ),
-    "ex1layer", $block_index, $device_index,
+    "keras1layer", $block_index, $device_index,
 )</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
