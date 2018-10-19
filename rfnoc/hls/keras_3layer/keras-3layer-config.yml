@@ -1,0 +1,10 @@
+KerasJson: ../../hls4ml/keras-to-hls/example-keras-model-files/KERAS_3layer.json
+KerasH5:   ../../hls4ml/keras-to-hls/example-keras-model-files/KERAS_3layer_weights.h5
+OutputDir: ./
+ProjectName: keras_3layer
+XilinxPart: xc7z020clg484-1
+ClockPeriod: 5
+
+IOType: io_serial
+ReuseFactor: 1
+DefaultPrecision: ap_fixed<18,8>
