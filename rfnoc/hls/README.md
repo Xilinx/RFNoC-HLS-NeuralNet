@@ -1,32 +1,36 @@
 # HLS Code
 
-The sub-projects in this repo fall into roughly 3 categories:
+The example HLS projects in this repo demonstrate the
+workflow for generating new neural network IP using hls4ml.
 
-1. Neural Network Library: Contains templatized function definitions with compiler directives for efficient FPGA synthesis of neural network building blocks
-    * nnet_lib
-    
-2. Code Examples: Contains working examples meant to demonstrate a relevant neural network instantiation
-    * ex_1layer
-    * ex_2layer
-    * ex_modrec
-    * ex_iqconv
-    
-3. Test Projects: These projects I used to develop and test a few of the nnet_lib headers. I decided to keep them here because I found them fairly useful to refer to at times.
-    * test_activations
-    * test_conv
-    * test_conv1d
+Provided examples are:
+  - keras_1layer: A small classifier network with one hidden layer.
+  - keras_3layer: A slightly bigger classifier network with three hidden layers.
 
-And finally, totally out of place, we have the "addsub" project, which I fixed up based on the HLS code in uhd-fpga and left as a convenient example. Should probably delete this. 
+These examples are created using the hls4ml "example-keras-model-files"
+that represent several pretrained networks used for testing the
+hls4ml library.
 
-## How to use..
+## Implementing your own network
 
-Contrary to the [beginner Vivado HLS tutorials](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_4/ug871-vivado-high-level-synthesis-tutorial.pdf), I prefer to split up project generation from HLS synthesis. (I've hit a few trouble spots where the code does not synthesize correctly, and then the build action stalls). 
+The recommended approach for implementing a new network is
+to copy the general idea in these examples (except target
+your own JSON and h5 files, of course).
 
-So, the READMEs in each subdirectory here will indicate that the correct process to test each HLS project is as follows:
+This would look something like this:
 
-1. Source vivado so vivado_hls is on your path
-2. Create the project: `vivado_hls -f build_prj.tcl`
-3. Open the project: `vivado_hls -p <project name>`
-4. Manually hit the compile button to run the simulation only, or hit the green arrow to synthesize and generate resource usage estimates. 
+1. Create and train your neural network using python, perhaps
+using Keras or Pytorch.
+2. Export the network into the json and h5 file representation
+(follow instructions in hls4ml to do this export)
+3. Fork this repo, or set up your own repo similar to this one.
+4. Add a subfolder here with your network definition. Call hls4ml
+to generate the C++ code (see examples), confirm operation, and
+commit to your repo!
+5. If desired, open HLS and observe resource usage, try tuning
+parameters to get towards better resoure usage, etc.
+6. Add relevant makefiles to your hls folder.
 
-
+After creating the HLS code, create a new noc_block, testbench,
+and xml definitions similar to the examples -- the formula ends
+up pretty similar from this point onward.
