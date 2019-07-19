@@ -8,7 +8,7 @@ LIB_IP_AXIS_DWIDTH_4B_TO_2B_SRCS = $(IP_BUILD_DIR)/axis_dwidth_converter_4B_to_2
 
 LIB_IP_AXIS_DWIDTH_4B_TO_2B_OUTS = $(addprefix $(IP_BUILD_DIR)/axis_dwidth_converter_4B_to_2B/, \
 axis_dwidth_converter_4B_to_2B.xci.out \
-synth/axis_dwidth_converter_4B_to_2B.vhd \
+synth/axis_dwidth_converter_4B_to_2B.v \
 )
 
 $(LIB_IP_AXIS_DWIDTH_4B_TO_2B_SRCS) $(LIB_IP_AXIS_DWIDTH_4B_TO_2B_OUTS) : $(RFNOC_NEURALNET_DIR)/ip/axis_dwidth_converter_4B_to_2B/axis_dwidth_converter_4B_to_2B.xci
